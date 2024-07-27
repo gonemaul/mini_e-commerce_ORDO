@@ -185,7 +185,6 @@
                 </button>
             </form>
             <div class="dropdown-divider"></div>
-            <p class="p-3 mb-0 text-center">Advanced settings</p>
           </div>
         </li>
       </ul>

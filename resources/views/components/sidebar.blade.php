@@ -18,7 +18,7 @@
           </div>
           <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
           <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list" aria-labelledby="profile-dropdown">
-            <a href="" class="dropdown-item preview-item">
+            <a href="{{ route('profile') }}" class="dropdown-item preview-item">
               <div class="preview-thumbnail">
                 <div class="preview-icon bg-dark rounded-circle">
                   <i class="mdi mdi-settings text-primary"></i>
@@ -29,7 +29,7 @@
               </div>
             </a>
             <div class="dropdown-divider"></div>
-            <a href="" class="dropdown-item preview-item">
+            <a href="{{ route('change-password') }}" class="dropdown-item preview-item">
               <div class="preview-thumbnail">
                 <div class="preview-icon bg-dark rounded-circle">
                   <i class="mdi mdi-onepassword  text-info"></i>
@@ -55,7 +55,7 @@
         </a>
       </li>
       <li class="nav-item menu-items {{  Request::is('Users') ? 'active' : ''  }}">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="{{ route('users.list') }}">
           <span class="menu-icon">
             <i class="mdi mdi-account-multiple"></i>
           </span>
