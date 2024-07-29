@@ -3,6 +3,20 @@
 
 @section('content')
 <script src="https://kit.fontawesome.com/1b48e60650.js" crossorigin="anonymous"></script>
+
+<ul class="notifications"></ul>
+
+<link rel="stylesheet" href="{{ asset('assets/css/alert.css') }}">
+<script src="{{ asset('assets/js/alert.js') }}"></script>
+@if(session()->has('success'))
+    <input type="hidden" id="myElement" message="{{ session('success') }}">
+    <script>
+        var element = document.getElementById('myElement');
+        var message = element.getAttribute('message');
+        createToast('success', message);
+    </script>
+@endif
+
 <div class="content-wrapper">
   <div class="p-4" style="background-color: #191c24;border-radius:0.5rem">
     <div class="d-flex justify-content-between mb-3">

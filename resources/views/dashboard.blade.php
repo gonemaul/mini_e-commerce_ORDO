@@ -3,11 +3,18 @@
 @section('content')
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="{{ asset('assets/js/dashboard.js') }}"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://kit.fontawesome.com/1b48e60650.js" crossorigin="anonymous"></script>
 
+<ul class="notifications"></ul>
+
+<link rel="stylesheet" href="{{ asset('assets/css/alert.css') }}">
+<script src="{{ asset('assets/js/alert.js') }}"></script>
 @if(session()->has('success'))
+    <input type="hidden" id="myElement" message="{{ session('success') }}">
     <script>
-      swal("Good job!", {{ session('success') }}, "success");
+        var element = document.getElementById('myElement');
+        var message = element.getAttribute('message');
+        createToast('success', message);
     </script>
 @endif
 
