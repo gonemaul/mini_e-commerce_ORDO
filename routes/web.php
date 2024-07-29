@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Authentication;
 use App\Http\Controllers\Web\UserController;
+use App\Http\Controllers\Web\CategoryController;
 
 Route::get('/', function () {
     return view('dashboard')->with(['title' => 'Dashboard']);
@@ -16,6 +17,7 @@ Route::middleware('guest')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
+    // User
     Route::post('logout', [Authentication::class, 'logout'])->name('logout');
     Route::get('profile', [UserController::class, 'profile'])->name('profile');
     Route::get('change-password', [UserController::class, 'profile'])->name('change-password');
@@ -23,4 +25,7 @@ Route::middleware('auth')->group(function(){
     Route::post('update-password', [UserController::class, 'change_password'])->name('update-password');
     Route::get('users', [UserController::class, 'list_users'])->name('users.list');
     Route::get('user/{user}', [UserController::class, 'user_detail'])->name('users.detail');
+
+    // Category
+    Route::resource('categories', CategoryController::class);
 });

@@ -63,7 +63,7 @@
         </a>
       </li>
       <li class="nav-item menu-items {{  Request::is('categories/*') ? 'active' : ''  }}">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="{{ route('categories.index') }}">
           <span class="menu-icon">
             <i class="mdi mdi-apps"></i>
           </span>
