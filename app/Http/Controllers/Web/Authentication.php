@@ -28,11 +28,12 @@ class Authentication extends Controller
         ]);
         $validatedData['is_admin'] = true;
         User::create($validatedData);
-
+        
         return redirect()->route('login')->with('success', 'Registration successful. You can now login.');
     }
 
     public function authenticate(Request $request){
+        $user = User::where('email', $request->email)->first();
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required']
@@ -40,6 +41,7 @@ class Authentication extends Controller
 
         if(auth()->attempt(['email' => $credentials['email'], 'password' => $credentials['password'], 'is_admin' => true])){
             $request->session()->regenerate();
+            $user->update(['last_login' => now()]);
 
             return redirect()->route('dashboard');
         }

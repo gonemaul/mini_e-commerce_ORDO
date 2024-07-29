@@ -13,8 +13,6 @@
                   <th class="text-center" style="font-weight:600;"> Name </th>
                   <th class="text-center" style="font-weight:600;"> Email </th>
                   <th class="text-center" style="font-weight:600;"> Role </th>
-                  <th class="text-center" style="font-weight:600;"> last_login </th>
-                  <th class="text-center" style="font-weight:600;"> Joined </th>
                   <th class="text-center" style="font-weight:600;"> Action </th>
                 </tr>
               </thead>
@@ -35,8 +33,6 @@
                         @else
                             <label class="badge badge-outline-warning">User</label>
                         @endif
-                    <td class="text-center"></td>
-                    <td class="text-center">{{ $item->created_at->diffForHumans() }}</td>
                     <td class="text-center"><a href="{{ route('users.detail', $item->id) }}" class="btn btn-info" style="font-size:1rem"><i class="mdi mdi-eye"></i>Detail</a></td>
                   </tr>
                 @endforeach
