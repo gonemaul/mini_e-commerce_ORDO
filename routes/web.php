@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\Web\Authentication;
+use App\Http\Controllers\Web\ProductController;
+use App\Http\Controllers\Web\AuthenticationController;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\CategoryController;
 
@@ -11,15 +11,15 @@ Route::get('/', function () {
 })->name('dashboard')->middleware('auth');
 
 Route::middleware('guest')->group(function(){
-    Route::get('login', [Authentication::class, 'login'])->name('login');
-    Route::get('register', [Authentication::class, 'register'])->name('register');
-    Route::post('store', [Authentication::class, 'store'])->name('store');
-    Route::post('authenticate', [Authentication::class, 'authenticate'])->name('authenticate');
+    Route::get('login', [AuthenticationController::class, 'login'])->name('login');
+    Route::get('register', [AuthenticationController::class, 'register'])->name('register');
+    Route::post('store', [AuthenticationController::class, 'store'])->name('store');
+    Route::post('authenticate', [AuthenticationController::class, 'authenticate'])->name('authenticate');
 });
 
 Route::middleware('auth')->group(function(){
     // User
-    Route::post('logout', [Authentication::class, 'logout'])->name('logout');
+    Route::post('logout', [AuthenticationController::class, 'logout'])->name('logout');
     Route::get('profile', [UserController::class, 'profile'])->name('profile');
     Route::get('change-password', [UserController::class, 'profile'])->name('change-password');
     Route::post('update-profile', [UserController::class, 'update_profile'])->name('update-profile');

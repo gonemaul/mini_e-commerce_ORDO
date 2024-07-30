@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class Authentication extends Controller
+class AuthenticationController extends Controller
 {
     public function register(){
         return view('auth.register')->with([
@@ -28,7 +28,7 @@ class Authentication extends Controller
         ]);
         $validatedData['is_admin'] = true;
         User::create($validatedData);
-        
+
         return redirect()->route('login')->with('success', 'Registration successful. You can now login.');
     }
 
