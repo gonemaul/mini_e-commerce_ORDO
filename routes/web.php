@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Web\Authentication;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\CategoryController;
@@ -27,5 +28,8 @@ Route::middleware('auth')->group(function(){
     Route::get('user/{user}', [UserController::class, 'user_detail'])->name('users.detail');
 
     // Category
-    Route::resource('categories', CategoryController::class);
+    Route::resources([
+        'categories'=> CategoryController::class,
+        'products' => ProductController::class,
+    ]);
 });

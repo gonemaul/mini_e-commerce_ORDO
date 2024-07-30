@@ -21,8 +21,8 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function profileImage(){
-        return $this->hasMany(ProductImage::class, 'imageable');
+    public function productImage(){
+        return $this->hasMany(ProductImage::class);
     }
 
     public function cartItems(){

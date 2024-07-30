@@ -54,7 +54,7 @@
           <span class="menu-title">Dashboard</span>
         </a>
       </li>
-      <li class="nav-item menu-items {{  Request::is('Users') ? 'active' : ''  }}">
+      <li class="nav-item menu-items {{  Request::is('users/*') ? 'active' : ''  }}">
         <a class="nav-link" href="{{ route('users.list') }}">
           <span class="menu-icon">
             <i class="mdi mdi-account-multiple"></i>
@@ -71,7 +71,7 @@
         </a>
       </li>
       <li class="nav-item menu-items {{  Request::is('products/*') ? 'active' : ''  }}">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="{{ route('products.index') }}">
           <span class="menu-icon">
             <i class="mdi mdi-package-variant-closed"></i>
           </span>
