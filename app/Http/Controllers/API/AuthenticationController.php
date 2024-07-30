@@ -69,7 +69,12 @@ class AuthenticationController extends Controller
     public function me(Request $request){
         $user = $request->user();
         return response()->json([
-            'user' => $user,
+            'status' => 'success',
+            'account' => [
+                'name' => $user->name,
+                'email' => $user->email,
+                'profile_image' => $user->profile_image,
+            ]
         ]);
     }
 
