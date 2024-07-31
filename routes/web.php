@@ -1,14 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Web\ProductController;
-use App\Http\Controllers\Web\AuthenticationController;
 use App\Http\Controllers\Web\UserController;
+use App\Http\Controllers\Web\ProductController;
 use App\Http\Controllers\Web\CategoryController;
-
-Route::get('/', function () {
-    return view('dashboard')->with(['title' => 'Dashboard']);
-})->name('dashboard')->middleware('auth');
+use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\AuthenticationController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::middleware('guest')->group(function(){
     Route::get('login', [AuthenticationController::class, 'login'])->name('login');
@@ -18,6 +16,7 @@ Route::middleware('guest')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
+    Route::get('/', [DashboardController::class,'index'])->name('dashboard');
     // User
     Route::post('logout', [AuthenticationController::class, 'logout'])->name('logout');
     Route::get('profile', [UserController::class, 'profile'])->name('profile');

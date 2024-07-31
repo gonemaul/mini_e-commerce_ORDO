@@ -8,10 +8,7 @@
             </div>
             <form action="{{ route('categories.store') }}" method="post">
                 @csrf
-                <div class="form-group">
-                    <label for="name">Category Name</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Category Name" required autofocus>
-                </div>
+                @include('categories.partials.item_form')
                 <button class="btn btn-primary" type="submit">Save</button>
                 <a href="{{ route('categories.index') }}" class="btn btn-secondary">Cancel</a>
             </form>

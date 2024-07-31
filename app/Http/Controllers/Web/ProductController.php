@@ -96,23 +96,44 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $validatedData = $request->validated([
-            'name' => ['required','string','max:250'],
-            'category' => ['required'],
-            'price' => ['required','numeric'],
-            'stock' => ['required','numeric'],
-            'description' => ['required','max:300'],
-        ]);
+        // return dd($request);
 
+        $validatedData = $request->validate([
+            'name' => ['required','max:250','string'],
+            'category' => ['required'],
+            'price' => ['required', 'numeric'],
+            'stock' => ['required', 'numeric'],
+            'description' => ['required','max:300'],
+            'images' => ['array'],
+            'images.*' => ['image','max:1024','mimes:jpeg,png,jpg,gif,svg',],
+            'removed' => ['array']
+        ]);
         $product->update([
             'name' => Str::title($request->name),
             'category_id' => $request->category,
             'price' => $request->price,
             'stock' => $request->stock,
-            'description' => $request->description,
+            'description' => $request->description
         ]);
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully');
+        if($request->removed){
+            foreach ($request->removed as $remove) {
+                $img = ProductImage::findOrFail($remove);
+                Storage::delete($img->image);
+                $img->delete();
+            }
+        }
+        if($request->file('images')){
+            foreach ($request->images as $image) {
+                $product_image = $image->store('product_image','public');
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image' => $product_image
+                ]);
+            }
+        }
+
+        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 
     /**

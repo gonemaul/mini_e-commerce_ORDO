@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->group( function(){
     // Product Management
     Route::get('products', [ProductController::class, 'products']);
     Route::get('products/category/{category}', [ProductController::class, 'products_by_category']);
-    Route::get('products/sort-price/{sort_by}', [ProductController::class, 'sort_price']);
+    Route::get('products/sort-price', [ProductController::class, 'sort_price']);
     Route::get('products/{product}', [ProductController::class, 'product_detail']);
 
     // Cart Management

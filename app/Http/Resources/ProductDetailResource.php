@@ -14,11 +14,11 @@ class ProductDetailResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        foreach ($this->productImage as $item ){
-            $product_image[] = [
-                'image' => $item->image
-            ];
-        }
+        $product_image = $this->productImage->map(function ($image) {
+                return url('storage/' . $image->image);
+        });
+
+
         return [
             'id' => $this->id,
             'product_name' => $this->name,

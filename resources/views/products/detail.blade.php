@@ -11,17 +11,22 @@
         bottom: 0;
         text-align: center;
     }
+    .images img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 </style>
 
     <div class="content-wrapper">
         <div class="p-4 row" style="background-color: #191c24;border-radius:0.5rem">
-            <div class="col-md-6 col-xl-4 grid-margin stretch-card">
+            <div class="col-md-6 col-xl-4 stretch-card">
                 <div class="card">
-                  <div class="card-body">
+                  <div class="card-body p-0">
                     <div class="owl-carousel owl-theme full-width owl-carousel-dash portfolio-carousel" id="owl-carousel-basic">
                         @foreach ($product->productImage as $img)
-                            <div class="item">
-                            <img src="{{ asset('storage/' . $img->image) }}" alt="">
+                            <div class="item images">
+                                <img src="{{ asset('storage/' . $img->image) }}" alt="">
                             </div>
                         @endforeach
                     </div>
@@ -29,25 +34,26 @@
                 </div>
             </div>
             <div class="col-md-6 p-3 pt-4 pl-4">
-                <h3 class="mb-4">{{ $product->name }}</h3>
-                <div class="row mb-1">
-                    <strong class="col-sm-3">Price</strong>
-                    <span class="col-sm-9">: {{ $product->price }}</span>
+                <h3 class="mb-1">{{ $product->name }}</h3>
+                <div class="row mb-3">
+                    <span class="col-sm-9"><label class="badge badge-outline-success">{{ $product->category->name }}</label></span>
                 </div>
                 <div class="row mb-1">
-                    <strong class="col-sm-3">Stock</strong>
-                    <span class="col-sm-9">: {{ $product->stock }}</span>
+                    <h4 class="col-sm-9">Rp. {{ $product->price }}</h4>
                 </div>
                 <div class="row mb-1">
-                    <strong class="col-sm-3">Category</strong>
-                    <span class="col-sm-9">: {{ $product->category->name }}</span>
+                    <span class="col-sm-9 text-muted" style="font-size: 15px">Tersisa {{ $product->stock }}</span>
                 </div>
                 <div class="row mb-1">
-                    <strong class="col-sm-3">Description</strong>
-                    <span class="col-sm-9">: </span>
-                    <span class="ml-5">{!! $product->description !!}</span>
+                    <span class="col-sm-9 text-muted" style="font-size: 15px">Terjual {{ $product->terjual }}</span>
                 </div>
-                <a href="{{ route('products.index') }}" class="btn btn-primary mt-2">Kembali</a>
+                <a href="{{ route('products.index') }}" class="btn btn-outline-primary mt-2">Back</a>
+            </div>
+            <div class="col-md-6 p-3 pt-4 pl-4">
+                <h4 class="text-bold">Description</h4>
+                <div class="card">
+                    <article>{!! $product->description !!}</article>
+                </div>
             </div>
         </div>
     </div>

@@ -22,9 +22,9 @@ class AuthenticationController extends Controller
         if(!$validatedData){
             return response()->json([
                'status' => 'error',
-               'message' => 'data not valid',
+               'message' => 'Data validation failed',
                 'data' => $validatedData,
-            ]);
+            ],400);
         }
 
         User::create([
@@ -36,18 +36,17 @@ class AuthenticationController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'You have successfully registered',
-        ]);
+        ],201);
     }
 
     public function login(Request $request){
-        $validatedData = $request->validate([
+        $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt(['email' => $validatedData['email'], 'password' => $validatedData['password']])) {
+        if (Auth::attempt($credentials)) {
             $user = User::where('email', $request->email)->first();
-
             if($user->tokens()) {
                 $user->tokens()->delete();
             }
@@ -56,14 +55,24 @@ class AuthenticationController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Login successfully',
-                'token' => $token,
-                'type' => 'Bearer'
-            ]);
+                'data' => [
+                    'user' => $user,
+                    'token' => [
+                        'access_token' => $token,
+                        'token_type' => 'Bearer',
+                        // 'expires_in' => $token->expires_at->diffInSeconds(now())
+                    ]
+                ]
+            ], 200);
         }
         return response()->json([
             'status' => 'error',
-            'message' => 'The provided credentials do not match our records'
-        ]);
+            'message' => 'Invalid credentials',
+            'errors' => [
+                'email' => ['The provided email is not registered'],
+                'password' => ['The provided password is incorrect']
+            ]
+        ], 401);
     }
 
     public function me(Request $request){
@@ -73,8 +82,11 @@ class AuthenticationController extends Controller
             'account' => [
                 'name' => $user->name,
                 'email' => $user->email,
-                'profile_image' => $user->profile_image,
-            ]
+                'profile_image' => url('storage/' . $user->profile_image),
+                'last_login' => $user->last_login,
+                'created_at' => $user->created_at,
+                'updated_at' => $user->updated_at,
+            ],
         ]);
     }
 
@@ -94,9 +106,9 @@ class AuthenticationController extends Controller
 
         if($request->new_password && (Hash::check($request->new_password, $user->password))){
             return response()->json([
-                'status' =>'failed',
+                'status' =>'error',
                 'message' => 'The new password is the same as the old password'
-            ]);
+            ],403);
         }
         else{
             $user->password = Hash::make($request->new_password);
@@ -113,14 +125,15 @@ class AuthenticationController extends Controller
         return response()->json([
            'status' =>'success',
             'message' => 'The profile was updated successfully'
-        ]);
+        ],201);
         }
 
     public function logout(Request $request){
         $request->user()->tokens()->delete();
 
         return response()->json([
-           'message' => 'You have successfully logged out!'
-        ]);
+            'status' => 'success',
+            'message' => 'You have successfully logged out!'
+        ],200);
     }
 }

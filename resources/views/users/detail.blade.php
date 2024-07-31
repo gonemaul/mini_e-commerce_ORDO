@@ -5,9 +5,9 @@
         <div class="p-4 mb-3 row mx-0" style="background-color: #191c24;border-radius:0.5rem">
             <div class="profile col-md-6 align-content-center pl-5">
                 @if ($user->profile_image)
-                    <img class="rounded" style="width: 130px;height:130px" src="{{ asset('storage/' . $user->profile_image) }}">
+                    <img class="rounded-circle" style="width: 130px;height:130px" src="{{ asset('storage/' . $user->profile_image) }}">
                 @else
-                    <img class="rounded" style="width: 100px;height:100px" src="https://ui-avatars.com/api/?name={{ $user->name }}&color=7F9CF5&background=EBF4FF">
+                    <img class="rounded-circle" style="width: 100px;height:100px" src="https://ui-avatars.com/api/?name={{ $user->name }}&color=7F9CF5&background=EBF4FF">
                 @endif
             </div>
             <div class="profile-info col-md-6">
