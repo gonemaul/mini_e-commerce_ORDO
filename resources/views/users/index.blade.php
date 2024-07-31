@@ -1,6 +1,7 @@
 @extends('layout.main')
 
 @section('content')
+<script src="https://kit.fontawesome.com/1b48e60650.js" crossorigin="anonymous"></script>
 <div class="content-wrapper">
   <div class="col-lg-12 grid-margin stretch-card">
       <div class="card">
@@ -33,11 +34,14 @@
                         @else
                             <label class="badge badge-outline-warning">User</label>
                         @endif
-                    <td class="text-center"><a href="{{ route('users.detail', $item->id) }}" class="btn btn-info" style="font-size:1rem"><i class="mdi mdi-eye"></i>Detail</a></td>
+                    <td class="text-center"><a href="{{ route('users.detail', $item->id) }}" class="btn btn-outline-info" style="font-size:1rem"><i class="fa-solid fa-eye"></i>Detail</a></td>
                   </tr>
                 @endforeach
               </tbody>
             </table>
+            <div class="d-flex justify-content-end mt-3">
+                {{ $users->links('components.pagination') }}
+            </div>
           </div>
         </div>
       </div>

@@ -62,7 +62,7 @@ class UserController extends Controller
     public function list_users(){
         return view('users.index')->with([
             'title' => 'User List',
-            'users' => User::orderBy('is_admin', 'desc')->get()
+            'users' => User::orderBy('is_admin', 'desc')->paginate(10)
         ]);
     }
 
