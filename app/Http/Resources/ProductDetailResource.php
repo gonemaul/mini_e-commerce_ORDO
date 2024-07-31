@@ -14,6 +14,11 @@ class ProductDetailResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        foreach ($this->productImage as $item ){
+            $product_image[] = [
+                'image' => $item->image
+            ];
+        }
         return [
             'id' => $this->id,
             'product_name' => $this->name,
@@ -21,7 +26,7 @@ class ProductDetailResource extends JsonResource
             'price' => $this->price,
             'stock' => $this->stock,
             'description' => $this->description,
-            'images' => $this->productImage
+            'images' => $product_image
         ];
     }
 }
