@@ -28,6 +28,7 @@ class OrderController extends Controller
                         ], 400);
                     }
                     $cartItem->product->decrement('stock', $cartItem->quantity);
+                    $cartItem->product->increment('terjual', $cartItem->quantity);
                     $total += $cartItem->product->price * $cartItem->quantity;
                 }
 

@@ -15,8 +15,8 @@ class DashboardController extends Controller
         return view('dashboard')->with([
             'title' => 'Dashboard',
             'users' => User::orderBy('created_at', 'desc')->get(),
-            'products' => Product::orderBy('created_at','desc')->get(),
-            'categories' => Category::orderBy('created_at','desc')->get(),
+            'products' => Product::with(['productImage','category'])->get(),
+            'categories' => Category::with('products')->orderBy('created_at','desc')->get(),
             'orders' => Order::orderBy('created_at','desc')->get()
         ]);
     }

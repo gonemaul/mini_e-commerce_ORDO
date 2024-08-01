@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Web;
 
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class AuthenticationController extends Controller
 {
@@ -26,8 +28,12 @@ class AuthenticationController extends Controller
             'email' => ['required', 'email', 'max:250', 'unique:users'],
             'password' => ['required', 'max:250', 'min:6', 'confirmed'],
         ]);
-        $validatedData['is_admin'] = true;
-        User::create($validatedData);
+        User::create([
+            'name' => Str::title($request->name),
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'is_admin' => true
+        ]);
 
         return redirect()->route('login')->with('success', 'Registration successful. You can now login.');
     }

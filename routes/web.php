@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\UserController;
+use App\Http\Controllers\Web\OrderController;
 use App\Http\Controllers\Web\ProductController;
 use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\DashboardController;
@@ -26,9 +27,11 @@ Route::middleware('auth')->group(function(){
     Route::get('users', [UserController::class, 'list_users'])->name('users.list');
     Route::get('user/{user}', [UserController::class, 'user_detail'])->name('users.detail');
 
-    // Category
     Route::resources([
         'categories'=> CategoryController::class,
         'products' => ProductController::class,
     ]);
+
+    Route::get('orders', [OrderController::class, 'index'])->name('orders.list');
+    Route::get('orders/{id}', [OrderController::class, 'detail'])->name('orders.detail');
 });

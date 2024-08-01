@@ -72,7 +72,7 @@
 
 {{-- Name Produk --}}
     <div class="form-group">
-        <label for="name">Product Name</label>
+        <label for="name">Product Name <span class="text-danger">*</span></label>
         <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" autofocus value="{{ old('name', $product->name ?? '') }}">
     </div>
     @error('name')
@@ -83,7 +83,7 @@
 
 {{-- Category --}}
     <div class="form-group">
-        <label for="category">Category</label>
+        <label for="category">Category <span class="text-danger">*</span></label>
         <select class="form-control" id="category" name="category" value="{{ old('category', $product->category ?? '') }}">
         @foreach ($categories as $category)
             <option value="{{ $category->id }}" {{ (old('category_id', $product->category_id ?? '') == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -93,8 +93,8 @@
 
 {{-- Price --}}
     <div class="form-group">
-        <label for="price">Price</label>
-        <input type="text" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price', $product->price ?? '') }}">
+        <label for="price">Price <span class="text-danger">*</span></label>
+        <input type="number" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price', $product->price ?? '') }}">
     </div>
     @error('price')
     <div class="invalid-feedback">
@@ -104,8 +104,8 @@
 
 {{-- Stock --}}
     <div class="form-group">
-        <label for="stock">Stock</label>
-        <input type="text" class="form-control @error('stock') is-invalid @enderror" id="stock" name="stock" value="{{ old('stock', $product->stock ?? '') }}">
+        <label for="stock">Stock <span class="text-danger">*</span></label>
+        <input type="number" class="form-control @error('stock') is-invalid @enderror" id="stock" name="stock" value="{{ old('stock', $product->stock ?? '') }}">
     </div>
     @error('stock')
     <div class="invalid-feedback">
@@ -115,7 +115,7 @@
 
 {{-- Images --}}
     <div class="form-group mt-4">
-        <label for="images">Product Image</label>
+        <label for="images">Product Image <span class="text-danger">*</span></label>
         <input type="file" id="images" name="images[]" multiple class="file-upload-default @error('images') is-invalid @enderror">
         <div class="input-group col-xs-12">
             <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
@@ -143,7 +143,7 @@
 
 {{-- Description --}}
     <div class="form-group mb-4">
-        <label for="description">Description</label>
+        <label for="description">Description <span class="text-danger">*</span></label>
         <input id="description" type="hidden" name="description" value="{{ old('description', $product->description ?? '') }}" required>
         <trix-editor input="description"></trix-editor>
     </div>
@@ -153,17 +153,6 @@
     </div>
     @enderror
 <script>
-        const price =document.getElementById('price')
-
-        price.addEventListener('input', function (e) {
-            let value = e.target.value;
-            value = value.replace(/[^0-9]/g, ''); // Hanya mengizinkan angka
-            if (value) {
-                value = parseInt(value).toLocaleString('id-ID'); // Format angka dengan pemisah ribuan
-            }
-            e.target.value = value;
-        });
-
         var imagesToRemove = [];
 
         $('.remove-image').on('click', function() {

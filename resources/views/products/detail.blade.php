@@ -24,11 +24,15 @@
                 <div class="card">
                   <div class="card-body p-0">
                     <div class="owl-carousel owl-theme full-width owl-carousel-dash portfolio-carousel" id="owl-carousel-basic">
-                        @foreach ($product->productImage as $img)
+                        @forelse ($product->productImage as $img)
                             <div class="item images">
                                 <img src="{{ asset('storage/' . $img->image) }}" alt="">
                             </div>
-                        @endforeach
+                        @empty
+                            <div class="item images">
+                                <img src="{{ asset('assets/images/no-image.png') }}" alt="">
+                            </div>
+                        @endforelse
                     </div>
                   </div>
                 </div>
@@ -47,6 +51,7 @@
                 <div class="row mb-1">
                     <span class="col-sm-9 text-muted" style="font-size: 15px">Terjual {{ $product->terjual }}</span>
                 </div>
+                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-outline-warning mt-2 mr-2">Edit</a>
                 <a href="{{ route('products.index') }}" class="btn btn-outline-primary mt-2">Back</a>
             </div>
             <div class="col-md-6 p-3 pt-4 pl-4">

@@ -19,7 +19,7 @@ class ProductController extends Controller
     {
         return view('products.index')->with([
             'title' => 'Product',
-            'products' => Product::paginate(10)
+            'products' => Product::with('category')->paginate(10)
         ]);
     }
 

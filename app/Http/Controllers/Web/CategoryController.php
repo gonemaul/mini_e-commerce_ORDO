@@ -16,7 +16,7 @@ class CategoryController extends Controller
     {
         return view('categories.index')->with([
             'title' => 'Category',
-            'category' => Category::paginate(10)
+            'category' => Category::with('products')->paginate(10)
         ]);
     }
 

@@ -6,7 +6,6 @@
 <script src="{{ asset('assets/js/dashboard.js') }}"></script>
 <style>
     .card-title{
-        border-bottom: 3.5px solid #ffffff;
         padding-bottom: 8px
     }
 </style>
@@ -96,11 +95,11 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6 grid-margin stretch-card">
+      <div class="col-md-4 grid-margin stretch-card">
         <div class="card">
           <div class="card-body">
             <div class="d-flex flex-row justify-content-between">
-                <h4 class="card-title mb-1">New Users</h4>
+                <h4 class="card-title mb-1 text-primary" style="border-bottom: 3.5px solid #0090e7;">New Users</h4>
             </div>
                 <div class="row">
                     <div class="col-12">
@@ -134,104 +133,151 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6 grid-margin stretch-card">
+      <div class="col-md-4 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
               <div class="d-flex flex-row justify-content-between">
-                  <h4 class="card-title mb-1">New Products</h4>
+                  <h4 class="card-title mb-1 text-success" style="border-bottom: 3.5px solid #00d25b;">New Products</h4>
                   <p class="text-muted mb-1"></p>
               </div>
                   <div class="row">
                       <div class="col-12">
                           <div class="preview-list">
-                              @foreach ($products as $index => $product)
-                                  @if ($index < 5)
-                                      <div class="preview-item border-bottom">
-                                      <div class="preview-thumbnail">
-                                          @if($product->productImage->isNotEmpty())
-                                              <img class="rounded" style="width: 50px; height: 50px" src="{{ asset('storage/' . $product->productImage->first()->image) }}">
-                                          @else
-                                              <img class="rounded" style="width: 50px; height: 50px" src="https://ui-avatars.com/api/?name={{ $product->name }}&color=7F9CF5&background=EBF4FF">
-                                          @endif
-                                      </div>
-                                      <div class="preview-item-content d-sm-flex flex-grow">
-                                          <div class="flex-grow">
-                                              <h6 class="preview-subject">{{ $product->name }}</h6>
-                                              <p class="text-muted mb-0">{{ $product->category->name }}</p>
-                                          </div>
-                                          <div class="mr-auto text-sm-right pt-2 pt-sm-0 align-content-end">
-                                              <p class="text-muted mb-0">Rilis {{ $product->created_at->diffForHumans() }}</p>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  @endif
-                              @endforeach
-                          </div>
-                      </div>
-                  </div>
-            </div>
-        </div>
-      </div>
-      <div class="col-md-6 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-              <div class="d-flex flex-row justify-content-between">
-                  <h4 class="card-title mb-1">New Category</h4>
-                  <p class="text-muted mb-1"></p>
-              </div>
-                  <div class="row">
-                      <div class="col-12">
-                          <div class="preview-list">
-                              @foreach ($categories as $index => $category)
-                                  @if ($index < 5)
-                                      <div class="preview-item border-bottom">
-                                      <div class="preview-thumbnail">
-                                        <img class="rounded" style="width: 50px; height: 50px" src="https://ui-avatars.com/api/?name={{ $category->name }}&color=7F9CF5&background=EBF4FF">
-                                      </div>
-                                      <div class="preview-item-content d-sm-flex flex-grow">
-                                          <div class="flex-grow">
-                                              <h6 class="preview-subject">{{ $category->name }}</h6>
-                                              <p class="text-muted mb-0">Products {{ count($category->products) }}</p>
-                                          </div>
-                                          <div class="mr-auto text-sm-right pt-2 pt-sm-0 align-content-end">
-                                              <p class="text-muted mb-0">Rilis {{ $category->created_at->diffForHumans() }}</p>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  @endif
-                              @endforeach
-                          </div>
-                      </div>
-                  </div>
-            </div>
-        </div>
-      </div>
-      <div class="col-md-6 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-              <div class="d-flex flex-row justify-content-between">
-                  <h4 class="card-title mb-1">New Orders</h4>
-                  <p class="text-muted mb-1"></p>
-              </div>
-                  <div class="row">
-                      <div class="col-12">
-                          <div class="preview-list">
-                              @foreach ($orders as $index => $order)
-                                  @if ($index < 5)
-                                    <div class="preview-item border-bottom">
+                                @forelse ($products->sortByDesc('created_at') as $index => $product)
+                                    @if ($index < 5)
+                                        <div class="preview-item border-bottom">
+                                        <div class="preview-thumbnail">
+                                            @if($product->productImage->isNotEmpty())
+                                                <img class="rounded" style="width: 50px; height: 50px" src="{{ asset('storage/' . $product->productImage->first()->image) }}">
+                                            @else
+                                                <img class="rounded" style="width: 50px; height: 50px" src="{{ asset('assets/images/no-image.png') }}">
+                                            @endif
+                                        </div>
                                         <div class="preview-item-content d-sm-flex flex-grow">
                                             <div class="flex-grow">
-                                                <h6 class="preview-subject">{{ $order->user->name }}</h6>
-                                                <p class="text-muted mb-0">Total : {{ $order->total }}</p>
+                                                <h6 class="preview-subject">{{ $product->name }}</h6>
+                                                <p class="text-muted mb-0">{{ $product->category->name }}</p>
                                             </div>
-                                            <div class="mr-auto text-sm-right pt-2 pt-sm-0">
-                                                <p class="text-muted">Status {{ $order->status }}</p>
-                                                <p class="text-muted mb-0">Order {{ $order->created_at }}</p>
+                                            <div class="mr-auto text-sm-right pt-2 pt-sm-0 align-content-end">
+                                                <p class="text-muted mb-0">Rilis {{ $product->created_at->diffForHumans() }}</p>
                                             </div>
                                         </div>
                                     </div>
-                                  @endif
-                              @endforeach
+                                    @endif
+                                @empty
+                                    <h4 class="text-center mt-4 text-muted">No Data Available !</h4>
+                                @endforelse
+                          </div>
+                      </div>
+                  </div>
+            </div>
+        </div>
+      </div>
+      <div class="col-md-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+              <div class="d-flex flex-row justify-content-between">
+                  <h4 class="card-title mb-1 text-info" style="border-bottom: 3.5px solid #8f5fe8;">Best Saller</h4>
+                  <p class="text-muted mb-1"></p>
+              </div>
+                  <div class="row">
+                      <div class="col-12">
+                          <div class="preview-list">
+                                @forelse ($products->sortByDesc('terjual') as $index => $product)
+                                    @if ($index < 5)
+                                        <div class="preview-item border-bottom">
+                                        <div class="preview-thumbnail">
+                                            @if($product->productImage->isNotEmpty())
+                                                <img class="rounded" style="width: 50px; height: 50px" src="{{ asset('storage/' . $product->productImage->first()->image) }}">
+                                            @else
+                                                <img class="rounded" style="width: 50px; height: 50px" src="{{ asset('assets/images/no-image.png') }}">
+                                            @endif
+                                        </div>
+                                        <div class="preview-item-content d-sm-flex flex-grow">
+                                            <div class="flex-grow">
+                                                <h6 class="preview-subject">{{ $product->name }}</h6>
+                                                <p class="text-muted mb-0">{{ $product->category->name }}</p>
+                                            </div>
+                                            <div class="mr-auto text-sm-right pt-2 pt-sm-0 align-content-end">
+                                                <p class="text-muted mb-0">Terjual {{ $product->terjual }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                @empty
+                                    <h4 class="text-center mt-4 text-muted">No Data Available !</h4>
+                                @endforelse
+                          </div>
+                      </div>
+                  </div>
+            </div>
+        </div>
+      </div>
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+              <div class="d-flex flex-row justify-content-between">
+                  <h4 class="card-title mb-1 text-warning" style="border-bottom: 3.5px solid #ffab00;">New Category</h4>
+                  <p class="text-muted mb-1"></p>
+              </div>
+                  <div class="row">
+                      <div class="col-12">
+                          <div class="preview-list">
+                                @forelse ($categories as $index => $category)
+                                    @if ($index < 5)
+                                        <div class="preview-item border-bottom">
+                                        <div class="preview-thumbnail">
+                                            <img class="rounded" style="width: 50px; height: 50px" src="https://ui-avatars.com/api/?name={{ $category->name }}&color=7F9CF5&background=EBF4FF">
+                                        </div>
+                                        <div class="preview-item-content d-sm-flex flex-grow">
+                                            <div class="flex-grow">
+                                                <h6 class="preview-subject">{{ $category->name }}</h6>
+                                                <p class="text-muted mb-0">Products {{ count($category->products) }}</p>
+                                            </div>
+                                            <div class="mr-auto text-sm-right pt-2 pt-sm-0 align-content-end">
+                                                <p class="text-muted mb-0">Added {{ $category->created_at->diffForHumans() }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                @empty
+                                  <h4 class="text-center mt-4 text-muted">No Data Available !</h4>
+                                @endforelse
+                          </div>
+                      </div>
+                  </div>
+            </div>
+        </div>
+      </div>
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+              <div class="d-flex flex-row justify-content-between">
+                  <h4 class="card-title mb-1 text-danger" style="border-bottom: 3.5px solid #fc424a;">New Orders</h4>
+                  <p class="text-muted mb-1"></p>
+              </div>
+                  <div class="row">
+                      <div class="col-12">
+                          <div class="preview-list">
+                                @forelse ($orders as $index => $order)
+                                    @if ($index < 5)
+                                        <div class="preview-item border-bottom">
+                                            <div class="preview-item-content d-sm-flex flex-grow">
+                                                <div class="flex-grow">
+                                                    <h6 class="preview-subject">{{ $order->user->name }}</h6>
+                                                    <p class="text-muted mb-2">Total :</p>
+                                                    <p class="text-muted mb-0">Rp. {{ number_format($order->total, 0, ',', '.') }}</p>
+                                                </div>
+                                                <div class="mr-auto text-sm-right pt-2 pt-sm-0 align-content-end">
+                                                    <p class="text-muted">Status {{ $order->status }}</p>
+                                                    <p class="text-muted mb-0">Order {{ $order->created_at }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @empty
+                                  <h4 class="text-center mt-4 text-muted">No Data Available !</h4>
+                                @endforelse
                           </div>
                       </div>
                   </div>

@@ -13,7 +13,7 @@
             </div>
             <div class="profile-name">
               <h5 class="mb-0 font-weight-normal">Hi, {{ Auth::user()->name }}</h5>
-              <span>Administrator</span>
+              <span>{{ auth()->user()->email }}</span>
             </div>
           </div>
         </div>
@@ -54,7 +54,7 @@
         </a>
       </li>
       <li class="nav-item menu-items {{  Request::is('orders/*') ? 'active' : ''  }}">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="{{ route('orders.list') }}">
           <span class="menu-icon">
             <i class="mdi mdi-cart"></i>
           </span>
