@@ -9,8 +9,8 @@
             <form action="{{ route('categories.store') }}" method="post">
                 @csrf
                 @include('categories.partials.item_form')
-                <button class="btn btn-primary" type="submit">Save</button>
-                <a href="{{ route('categories.index') }}" class="btn btn-secondary">Cancel</a>
+                <button class="btn btn-primary mt-3" type="submit">Save</button>
+                <a href="{{ route('categories.index') }}" class="btn btn-secondary mt-3">Cancel</a>
             </form>
         </div>
     </div>

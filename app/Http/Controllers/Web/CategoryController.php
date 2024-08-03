@@ -35,8 +35,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => ['required','string','max:255'],
+        $request->validate([
+            'name' => ['required','string','max:250','regex:/^[\pL\s]+$/u'],
         ]);
 
         Category::create([
@@ -71,7 +71,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $validatedData = $request->validate([
-            'name' => ['required','string','max:255'],
+            'name' => ['required','string','max:10','regex:/^[\pL\s]+$/u'],
         ]);
 
         $category->update([

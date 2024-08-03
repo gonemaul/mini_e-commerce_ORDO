@@ -39,15 +39,17 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => ['required','string','max:250'],
+        // return dd($request);
+        $request->validate([
+            'name' => ['required','string','max:250','regex:/^[\pL\s]+$/u'],
             'category' => ['required'],
             'price' => ['required','numeric'],
             'stock' => ['required','numeric'],
-            'description' => ['required','string','max:300'],
+            'description' => ['required','max:300'],
         ]);
 
-        Product::create([
+        $product = new Product();
+        $product->create([
             'name' => Str::title($request->name),
             'category_id' => $request->category,
             'price' => $request->price,
@@ -55,16 +57,14 @@ class ProductController extends Controller
             'description' => $request->description,
         ]);
 
-        $product = Product::orderBY('id', 'desc')->first();
-
-        foreach ($request->images as $image) {
-            $product_image = $image->store('product_image', 'public');
-            ProductImage::create([
-                'product_id' => $product->id,
-                'image' => $product_image,
-            ]);
+        if($request->has('path_image') && $request->input('path_image') !== null) {
+            $product_id = $product->orderBy('id', 'desc')->first();
+            $images = json_decode($request->path_image, true);
+            foreach ($images as $image) {
+                $product_image = ProductImage::where('image', $image)->first();
+                $product_image->update(['product_id' => $product_id->id]);
+            }
         }
-
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
@@ -99,7 +99,7 @@ class ProductController extends Controller
         // return dd($request);
 
         $validatedData = $request->validate([
-            'name' => ['required','max:250','string'],
+            'name' => ['required','max:250','string','regex:/^[\pL\s]+$/u'],
             'category' => ['required'],
             'price' => ['required', 'numeric'],
             'stock' => ['required', 'numeric'],
@@ -116,20 +116,11 @@ class ProductController extends Controller
             'description' => $request->description
         ]);
 
-        if($request->removed){
-            foreach ($request->removed as $remove) {
-                $img = ProductImage::findOrFail($remove);
-                Storage::delete($img->image);
-                $img->delete();
-            }
-        }
-        if($request->file('images')){
-            foreach ($request->images as $image) {
-                $product_image = $image->store('product_image','public');
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image' => $product_image
-                ]);
+        if($request->has('path_image') && $request->input('path_image') !== null) {
+            $images = json_decode($request->path_image, true);
+            foreach ($images as $image) {
+                $product_image = ProductImage::where('image', $image)->first();
+                $product_image->update(['product_id' => $product->id]);
             }
         }
 

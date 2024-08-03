@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ImageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\OrderController;
@@ -26,7 +27,10 @@ Route::middleware('auth')->group(function(){
     Route::post('update-password', [UserController::class, 'change_password'])->name('update-password');
     Route::get('users', [UserController::class, 'list_users'])->name('users.list');
     Route::get('user/{user}', [UserController::class, 'user_detail'])->name('users.detail');
+    Route::post('delete-account', [UserController::class, 'delete_account'])->name('delete-account');
 
+    Route::post('/products/upload-image', [ImageController::class, 'uploadImage'])->name('upload_image');
+    Route::post('/products/delete-image', [ImageController::class, 'deleteImage'])->name('upload_image');
     Route::resources([
         'categories'=> CategoryController::class,
         'products' => ProductController::class,

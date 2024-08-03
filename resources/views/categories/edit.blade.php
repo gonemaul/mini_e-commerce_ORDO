@@ -11,8 +11,8 @@
             @csrf
             <input type="hidden" name="id" value="{{ $category->id }}">
             @include('categories.partials.item_form')
-            <button class="btn btn-primary" type="submit">Update</button>
-            <a  href="{{ route('categories.index') }}" class="btn btn-secondary">Cancel</a>
+            <button class="btn btn-primary mt-3" type="submit">Update</button>
+            <a  href="{{ route('categories.index') }}" class="btn btn-secondary mt-3">Cancel</a>
         </form>
     </div>
 </div>

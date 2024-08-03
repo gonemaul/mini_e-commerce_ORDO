@@ -1,9 +1,10 @@
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/1b48e60650.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
 <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
-
-
+<link rel="stylesheet" href="{{ asset('assets/css/uploader.css') }}">
+<link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
 <style>
     trix-toolbar [data-trix-button-group="file-tools"]{
         display: none
@@ -28,11 +29,11 @@
         display: flex;
         flex-wrap: wrap;
     }
-    .imageContainer .marked-for-removal{
-        opacity: 0.2; /* Mengurangi opasitas gambar */
-        border: 2px solid rgb(0, 0, 0); /* Menambahkan garis tepi merah */
+    /* .marked-for-removal .file-details{
+        opacity: 0.2;
+        border: 2px solid rgb(0, 0, 0);
         background-color: rgba(0, 0, 0, 0.508);
-    }
+    } */
     .marked-for-removal .remove-image{
         opacity: 0;
     }
@@ -69,7 +70,12 @@
         font-size: 30px
     }
 </style>
-
+<input type="hidden" name="path_image" id="path_image" value="{{ old('path_image') }}">
+@if ($errors->any())
+    <script>
+        error()
+    </script>
+@enderror
 {{-- Name Produk --}}
     <div class="form-group">
         <label for="name">Product Name <span class="text-danger">*</span></label>
@@ -94,7 +100,7 @@
 {{-- Price --}}
     <div class="form-group">
         <label for="price">Price <span class="text-danger">*</span></label>
-        <input type="number" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price', $product->price ?? '') }}">
+        <input type="text" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price', $product->price ?? '') }}">
     </div>
     @error('price')
     <div class="invalid-feedback">
@@ -105,7 +111,7 @@
 {{-- Stock --}}
     <div class="form-group">
         <label for="stock">Stock <span class="text-danger">*</span></label>
-        <input type="number" class="form-control @error('stock') is-invalid @enderror" id="stock" name="stock" value="{{ old('stock', $product->stock ?? '') }}">
+        <input type="text" class="form-control @error('stock') is-invalid @enderror" id="stock" name="stock" value="{{ old('stock', $product->stock ?? '') }}">
     </div>
     @error('stock')
     <div class="invalid-feedback">
@@ -113,92 +119,52 @@
     </div>
     @enderror
 
-{{-- Images --}}
-    <div class="form-group mt-4">
-        <label for="images">Product Image <span class="text-danger">*</span></label>
-        <input type="file" id="images" name="images[]" multiple class="file-upload-default @error('images') is-invalid @enderror">
-        <div class="input-group col-xs-12">
-            <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
-            <span class="input-group-append">
-                <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-            </span>
-        </div>
-    </div>
-    @error('image')
-    <div class="invalid-feedback">
-      {{ $message }}
-    </div>
-    @enderror
-    <div class="mb-3 imageContainer mt-3" id="imageContainer">
-        @if(isset($product) && $product->productImage->isNotEmpty())
-            @foreach ($product->productImage as $image)
-                <div class="image-box">
-                    <img src="{{ asset('storage/' . $image->image) }}" class="rounded">
-                    <input class="d-none" type="checkbox" id="remove_image_{{ $loop->index }}" name="removed[]" value="{{ $image->id }}">
-                    <label class="remove-image" for="remove_image_{{ $loop->index }}"><i class="fa fa-trash"></i></label>
-                </div>
-            @endforeach
-        @endif
-    </div>
-
 {{-- Description --}}
-    <div class="form-group mb-4">
+    <div class="form-group">
         <label for="description">Description <span class="text-danger">*</span></label>
         <input id="description" type="hidden" name="description" value="{{ old('description', $product->description ?? '') }}" required>
         <trix-editor input="description"></trix-editor>
     </div>
     @error('description')
     <div class="invalid-feedback">
-      {{ $message }}
+    {{ $message }}
     </div>
     @enderror
+
+{{-- Images --}}
+@error('images')
+<div class="invalid-feedback">
+  {{ $message }}
+</div>
+@enderror
+
+{{-- <div class="mb-3 imageContainer mt-3" id="imageContainer">
+    @if(isset($product) && $product->productImage->isNotEmpty())
+        @foreach ($product->productImage as $image)
+            <div class="image-box">
+                <img src="{{ asset('storage/' . $image->image) }}" class="rounded">
+                <input class="d-none" type="checkbox" id="remove_image_{{ $loop->index }}" name="removed[]" value="{{ $image->id }}">
+                <label class="remove-image" for="remove_image_{{ $loop->index }}"><i class="fa fa-trash"></i></label>
+            </div>
+        @endforeach
+    @endif
+</div> --}}
+
 <script>
-        var imagesToRemove = [];
+//         var imagesToRemove = [];
 
-        $('.remove-image').on('click', function() {
-            var imageName = $(this).data('image');
-            var parentDiv = $(this).parent();
+//         $('.remove-image').on('click', function() {
+//             var imageName = $(this).data('image');
+//             var parentDiv = $(this).parent();
 
-            if (parentDiv.hasClass('marked-for-removal')) {
-                parentDiv.removeClass('marked-for-removal');
-                imagesToRemove = imagesToRemove.filter(function(img) { return img !== imageName; });
-            } else {
-                parentDiv.addClass('marked-for-removal');
-                imagesToRemove.push(imageName);
-            }
-            console.log(imagesToRemove);
-        });
+//             if (parentDiv.hasClass('marked-for-removal')) {
+//                 parentDiv.removeClass('marked-for-removal');
+//                 imagesToRemove = imagesToRemove.filter(function(img) { return img !== imageName; });
+//             } else {
+//                 parentDiv.addClass('marked-for-removal');
+//                 imagesToRemove.push(imageName);
+//             }
+//             console.log(imagesToRemove);
+//         });
+// </script>
 
-        $('#images').on('change', function() {
-            var files = this.files;
-            var preview = $('#imageContainer');
-            // preview.empty();
-            var fileArray = Array.from(files);
-            if(files) {
-                $.each(fileArray, function(i, file) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        var div = $('<div>').addClass('image-box');
-                        var img = $('<img>').addClass('rounded').attr('src', e.target.result);
-                        var button = $('<button>').addClass('remove-image').attr('data-index', i).html('<i class="fa fa-trash"></i>');
-                        button.on('click', function() {
-                            var index = $(this).data('index');
-                            fileArray.splice(index, 1);
-                            updateFileInput(fileArray);
-                            $(this).parent().remove();
-                        });
-                        div.append(img).append(button);
-                        preview.append(div);
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-        });
-
-        function updateFileInput(fileArray) {
-            var dataTransfer = new DataTransfer();
-            fileArray.forEach(file => dataTransfer.items.add(file));
-            $('#images')[0].files = dataTransfer.files;
-        }
-</script>
-<script src="{{ asset('assets/js/file-upload.js') }}"></script>

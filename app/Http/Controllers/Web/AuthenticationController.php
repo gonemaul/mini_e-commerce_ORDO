@@ -23,9 +23,9 @@ class AuthenticationController extends Controller
     }
 
     public function store(Request $request){
-        $validatedData = $request->validate([
-            'name' =>['required', 'max:30', 'string'],
-            'email' => ['required', 'email', 'max:250', 'unique:users'],
+        $request->validate([
+            'name' =>['required', 'max:30', 'string','regex:/^[\pL\s]+$/u'],
+            'email' => ['required', 'email', 'max:30', 'unique:users'],
             'password' => ['required', 'max:250', 'min:6', 'confirmed'],
         ]);
         User::create([

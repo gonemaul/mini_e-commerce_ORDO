@@ -29,9 +29,27 @@
             <form action="{{ Route('products.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 @include('products.partials.item_form')
-                <button type="submit" class=" btn btn-primary">Add Product</button>
-                <a  href="{{ Route('products.index') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class=" btn btn-primary mt-3" id="submit">Add Product</button>
+                <a class="btn btn-secondary mt-3" onclick="cekImage()" id="cancel-submit">Cancel</a>
+            </form>
+            <form action="" enctype="multipart/form-data" id="form_image">
+                <div class="file-uploader">
+                    <div class="uploader-header">
+                      <h2 class="uploader-title">File Uploader</h2>
+                      <h4 class="file-completed-status"></h4>
+                    </div>
+                    <ul class="file-list"></ul>
+                    <div class="file-upload-box">
+                      <h2 class="box-title">
+                        <span class="file-instruction">Drag files here or</span>
+                        <span class="file-browse-button">browse</span>
+                      </h2>
+                      <input class="file-browse-input" name="files[]" type="file" multiple hidden>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
+
+<script src="{{ asset('assets/js/uploader.js') }}"></script>
 @endsection

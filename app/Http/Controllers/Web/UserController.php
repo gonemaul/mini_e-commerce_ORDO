@@ -43,20 +43,36 @@ class UserController extends Controller
     public function change_password(Request $request){
         $user = User::findOrFail(auth()->user()->id);
 
-        if (!(Hash::check($request->get('current_password'), $user->password))) {
-            return back()->with(["error" => "Your current password does not matches with the password."]);
-        }
-
-        $validatedData = $request->validate([
+        $request->validate([
             'current_password' => 'required',
             'password' => ['required','min:6','confirmed'],
         ]);
+
+        if (!(Hash::check($request->get('current_password'), $user->password))) {
+            return back()->with(["error" => "Your current password does not matches with the password."]);
+        }
 
         $user->update([
             'password' =>  Hash::make($request->get('password'))
         ]);;
 
-        return redirect()->route('dashboard')->with(["success" => "Password changed successfully!"]);
+        return back()->with(["success" => "Password changed successfully!"]);
+    }
+
+    public function delete_account(Request $request){
+        $request->validate([
+            'password' => 'required'
+        ]);
+
+        $user = User::findOrFail(auth()->user()->id);
+        if (!(Hash::check($request->get('password'), $user->password))) {
+            return back()->with(["error" => "Password does not match with the your password."]);
+        }
+        else{
+            $user->delete();
+            auth()->logout();
+            return redirect()->route('login')->with(['success' => 'Your account has been deleted successfully!']);
+        }
     }
 
     public function list_users(){

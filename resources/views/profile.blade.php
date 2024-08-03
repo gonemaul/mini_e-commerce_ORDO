@@ -2,9 +2,26 @@
 
 @section('content')
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/1b48e60650.js" crossorigin="anonymous"></script>
 <script src="{{ asset('assets/js/file-upload.js') }}"></script>
+<ul class="notifications"></ul>
+<link rel="stylesheet" href="{{ asset('assets/css/alert.css') }}">
+<script src="{{ asset('assets/js/alert.js') }}"></script>
+<style>
+    .invalid-feedback{
+        display: block
+    }
+</style>
 <div class="content-wrapper">
     @if (url()->current() == Route('profile'))
+        @if(session()->has('error'))
+        <input type="hidden" id="myElement" message="{{ session('error') }}">
+            <script>
+                var element = document.getElementById('myElement');
+                var message = element.getAttribute('message');
+                createToast('error', message);
+            </script>
+        @endif
         <div class="row px-4 py-4 mb-3" style="background-color: #191c24;border-radius:0.5rem">
             <div class="col-md-6 ps-3 text-center">
                 <h4 class="align-center">General Account</h4>
@@ -56,14 +73,51 @@
                 </form>
             </div>
         </div>
+
+        <div class="row px-4 py-4 mb-3" style="background-color: #191c24;border-radius:0.5rem">
+            <div class="col-md-12 ps-3 text-center" style="border-bottom: 3px solid #343434;">
+                <h3 class="text-danger">Danger Zone !!!</h3>
+            </div>
+            <div class="col-md-12 text-center" id="btn_delete">
+                <button class="btn btn-outline-danger text-center mt-3 fs-3" id="delete-account">Delete Account</button>
+            </div>
+            <div class="col md-12 ps-3 mt-3 d-none" id="form_delete">
+                <form action="{{ Route('delete-account') }}" method="post"  enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group">
+                        <label for="password">Please field your password !!</label>
+                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Password">
+                        @error('password')
+                            <div class="invalid-feedback">
+                            {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary mr-3">Back to Dashboard</a>
+                    <button class="btn btn-outline-danger" onclick="return confirm('What are you sure? ..')" type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+        <script>
+            $('#delete-account').click(function() {
+                $('#form_delete').removeClass('d-none')
+                $('#btn_delete').addClass('d-none')
+            })
+        </script>
     @else
         @if(session()->has('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
-        @elseif (session()->has('success'))
+        <input type="hidden" id="myElement" message="{{ session('error') }}">
             <script>
-                swal("Good job!", "Password changed successfully!", "success");
+                var element = document.getElementById('myElement');
+                var message = element.getAttribute('message');
+                createToast('error', message);
+            </script>
+        @elseif (session()->has('success'))
+            <input type="hidden" id="myElement" message="{{ session('success') }}">
+            <script>
+                var element = document.getElementById('myElement');
+                var message = element.getAttribute('message');
+                createToast('success', message);
             </script>
         @endif
         <div class="row mt-3 px-4 py-4" id="changePassword" style="background-color: #191c24;border-radius:0.5rem">
@@ -76,7 +130,7 @@
                     <input type="hidden" name="id" value="{{ $user->id }}">
                     <div class="form-group">
                         <label for="current_password">Current Password</label>
-                        <input type="password" class="form-control @error('current_password') is-invalid @enderror" name="current_password" id="current_password" placeholder="Current Password" required>
+                        <input type="password" class="form-control @error('current_password') is-invalid @enderror" name="current_password" id="current_password" placeholder="Current Password">
                         @error('current_password')
                             <div class="invalid-feedback">
                             {{ $message }}
@@ -85,7 +139,7 @@
                     </div>
                     <div class="form-group">
                         <label for="password">New Password</label>
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password" placeholder="New Password" required>
+                        <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password" placeholder="New Password" >
                         @error('password')
                             <div class="invalid-feedback">
                             {{ $message }}
@@ -94,7 +148,7 @@
                     </div>
                     <div class="form-group">
                         <label for="password_confirmation">Confirm Password</label>
-                        <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation" id="password_confirmation" placeholder="Confirm Password" required>
+                        <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation" id="password_confirmation" placeholder="Confirm Password" >
                         @error('password_confirmation')
                             <div class="invalid-feedback">
                             {{ $message }}

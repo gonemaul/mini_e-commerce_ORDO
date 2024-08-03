@@ -11,6 +11,11 @@
         bottom: 0;
         text-align: center;
     }
+    .images{
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
     .images img{
         width: 100%;
         height: 100%;
@@ -43,7 +48,7 @@
                     <span class="col-sm-9"><label class="badge badge-outline-success">{{ $product->category->name }}</label></span>
                 </div>
                 <div class="row mb-1">
-                    <h4 class="col-sm-9">Rp. {{ $product->price }}</h4>
+                    <h4 class="col-sm-9">Rp. {{ number_format($product->price, 0, ',', '.') }}</h4>
                 </div>
                 <div class="row mb-1">
                     <span class="col-sm-9 text-muted" style="font-size: 15px">Tersisa {{ $product->stock }}</span>
@@ -56,9 +61,7 @@
             </div>
             <div class="col-md-6 p-3 pt-4 pl-4">
                 <h4 class="text-bold">Description</h4>
-                <div class="card">
-                    <article>{!! $product->description !!}</article>
-                </div>
+                <article>{!! $product->description !!}</article>
             </div>
         </div>
     </div>

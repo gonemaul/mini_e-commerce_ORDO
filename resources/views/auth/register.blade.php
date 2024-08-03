@@ -51,7 +51,7 @@
               <div class="text-center">
                 <button type="submit" class="btn btn-primary btn-block enter-btn">Register</button>
               </div>
-              <p class="sign-up text-center">Already have an Account?<a href="{{ Route('login') }}"> Sign Up</a></p>
+              <p class="sign-up text-center">Already have an Account?<a href="{{ Route('login') }}"> Sign In</a></p>
               <p class="terms">By creating an account you are accepting our<a href="#"> Terms & Conditions</a></p>
           </div>
       </form>

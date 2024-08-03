@@ -104,14 +104,14 @@ class AuthenticationController extends Controller
             $user->name = Str::title($request->name);
         }
 
-        if($request->new_password && (Hash::check($request->new_password, $user->password))){
+        if($request->password && (Hash::check($request->password, $user->password))){
             return response()->json([
                 'status' =>'error',
                 'message' => 'The new password is the same as the old password'
             ],403);
         }
         else{
-            $user->password = Hash::make($request->new_password);
+            $user->password = Hash::make($request->password);
         }
 
         if ($request->file('profile_image')){
