@@ -22,7 +22,7 @@
                 </div>
                 <div class="row mb-1">
                     <strong class="col-sm-3">Role</strong>
-                    <span class="col-sm-9">: {{ $user->is_admin ? 'Administrator' : 'User' }}</span>
+                    <span class="col-sm-9">: {{ $user->is_admin ? 'Admin' : 'User' }}</span>
                 </div>
                 <div class="row mb-1">
                     <strong class="col-sm-3">Last login</strong>

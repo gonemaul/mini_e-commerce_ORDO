@@ -24,18 +24,18 @@
     <div class="content-wrapper">
         <div class="p-4" style="background-color: #191c24;border-radius:0.5rem">
             <div class="title mb-5">
-                <h4>Add Product</h4>
+                <h4>Create Product</h4>
             </div>
             <form action="{{ Route('products.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 @include('products.partials.item_form')
                 <button type="submit" class=" btn btn-primary mt-3" id="submit">Add Product</button>
-                <a class="btn btn-secondary mt-3" onclick="cekImage()" id="cancel-submit">Cancel</a>
+                <a class="btn btn-secondary mt-3" onclick="cancel()" id="cancel-submit">Cancel</a>
             </form>
             <form action="" enctype="multipart/form-data" id="form_image">
                 <div class="file-uploader">
                     <div class="uploader-header">
-                      <h2 class="uploader-title">File Uploader</h2>
+                      <h2 class="uploader-title">Image Uploader</h2>
                       <h4 class="file-completed-status"></h4>
                     </div>
                     <ul class="file-list"></ul>
@@ -44,7 +44,7 @@
                         <span class="file-instruction">Drag files here or</span>
                         <span class="file-browse-button">browse</span>
                       </h2>
-                      <input class="file-browse-input" name="files[]" type="file" multiple hidden>
+                      <input class="file-browse-input" name="files[]" accept="image/*" type="file" multiple hidden>
                     </div>
                 </div>
             </form>

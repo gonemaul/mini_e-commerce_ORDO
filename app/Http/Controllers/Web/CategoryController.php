@@ -37,7 +37,7 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => ['required','string','max:250','regex:/^[\pL\s]+$/u'],
-        ]);
+        ], ['name.regex' => 'Input hanya boleh mengandung huruf dan spasi...']);
 
         Category::create([
             'name' => Str::title($request->name)
@@ -70,9 +70,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $validatedData = $request->validate([
-            'name' => ['required','string','max:10','regex:/^[\pL\s]+$/u'],
-        ]);
+        $request->validate([
+            'name' => ['required','string','max:250','regex:/^[\pL\s]+$/u'],
+        ], ['name.regex' => 'Input hanya boleh mengandung huruf dan spasi...']);
 
         $category->update([
             'name' => Str::title($request->name)

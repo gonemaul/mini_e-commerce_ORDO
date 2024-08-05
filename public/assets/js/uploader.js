@@ -122,7 +122,6 @@ const handleSelectedFiles = ([...files]) => {
                 deleteFile.setAttribute('image_path', response.path)
                 images.push(response.path);
                 path_image.setAttribute('value', JSON.stringify(images));
-                // localStorage.setItem('images', JSON.stringify(images));
                 updateFileStatus(response.status, response.color);
                 fileCompletedStatus.innerText = `${completedFiles} / ${totalFiles} files completed`;
             }
@@ -174,7 +173,7 @@ const handleDeleteFiles = (path) => {
             var response = JSON.parse(xhr.responseText);
             console.log(response.message);
         } else {
-            console.log("Failed to upload");
+            console.log("Failed to delete");
         }
     }
     // Opening connection to the server API endpoint "api.php" and sending the form data
@@ -192,12 +191,12 @@ function removeFiles(){
     }
 }
 
-function cekImage(){
+function cancel(){
     if(images.length === 0) {
         window.location.href='/products'
     }
-    window.location.href='/products'
     removeFiles();
+    window.location.href='/products'
 }
 // cekStorage()
 // function cekStorage(){
@@ -255,4 +254,11 @@ fileUploadBox.addEventListener("dragleave", (e) => {
 fileBrowseInput.addEventListener("change", (e) => handleSelectedFiles(e.target.files));
 // fileBrowseInput.addEventListener("change", (e) => handleSelectedFiles(e.target.files));
 fileBrowseButton.addEventListener("click", () => fileBrowseInput.click());
-submit.addEventListener('click',() => isFormDirty=false);
+submit.addEventListener('click',function (){
+    if(imagesToRemove.length !== 0){
+        imagesToRemove.forEach((image, index) => {
+            handleDeleteFiles(image);
+        })
+    }
+    isFormDirty = false
+});

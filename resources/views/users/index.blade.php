@@ -30,7 +30,7 @@
                     <td> {{ $item->email }} </td>
                     <td class="text-center">
                         @if ($item->is_admin)
-                            <label class="badge {{ auth()->user()->id == $item->id ? 'badge-primary' : 'badge-outline-primary'}}">Administrator</label>
+                            <label class="badge {{ auth()->user()->id == $item->id ? 'badge-primary' : 'badge-outline-primary'}}">Admin</label>
                         @else
                             <label class="badge badge-outline-warning">User</label>
                         @endif

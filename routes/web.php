@@ -1,14 +1,13 @@
 <?php
 
-use App\Http\Controllers\ImageController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\ImageController;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\OrderController;
 use App\Http\Controllers\Web\ProductController;
 use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\AuthenticationController;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::middleware('guest')->group(function(){
     Route::get('login', [AuthenticationController::class, 'login'])->name('login');

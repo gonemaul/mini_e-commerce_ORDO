@@ -22,10 +22,10 @@ class UserController extends Controller
         $user = User::findOrFail($request->id);
 
         $validatedData = $request->validate([
-            'name' => ['required','string','max:255'],
+            'name' => ['required','string','max:255','regex:/^[\pL\s]+$/u'],
             'email' => ['required','string','email','max:255'],
             'profile_image' => ['image','max:1024','mimes:jpeg,png,jpg,gif,svg',],
-        ]);
+        ],['name.regex' => 'Input hanya boleh mengandung huruf dan spasi...']);
 
         if ($request->file('profile_image')){
             if($user->profile_image){
@@ -69,6 +69,9 @@ class UserController extends Controller
             return back()->with(["error" => "Password does not match with the your password."]);
         }
         else{
+            if($user->profile_image){
+                Storage::delete($user->profile_image);
+            }
             $user->delete();
             auth()->logout();
             return redirect()->route('login')->with(['success' => 'Your account has been deleted successfully!']);

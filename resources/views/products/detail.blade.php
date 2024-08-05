@@ -17,14 +17,12 @@
         object-fit: cover;
     }
     .images img{
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        height: 250px;
     }
 </style>
 
     <div class="content-wrapper">
-        <div class="p-4 row" style="background-color: #191c24;border-radius:0.5rem">
+        <div class="p-5 row" style="background-color: #191c24;border-radius:0.5rem">
             <div class="col-md-6 col-xl-4 stretch-card">
                 <div class="card">
                   <div class="card-body p-0">
@@ -42,24 +40,26 @@
                   </div>
                 </div>
             </div>
-            <div class="col-md-6 p-3 pt-4 pl-4">
-                <h3 class="mb-1">{{ $product->name }}</h3>
-                <div class="row mb-3">
-                    <span class="col-sm-9"><label class="badge badge-outline-success">{{ $product->category->name }}</label></span>
-                </div>
+            <div class="col-md-6 ml-3 pl-4">
+                <h3 class="mb-2">{{ $product->name }}</h3>
                 <div class="row mb-1">
                     <h4 class="col-sm-9">Rp. {{ number_format($product->price, 0, ',', '.') }}</h4>
                 </div>
-                <div class="row mb-1">
-                    <span class="col-sm-9 text-muted" style="font-size: 15px">Tersisa {{ $product->stock }}</span>
+                <div class="row mb-4">
+                    <span class="col-sm-9"><label class="badge badge-outline-success">{{ $product->category->name }}</label></span>
                 </div>
-                <div class="row mb-1">
-                    <span class="col-sm-9 text-muted" style="font-size: 15px">Terjual {{ $product->terjual }}</span>
+                <div class="row mb-1 d-flex px-3 text-muted">
+                    <span class="mr-2" style="font-size: 15px">Tersisa {{ $product->stock }}</span>
+                    |
+                    <span class="ml-2" style="font-size: 15px">Terjual {{ $product->terjual }}</span>
                 </div>
-                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-outline-warning mt-2 mr-2">Edit</a>
+                <div class="row mb-4 px-3">
+                    <span class="text-muted" style="font-size: 15px">Added {{ $product->created_at->diffForHumans() }}</span>
+                </div>
+                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-outline-warning mt-2 mr-2"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
                 <a href="{{ route('products.index') }}" class="btn btn-outline-primary mt-2">Back</a>
             </div>
-            <div class="col-md-6 p-3 pt-4 pl-4">
+            <div class="col-md-12 p-3 pt-4 pl-4">
                 <h4 class="text-bold">Description</h4>
                 <article>{!! $product->description !!}</article>
             </div>

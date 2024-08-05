@@ -39,14 +39,13 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // return dd($request);
         $request->validate([
             'name' => ['required','string','max:250','regex:/^[\pL\s]+$/u'],
             'category' => ['required'],
             'price' => ['required','numeric'],
             'stock' => ['required','numeric'],
             'description' => ['required','max:300'],
-        ]);
+        ],['name.regex' => 'Input hanya boleh mengandung huruf dan spasi...']);
 
         $product = new Product();
         $product->create([
@@ -98,16 +97,14 @@ class ProductController extends Controller
     {
         // return dd($request);
 
-        $validatedData = $request->validate([
+        $request->validate([
             'name' => ['required','max:250','string','regex:/^[\pL\s]+$/u'],
             'category' => ['required'],
             'price' => ['required', 'numeric'],
             'stock' => ['required', 'numeric'],
             'description' => ['required','max:300'],
-            'images' => ['array'],
-            'images.*' => ['image','max:1024','mimes:jpeg,png,jpg,gif,svg',],
             'removed' => ['array']
-        ]);
+        ],['name.regex' => 'Input hanya boleh mengandung huruf dan spasi...']);
         $product->update([
             'name' => Str::title($request->name),
             'category_id' => $request->category,

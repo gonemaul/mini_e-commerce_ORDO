@@ -93,7 +93,7 @@
                             </div>
                         @enderror
                     </div>
-                    <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary mr-3">Back to Dashboard</a>
+                    <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary mr-2">Back to Dashboard</a>
                     <button class="btn btn-outline-danger" onclick="return confirm('What are you sure? ..')" type="submit">Delete</button>
                 </form>
             </div>
