@@ -50,6 +50,11 @@
                             </span>
                             </div>
                         </div>
+                        @error('profile_image')
+                            <div class="invalid-feedback">
+                            {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label for="name">Name</label>

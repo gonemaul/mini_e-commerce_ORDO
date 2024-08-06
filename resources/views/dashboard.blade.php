@@ -159,7 +159,7 @@
                                                 <p class="text-muted mb-0">{{ $product->category->name }}</p>
                                             </div>
                                             <div class="mr-auto text-sm-right pt-2 pt-sm-0 align-content-end">
-                                                <p class="text-muted mb-0">Rilis {{ $product->created_at->diffForHumans() }}</p>
+                                                <p class="text-muted mb-0">Added {{ $product->created_at->diffForHumans() }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -269,8 +269,8 @@
                                                     <p class="text-muted mb-0">Rp. {{ number_format($order->total, 0, ',', '.') }}</p>
                                                 </div>
                                                 <div class="mr-auto text-sm-right pt-2 pt-sm-0 align-content-end">
-                                                    <p class="text-muted">Status {{ $order->status }}</p>
-                                                    <p class="text-muted mb-0">Order {{ $order->created_at }}</p>
+                                                    <p class="text-muted">{{ $order->status }}</p>
+                                                    <p class="text-muted mb-0"># {{ $order->order_id }}</p>
                                                 </div>
                                             </div>
                                         </div>

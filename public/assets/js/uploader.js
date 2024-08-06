@@ -255,10 +255,10 @@ fileBrowseInput.addEventListener("change", (e) => handleSelectedFiles(e.target.f
 // fileBrowseInput.addEventListener("change", (e) => handleSelectedFiles(e.target.files));
 fileBrowseButton.addEventListener("click", () => fileBrowseInput.click());
 submit.addEventListener('click',function (){
+    isFormDirty = false
     if(imagesToRemove.length !== 0){
         imagesToRemove.forEach((image, index) => {
             handleDeleteFiles(image);
         })
     }
-    isFormDirty = false
 });

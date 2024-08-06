@@ -25,15 +25,25 @@
                         <td class="text-center">{{ $item->user->name }}</td>
                         <td class="text-center"> Rp. {{ number_format($item->total, 0, ',', '.') }}</td>
                         <td class="text-center">
-                            @if ($item->status == 'pending')
-                                <label class="badge badge-outline-warning"><i class="fa-solid fa-hourglass-end mr-1"></i> Pending</label>
-                            @elseif ($item->status == 'in-progress')
-                                <label class="badge badge-outline-primary"><i class="fa-solid fa-truck mr-1"></i> In Proccess</label>
-                            @elseif ($item->status == 'success')
-                                <label class="badge badge-outline-success"><i class="fa-solid fa-circle-check mr-1"></i> Success</label>
-                            @elseif ($item->status == 'cancelled')
-                                <label class="badge badge-outline-danger"><i class="fa-solid fa-circle-xmark mr-1"></i> Cancelled</label>
-                            @endif
+                            @switch($item->status)
+                                @case('Success')
+                                    <label class="badge badge-outline-success">{{ $item->status }}</label>
+                                    @break
+                                @case('Pending')
+                                    <label class="badge badge-outline-warning">{{ $item->status }}</label>
+                                    @break
+                                @case('Failed')
+                                    <label class="badge badge-outline-danger">{{ $item->status }}</label>
+                                    @break
+                                @case('Expired')
+                                    <label class="badge badge-outline-info">{{ $item->status }}</label>
+                                    @break
+                                @case('Canceled')
+                                    <label class="badge badge-outline-danger">{{ $item->status }}</label>
+                                    @break
+                                @default
+                                    <label class="badge badge-outline-secondary">{{ $item->status }}</label>
+                            @endswitch
                         </td>
                         <td class="text-center">
                             <a href="{{ route('orders.detail', $item->id) }}" class="btn btn-outline-info"><i class="fa-solid fa-eye"></i> Detail</a>

@@ -10,9 +10,13 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
+        'order_id',
         'user_id',
+        'phone',
+        'address',
         'status',
-        'total'
+        'total',
+        'snap_token'
     ];
 
     public function user(){

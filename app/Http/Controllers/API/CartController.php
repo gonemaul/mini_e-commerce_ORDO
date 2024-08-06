@@ -37,8 +37,54 @@ class CartController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Product add to cart successfully',
-                'data' => $cartItem
+                'data' => [
+                    'user' => $user->name,
+                    'name' => $cartItem->product->name,
+                    'quantity' => $cartItem->quantity,
+                    'price' => $cartItem->product->price,
+                    'amount' => $cartItem->product->price * $cartItem->quantity
+                ]
 
+            ],200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'data' => null,
+               'meta' => null,
+               'status' => 'error',
+               'message' => 'An error occurred',
+                'errors' => ['exception' => $e->getMessage()]
+            ], 500);
+        }
+    }
+
+    public function show(Request $request){
+        try{
+            $user = $request->user();
+            $cartItems = CartItem::where('user_id', $user->id)->with('product')->get();
+            $totalPrice = $cartItems->sum(function ($item) {
+                return $item->quantity * $item->product->price;
+            });
+
+            if($cartItems->isEmpty()){
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Cart is empty',
+                ],200);
+            }
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Cart items retrieved successfully',
+                'data' => [
+                    'cartItems' => $cartItems->map(function ($cartItem) {
+                        return [
+                            'product_name' => $cartItem->product->name,
+                            'category' => $cartItem->product->category->name,
+                            'quantity' => $cartItem->quantity,
+                            'price' => $cartItem->product->price,
+                        ];
+                    }),
+                    'totalPrice' => $totalPrice
+                ],
             ],200);
         } catch (\Exception $e) {
             return response()->json([

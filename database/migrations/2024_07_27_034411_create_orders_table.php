@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('status')->default('pending');
-            $table->decimal('total', 10, 2)->default(0);
+            $table->string('phone');
+            $table->string('address');
+            $table->string('status')->default('Pending');
+            $table->decimal('total', 10, 2);
+            $table->string('snap_token')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

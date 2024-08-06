@@ -35,6 +35,8 @@ Route::middleware('auth')->group(function(){
         'products' => ProductController::class,
     ]);
 
-    Route::get('orders', [OrderController::class, 'index'])->name('orders.list');
-    Route::get('orders/{id}', [OrderController::class, 'detail'])->name('orders.detail');
+    Route::prefix('orders')->group(function() {
+        Route::get('/', [OrderController::class, 'index'])->name('orders.list');
+        Route::get('{id}', [OrderController::class, 'detail'])->name('orders.detail');
+    });
 });

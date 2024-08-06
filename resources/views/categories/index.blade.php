@@ -15,6 +15,13 @@
         var message = element.getAttribute('message');
         createToast('success', message);
     </script>
+@elseif(session()->has('error'))
+    <input type="hidden" id="myElement" message="{{ session('error') }}">
+    <script>
+        var element = document.getElementById('myElement');
+        var message = element.getAttribute('message');
+        createToast('error', message);
+    </script>
 @endif
 
 <div class="content-wrapper">

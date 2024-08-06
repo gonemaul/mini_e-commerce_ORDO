@@ -56,11 +56,14 @@ class AuthenticationController extends Controller
                 'status' => 'success',
                 'message' => 'Login successfully',
                 'data' => [
-                    'user' => $user,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'profile_image' => $user->profile_image,
+                    'last_login' => $user->last_login,
+                    'created_at' => $user->created_at,
                     'token' => [
                         'access_token' => $token,
                         'token_type' => 'Bearer',
-                        // 'expires_in' => $token->expires_at->diffInSeconds(now())
                     ]
                 ]
             ], 200);
