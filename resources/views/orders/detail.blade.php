@@ -73,7 +73,7 @@
                         <div class="info-right pt-3">
                             <span class="text-muted">{{ $item->quantity }} x</span>
                             <div class="text-end">
-                                Rp. {{ number_format($item->price * $item->quantity) }}
+                                Rp. {{ number_format($item->price) }}
                             </div>
                         </div>
                     </div>

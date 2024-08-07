@@ -65,6 +65,7 @@ class OrderController extends Controller
                 }
                 $order_item = new OrderItem([
                     'order_id' => $order->id,
+                    'product_id' => $item->product->id,
                     'product_name' => $item->product->name,
                     'category_name' => $item->product->category->name,
                     'quantity' => $item->quantity,

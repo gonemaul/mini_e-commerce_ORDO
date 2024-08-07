@@ -183,7 +183,7 @@
                   <div class="row">
                       <div class="col-12">
                           <div class="preview-list">
-                                @forelse ($products->sortByDesc('terjual') as $index => $product)
+                                @forelse ($products->sortByDesc('sold') as $index => $product)
                                     @if ($index < 5)
                                         <div class="preview-item border-bottom">
                                         <div class="preview-thumbnail">

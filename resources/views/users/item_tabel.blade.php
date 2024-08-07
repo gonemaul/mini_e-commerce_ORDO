@@ -15,9 +15,9 @@
         <tr>
           <td class="text-center">
               @if ($item->profile_image)
-                  <img src="{{ asset('storage/' . $item->profile_image)}}"> </td>
+                  <img class="rounded-circle" style="width: 50px;height:50px" src="{{ asset('storage/' . $item->profile_image)}}"> </td>
               @else
-                  <img src="https://ui-avatars.com/api/?name={{ $item->name }}&color=7F9CF5&background=EBF4FF"> </td>
+                  <img class="rounded-circle" style="width: 50px;height:50px" src="https://ui-avatars.com/api/?name={{ $item->name }}&color=7F9CF5&background=EBF4FF"> </td>
               @endif
           <td> {{ $item->name }} </td>
           <td> {{ $item->email }} </td>
