@@ -148,7 +148,7 @@
                                         <div class="preview-item border-bottom">
                                         <div class="preview-thumbnail">
                                             @if($product->productImage->isNotEmpty())
-                                                <img class="rounded" style="width: 50px; height: 50px" src="{{ asset('storage/' . $product->productImage->first()->image) }}">
+                                                <img class="rounded" style="width: 50px; height: 50px" src="{{ asset('storage/' . $product->productImage->first()->path) }}">
                                             @else
                                                 <img class="rounded" style="width: 50px; height: 50px" src="{{ asset('assets/images/no-image.png') }}">
                                             @endif
@@ -188,7 +188,7 @@
                                         <div class="preview-item border-bottom">
                                         <div class="preview-thumbnail">
                                             @if($product->productImage->isNotEmpty())
-                                                <img class="rounded" style="width: 50px; height: 50px" src="{{ asset('storage/' . $product->productImage->first()->image) }}">
+                                                <img class="rounded" style="width: 50px; height: 50px" src="{{ asset('storage/' . $product->productImage->first()->path) }}">
                                             @else
                                                 <img class="rounded" style="width: 50px; height: 50px" src="{{ asset('assets/images/no-image.png') }}">
                                             @endif
@@ -199,7 +199,7 @@
                                                 <p class="text-muted mb-0">{{ $product->category->name }}</p>
                                             </div>
                                             <div class="mr-auto text-sm-right pt-2 pt-sm-0 align-content-end">
-                                                <p class="text-muted mb-0">Terjual {{ $product->terjual }}</p>
+                                                <p class="text-muted mb-0">Sold {{ $product->sold }}</p>
                                             </div>
                                         </div>
                                     </div>

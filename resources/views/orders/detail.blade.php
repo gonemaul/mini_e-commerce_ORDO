@@ -38,22 +38,20 @@
         <div class="info p-3 mb-3 d-flex justify-content-between">
             <div class="user d-flex">
                 <div class="left mr-3">
-                    @if ($order->user->profile_image)
-                        <img src="{{ asset('storage/' . $order->user->profile_image)}}"> </td>
-                    @else
-                        <img class="rounded-circle" src="https://ui-avatars.com/api/?name={{ $order->user->name }}&color=7F9CF5&background=EBF4FF"> </td>
-                    @endif
+                    <img class="rounded-circle" src="https://ui-avatars.com/api/?name={{ $order->name }}&color=7F9CF5&background=EBF4FF"> </td>
                 </div>
                 <div class="right">
                     <p class="m-0">
-                        <span>{{ $order->user->name }}</span>
-                    </p>
-                    <p class="m-0">
-                        <span>{{ $order->user->email }}</span>
+                        <span>{{ $order->name }}</span>
                     </p>
                     <p class="m-0">
                         <span>{{ $order->phone }}</span> |
+                        <span>{{ $order->email }}</span>
+                    </p>
+                    <p class="m-0">
                         <span>{{ $order->address }}</span>
+                        <span>, {{ $order->city }}</span>
+                        <span>{{ $order->postal_code }}</span>
                     </p>
                 </div>
             </div>
@@ -67,16 +65,9 @@
                 <div class="row mb-3 p-3 m-0" style="border-radius:0.5rem;border: 1px solid #8c8c8c;color: ">
                     <div class="col-md-12 d-flex justify-content-between" style="width: 100%">
                         <div class="detail-left d-flex">
-                            <div class="product-image d-flex justify-content-between">
-                                @if($item->product->productImage->isNotEmpty())
-                                    <img class="rounded" style="width: 80px; height: 80px;border: 1px solid #8c8c8c;" src="{{ asset('storage/' . $item->product->productImage->first()->image) }}">
-                                @else
-                                    <img class="rounded" style="width: 80px; height: 80px:border: 1px solid #8c8c8c;" src="{{ asset('assets/images/no-image.png') }}">
-                                @endif
-                            </div>
                             <div class="name ml-4">
-                                <h4>{{ $item->product->name }}</h4>
-                                <label for="" class="badge badge-outline-primary">{{ $item->product->category->name }}</label>
+                                <h4>{{ $item->product_name }}</h4>
+                                <label for="" class="badge badge-outline-primary">{{ $item->category_name }}</label>
                             </div>
                         </div>
                         <div class="info-right pt-3">

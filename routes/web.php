@@ -27,9 +27,12 @@ Route::middleware('auth')->group(function(){
     Route::get('users', [UserController::class, 'list_users'])->name('users.list');
     Route::get('user/{user}', [UserController::class, 'user_detail'])->name('users.detail');
     Route::post('delete-account', [UserController::class, 'delete_account'])->name('delete-account');
+    Route::post('users/load', [UserController::class, 'load_data']);
 
-    Route::post('/products/upload-image', [ImageController::class, 'uploadImage'])->name('upload_image');
-    Route::post('/products/delete-image', [ImageController::class, 'deleteImage'])->name('upload_image');
+    Route::post('products/upload-image', [ImageController::class, 'uploadImage'])->name('upload_image');
+    Route::post('products/delete-image', [ImageController::class, 'deleteImage'])->name('upload_image');
+    Route::post('products/load', [ProductController::class, 'load_data']);
+    Route::post('categories/load', [CategoryController::class, 'load_data']);
     Route::resources([
         'categories'=> CategoryController::class,
         'products' => ProductController::class,
@@ -38,5 +41,6 @@ Route::middleware('auth')->group(function(){
     Route::prefix('orders')->group(function() {
         Route::get('/', [OrderController::class, 'index'])->name('orders.list');
         Route::get('{id}', [OrderController::class, 'detail'])->name('orders.detail');
+        Route::post('/load', [OrderController::class, 'load_data']);
     });
 });

@@ -32,7 +32,7 @@
                             @foreach ($product->productImage as $image)
                                 <li class="file-item">
                                     <div class="file-extension">
-                                        <img src="{{ asset('storage/' . $image->image) }}" class="file-preview" id="image_{{ $loop->index }}">
+                                        <img src="{{ asset('storage/' . $image->path) }}" class="file-preview" id="image_{{ $loop->index }}">
                                     </div>
                                     <div class="file-content-wrapper">
                                     <div class="file-content">

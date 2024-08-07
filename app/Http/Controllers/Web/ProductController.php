@@ -19,6 +19,11 @@ class ProductController extends Controller
     {
         return view('products.index')->with([
             'title' => 'Product',
+        ]);
+    }
+
+    public function load_data(){
+        return view('products.partials.item_tabel')->with([
             'products' => Product::with('category')->paginate(10)
         ]);
     }
@@ -59,8 +64,8 @@ class ProductController extends Controller
         if($request->has('path_image') && $request->input('path_image') !== null) {
             $product_id = $product->orderBy('id', 'desc')->first();
             $images = json_decode($request->path_image, true);
-            foreach ($images as $image) {
-                $product_image = ProductImage::where('image', $image)->first();
+            foreach ($images as $path) {
+                $product_image = ProductImage::where('path', $path)->first();
                 $product_image->update(['product_id' => $product_id->id]);
             }
         }
@@ -115,8 +120,8 @@ class ProductController extends Controller
 
         if($request->has('path_image') && $request->input('path_image') !== null) {
             $images = json_decode($request->path_image, true);
-            foreach ($images as $image) {
-                $product_image = ProductImage::where('image', $image)->first();
+            foreach ($images as $path) {
+                $product_image = ProductImage::where('path', $path)->first();
                 $product_image->update(['product_id' => $product->id]);
             }
         }
@@ -131,7 +136,7 @@ class ProductController extends Controller
     {
         $image = $product->productImage;
         foreach ($image as $img) {
-            Storage::delete($img->image);
+            Storage::delete($img->path);
             $img->delete();
         }
         $product->delete();

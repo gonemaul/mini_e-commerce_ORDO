@@ -29,7 +29,7 @@
                     <div class="owl-carousel owl-theme full-width owl-carousel-dash portfolio-carousel" id="owl-carousel-basic">
                         @forelse ($product->productImage as $img)
                             <div class="item images">
-                                <img src="{{ asset('storage/' . $img->image) }}" alt="">
+                                <img src="{{ asset('storage/' . $img->path) }}" alt="">
                             </div>
                         @empty
                             <div class="item images">

@@ -19,13 +19,13 @@ class ImageController extends Controller
 
         // Simpan path gambar ke database atau lakukan tindakan lain sesuai kebutuhan
         ProductImage::create([
-            'image' => $imagePath,
+            'path' => $imagePath,
         ]);
         return response()->json(['success' => true, 'message' => 'Gambar berhasil diunggah', 'path' => $imagePath, 'status' => 'Complete', 'color' => '#00B125'],200);
     }
 
     public function deleteImage(Request $request){
-        $path = ProductImage::where('image', $request->image)->first();
+        $path = ProductImage::where('path', $request->image)->first();
         $path->delete();
         Storage::delete($request->image);
         return response()->json(['success' => true, 'message' => 'Gambar berhasil dihapus', 'path' => $request->image, 'status' => 'Removed', 'color' => '#515151'],200);

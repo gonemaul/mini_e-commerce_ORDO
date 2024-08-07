@@ -30,11 +30,19 @@ class MidtransController extends Controller
                         $order->update(['status' => 'Pending']);
                     } else {
                         $order->update(['status' => 'Success']);
+                        $order->orderItems->map(function ($item) {
+                            $item->product->decrement('stock', $item->quantity);
+                            $item->product->increment('sold', $item->quantity);
+                        });
                     }
                 }
                 break;
             case 'settlement':
                 $order->update(['status' => 'Success']);
+                $order->orderItems->map(function ($item) {
+                    $item->product->decrement('stock', $item->quantity);
+                    $item->product->increment('sold', $item->quantity);
+                });
                 break;
             case 'pending':
                 $order->update(['status' => 'Pending']);

@@ -26,10 +26,12 @@ class OrderController extends Controller
         $request->validate([
             'phone' => ['required','max:15'],
             'address' => ['required','max:100'],
+            'city' => ['required','max:50'],
+            'postal_code' => ['required','max:50'],
         ]);
 
         $date = Carbon::now()->format('Ymd');
-        $order_id = $date . rand(1000, 9999);
+        $order_id = $date . rand(10000, 99999);
         $user = auth()->user();
         $cartItems = CartItem::where('user_id', $user->id)->with('product')->get();
 
@@ -45,8 +47,12 @@ class OrderController extends Controller
             $order = Order::create([
                 'order_id' => $order_id,
                 'user_id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
                 'phone' => $request->phone,
                 'address' => $request->address,
+                'city' => $request->city,
+                'postal_code' => $request->postal_code,
                 'total' => $total,
             ]);
 
@@ -59,13 +65,11 @@ class OrderController extends Controller
                 }
                 $order_item = new OrderItem([
                     'order_id' => $order->id,
-                    'product_id' => $item->product_id,
+                    'product_name' => $item->product->name,
+                    'category_name' => $item->product->category->name,
                     'quantity' => $item->quantity,
                     'price' => $item->product->price,
                 ]);
-
-                $item->product->decrement('stock', $item->quantity);
-                $item->product->increment('terjual', $item->quantity);
 
                 return $order_item;
             });
@@ -80,9 +84,9 @@ class OrderController extends Controller
                 'item_details' => $cartItems->map(function ($item) {
                         return [
                             'id' => $item->product_id,
+                            'name' => $item->product->name,
                             'price' => intval($item->product->price),
                             'quantity' => $item->quantity,
-                            'name' => $item->product->name,
                         ];
                 }),
                 'customer_details' => [
@@ -135,8 +139,8 @@ class OrderController extends Controller
             $order_history = $history->map(function ($item) {
                 $order_items = $item->orderItems->map(function ($orderItem) {
                     return [
-                        'product_name' => $orderItem->product->name,
-                        'category' => $orderItem->product->category->name,
+                        'product_name' => $orderItem->product_name,
+                        'category' => $orderItem->category_name,
                         'quantity' => $orderItem->quantity,
                         'price' => $orderItem->price,
                     ];

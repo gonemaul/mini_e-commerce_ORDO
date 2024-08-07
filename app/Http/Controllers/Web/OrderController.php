@@ -11,6 +11,11 @@ class OrderController extends Controller
     public function index(){
         return view('orders.index')->with([
             'title' => 'Orders',
+        ]);
+    }
+
+    public function load_data(){
+        return view('orders.item_tabel')->with([
             'orders' => Order::with(['user', 'orderItems'])->paginate(10)
         ]);
     }

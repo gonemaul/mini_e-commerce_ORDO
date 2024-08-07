@@ -17,6 +17,11 @@ class CategoryController extends Controller
     {
         return view('categories.index')->with([
             'title' => 'Category',
+        ]);
+    }
+
+    public function load_data(){
+        return view('categories.partials.item_tabel')->with([
             'category' => Category::with('products')->paginate(10)
         ]);
     }
