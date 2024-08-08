@@ -264,7 +264,7 @@
                                         <div class="preview-item border-bottom">
                                             <div class="preview-item-content d-sm-flex flex-grow">
                                                 <div class="flex-grow">
-                                                    <h6 class="preview-subject">{{ $order->user->name }}</h6>
+                                                    <h6 class="preview-subject">{{ $order->name }}</h6>
                                                     <p class="text-muted mb-2">Total :</p>
                                                     <p class="text-muted mb-0">Rp. {{ number_format($order->total, 0, ',', '.') }}</p>
                                                 </div>

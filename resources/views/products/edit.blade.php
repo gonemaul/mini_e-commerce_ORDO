@@ -41,7 +41,7 @@
                                                 <small class="file-size" style="color:#ffff " id="text_{{ $loop->index }}">Current Image</small>
                                             </div>
                                         </div>
-                                        <label class="remove-image" image_path='{{ $image->image }}' id="{{ $loop->index }}">
+                                        <label class="remove-image" image_path='{{ $image->path }}' id="{{ $loop->index }}">
                                             <i class='bx bxs-trash'></i>
                                         </label>
                                     </div>
