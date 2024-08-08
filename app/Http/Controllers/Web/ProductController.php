@@ -47,8 +47,8 @@ class ProductController extends Controller
         $request->validate([
             'name' => ['required','string','max:250','regex:/^[\pL\s]+$/u'],
             'category' => ['required'],
-            'price' => ['required','numeric'],
-            'stock' => ['required','numeric', 'max:10',],
+            'price' => ['required', 'numeric','max:10000000','min:1'],
+            'stock' => ['required', 'numeric','max:1000','min:1'],
             'description' => ['required','max:300'],
         ],['name.regex' => 'Input hanya boleh mengandung huruf dan spasi...']);
 
@@ -105,8 +105,8 @@ class ProductController extends Controller
         $request->validate([
             'name' => ['required','max:250','string','regex:/^[\pL\s]+$/u'],
             'category' => ['required'],
-            'price' => ['required', 'numeric','max:10000000'],
-            'stock' => ['required', 'numeric','max:1000'],
+            'price' => ['required', 'numeric','max:10000000','min:1'],
+            'stock' => ['required', 'numeric','max:1000','min:1'],
             'description' => ['required','max:300'],
             'removed' => ['array']
         ],['name.regex' => 'Input hanya boleh mengandung huruf dan spasi...']);
