@@ -29,8 +29,11 @@ Route::middleware('auth:sanctum')->group( function(){
     Route::delete('/cart/{product}', [CartController::class, 'remove_from_cart']);
 
     // Order Management
-    Route::post('/orders', [OrderController::class, 'checkout_orders']);
-    Route::get('/orders/history', [OrderController::class, 'order_history']);
+    Route::prefix('orders')->group(function(){
+        Route::post('/', [OrderController::class, 'checkout_orders']);
+        Route::get('history', [OrderController::class, 'order_history']);
+        Route::post('{order_id}/cancel', [OrderController::class, 'cancel_order']);
+    });
 
 });
 // Midtrans

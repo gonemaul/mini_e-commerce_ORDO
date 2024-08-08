@@ -7,6 +7,7 @@ use Midtrans\Config;
 use App\Models\Order;
 use App\Models\CartItem;
 use App\Models\OrderItem;
+use Midtrans\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
@@ -170,6 +171,28 @@ class OrderController extends Controller
                'message' => 'An error occurred',
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
+        }
+    }
+
+    public function cancel_order($order_id){
+        $order = Order::where('order_id', $order_id)->first();
+
+        try {
+            Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+            Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
+
+            $canceled = Transaction::cancel($order_id);
+
+            if ($canceled == 200) {
+                $order->status = 'Canceled';
+                $order->save();
+
+                return response()->json(['message' => 'Order canceled successfully'], 200);
+            } else {
+                return response()->json(['message' => 'Failed to cancel order'], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
 }

@@ -3,7 +3,7 @@
 <table id="tabel" class="display row-border hover">
     <thead>
         <tr>
-        <th class="text-center" style="font-weight:600;"> No </th>
+        <th class="text-center" style="font-weight:600;"> Order ID </th>
         <th class="text-center" style="font-weight:600;"> User </th>
         <th class="text-center" style="font-weight:600;"> Total </th>
         <th class="text-center" style="font-weight:600;"> Status </th>
@@ -13,7 +13,7 @@
     <tbody>
         @foreach ($orders as $item)
             <tr>
-                <td class="text-center">{{ $loop->iteration}}</td>
+                <td class="text-center">#{{ $item->order_id }}</td>
                 <td class="text-center">{{ $item->name }}</td>
                 <td class="text-center"> Rp. {{ number_format($item->total, 0, ',', '.') }}</td>
                 <td class="text-center">
@@ -37,8 +37,13 @@
                             <label class="badge badge-outline-secondary">{{ $item->status }}</label>
                     @endswitch
                 </td>
-                <td class="text-center">
-                    <a href="{{ route('orders.detail', $item->id) }}" class="btn btn-outline-info"><i class="fa-solid fa-eye"></i> Detail</a>
+                <td class="justify-content-center d-flex">
+                    <a href="{{ route('orders.detail', $item->id) }}" class="btn btn-outline-primary mr-1"><i class="fa-solid fa-eye"></i> Detail</a>
+                    <form action="{{ route('orders.cancel', $item->order_id) }}" method="post">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('What are you sure? ..')" style="font-size:1rem"><i class="fa-solid fa-xmark"></i> Cancel</button>
+                    </form>
+                    {{-- <a href="{{ route('orders.cancel', $item->order_id) }}" class="btn btn-outline-danger"><i class="fa-solid fa-xmark"></i> Cancel</a> --}}
                 </td>
             </tr>
         @endforeach
@@ -47,6 +52,12 @@
 <script src="{{ asset('assets/js/datatables.js') }}"></script>
 <script>
     $(document).ready(function(){
-        $('#tabel').DataTable();
+        $('#tabel').DataTable({
+            columnDefs: [{
+			targets: [0,4],
+			orderable: false,
+		    }],
+            "order":[[1, 'asc']],
+        });
     })
 </script>

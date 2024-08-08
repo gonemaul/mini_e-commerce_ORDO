@@ -42,5 +42,6 @@ Route::middleware('auth')->group(function(){
         Route::get('/', [OrderController::class, 'index'])->name('orders.list');
         Route::get('{id}', [OrderController::class, 'detail'])->name('orders.detail');
         Route::post('/load', [OrderController::class, 'load_data']);
-    }); 
+        Route::post('{order_id}/cancel', [OrderController::class, 'cancel_order'])->name('orders.cancel');
+    });
 });
