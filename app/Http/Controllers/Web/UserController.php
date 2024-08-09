@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,7 +15,7 @@ class UserController extends Controller
     public function profile(){
         return view('profile')->with([
             'title' => 'Profile',
-            'user' => auth()->user()
+            'user' => Auth::user()
         ]);
     }
 
@@ -41,7 +42,7 @@ class UserController extends Controller
     }
 
     public function change_password(Request $request){
-        $user = User::findOrFail(auth()->user()->id);
+        $user = User::findOrFail($request->user()->id);
 
         $request->validate([
             'current_password' => 'required',
@@ -64,7 +65,7 @@ class UserController extends Controller
             'password' => 'required'
         ]);
 
-        $user = User::findOrFail(auth()->user()->id);
+        $user = User::findOrFail($request->user()->id);
         if (!(Hash::check($request->get('password'), $user->password))) {
             return back()->with(["error" => "Password does not match with the your password."]);
         }
@@ -73,7 +74,7 @@ class UserController extends Controller
                 Storage::delete($user->profile_image);
             }
             $user->delete();
-            auth()->logout();
+            Auth::logout();
             return redirect()->route('login')->with(['success' => 'Your account has been deleted successfully!']);
         }
     }
@@ -84,9 +85,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function load_data(){$users = User::orderBy('is_admin', 'desc')->paginate(10);
+    public function load_data(){
         return view('users.item_tabel')->with([
-            'users' => User::orderBy('is_admin', 'desc')->paginate(10)
+            'users' => User::orderBy('is_admin', 'desc')->get()
         ]);
     }
 

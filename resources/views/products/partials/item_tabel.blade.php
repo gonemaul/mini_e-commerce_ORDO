@@ -14,7 +14,7 @@
     <tbody>
       @foreach ($products as $item)
         <tr>
-          <td class="text-center"> {{ $products->firstItem() + $loop->index }} </td>
+          <td class="text-center"> {{ $loop->iteration }}</td>
           <td> {{ $item->name }} </td>
           <td class="text-center"> {{ $item->category->name }} </td>
           <td class="text-center">Rp. {{ number_format($item->price, 0, ',', '.') }} </td>

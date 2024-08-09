@@ -22,7 +22,7 @@ class CategoryController extends Controller
 
     public function load_data(){
         return view('categories.partials.item_tabel')->with([
-            'category' => Category::with('products')->paginate(10)
+            'category' => Category::orderBy('created_at', 'desc')->with('products')->get()
         ]);
     }
 

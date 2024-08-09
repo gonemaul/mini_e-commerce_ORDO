@@ -51,7 +51,7 @@
                 <div class="row mb-1 d-flex px-3 text-muted">
                     <span class="mr-2" style="font-size: 15px">Tersisa {{ $product->stock }}</span>
                     |
-                    <span class="ml-2" style="font-size: 15px">Terjual {{ $product->terjual }}</span>
+                    <span class="ml-2" style="font-size: 15px">Terjual {{ $product->sold }}</span>
                 </div>
                 <div class="row mb-4 px-3">
                     <span class="text-muted" style="font-size: 15px">Added {{ $product->created_at->diffForHumans() }}</span>

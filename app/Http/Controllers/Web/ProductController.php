@@ -15,6 +15,11 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function loadData(Request $request){
+        return view('products.partials.item_tabel')->with([
+            'products' => Product::orderBy('created_at', 'desc')->with('category')->get()
+        ]);
+    }
     public function index()
     {
         return view('products.index')->with([
@@ -22,11 +27,6 @@ class ProductController extends Controller
         ]);
     }
 
-    public function load_data(){
-        return view('products.partials.item_tabel')->with([
-            'products' => Product::with('category')->paginate(10)
-        ]);
-    }
 
     /**
      * Show the form for creating a new resource.

@@ -31,7 +31,6 @@ class MidtransController extends Controller
                     } else {
                         $order->update(['status' => 'Success']);
                         $order->orderItems->map(function ($item) {
-                            $item->product->decrement('stock', $item->quantity);
                             $item->product->increment('sold', $item->quantity);
                         });
                     }
@@ -40,7 +39,6 @@ class MidtransController extends Controller
             case 'settlement':
                 $order->update(['status' => 'Success']);
                 $order->orderItems->map(function ($item) {
-                    $item->product->decrement('stock', $item->quantity);
                     $item->product->increment('sold', $item->quantity);
                 });
                 break;
@@ -49,12 +47,21 @@ class MidtransController extends Controller
                 break;
             case 'deny':
                 $order->update(['status' => 'Failed']);
+                $order->orderItems->map(function ($item) {
+                    $item->product->increment('stock', $item->quantity);
+                });
                 break;
             case 'expire':
                 $order->update(['status' => 'Expired']);
+                $order->orderItems->map(function ($item) {
+                    $item->product->increment('stock', $item->quantity);
+                });
                 break;
             case 'cancel':
                 $order->update(['status' => 'Canceled']);
+                $order->orderItems->map(function ($item) {
+                    $item->product->increment('stock', $item->quantity);
+                });
                 break;
             default:
                 $order->update(['status' => 'Unknown']);

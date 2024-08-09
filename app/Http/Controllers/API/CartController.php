@@ -18,6 +18,14 @@ class CartController extends Controller
             $user = $request->user();
             $quantity = $request->quantity;
 
+            if($product->stock < $quantity){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Not enough stock for '. $product->name,
+                    'stock' => $product->stock
+                ],400);
+            }
+
             $cartItem = CartItem::where('user_id',$user->id)
                                         ->where('product_id',$product->id)
                                         ->first();
@@ -107,6 +115,14 @@ class CartController extends Controller
                                         ->where('product_id', $product->id)
                                         ->firstOrFail();
 
+            if($product->stock < $request->quantity){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Not enough stock for '. $product->name,
+                    'stock' => $product->stock
+                ],400);
+            }
+
             $cartItem->update([
                 'quantity' => $request->quantity
             ]);
@@ -114,7 +130,12 @@ class CartController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Product quantity updated successfully',
-                'data' => $cartItem,
+                'data' => [
+                    'name' => $cartItem->product->name,
+                    'quantity' => $cartItem->quantity,
+                    'price' => $cartItem->product->price,
+                    'amount' => $cartItem->product->price * $cartItem->quantity
+                ],
             ],200);
         } catch (\Exception $e){
             return response()->json([
@@ -130,9 +151,9 @@ class CartController extends Controller
     public function remove_from_cart(Product $product,Request $request){
         try{
             $user = $request->user();
-            $cartItem = CartItem::where('user_id',$user->id)
-                                        ->where('product_id',$product->id)
-                                        ->firstOrFail()->delete();
+            CartItem::where('user_id',$user->id)
+                            ->where('product_id',$product->id)
+                            ->firstOrFail()->delete();
 
             return response()->json([
                'status' =>'success',

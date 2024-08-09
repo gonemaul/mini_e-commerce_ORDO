@@ -19,10 +19,10 @@
                 <td class="text-center">
                     @switch($item->status)
                         @case('Success')
-                            <label class="badge badge-outline-success">{{ $item->status }}</label>
+                            <label class="badge badge-outline-success"><i class="fa-regular fa-circle-check mr-2"></i>{{ $item->status }}</label>
                             @break
                         @case('Pending')
-                            <label class="badge badge-outline-warning">{{ $item->status }}</label>
+                            <label class="badge badge-outline-warning"><i class="fa-regular fa-clock mr-2"></i> {{ $item->status }}</label>
                             @break
                         @case('Failed')
                             <label class="badge badge-outline-danger">{{ $item->status }}</label>
@@ -31,7 +31,7 @@
                             <label class="badge badge-outline-info">{{ $item->status }}</label>
                             @break
                         @case('Canceled')
-                            <label class="badge badge-outline-danger">{{ $item->status }}</label>
+                            <label class="badge badge-outline-danger"><i class="fa-solid fa-xmark mr-2"></i>{{ $item->status }}</label>
                             @break
                         @default
                             <label class="badge badge-outline-secondary">{{ $item->status }}</label>
@@ -41,23 +41,30 @@
                     <a href="{{ route('orders.detail', $item->id) }}" class="btn btn-outline-primary mr-1"><i class="fa-solid fa-eye"></i> Detail</a>
                     <form action="{{ route('orders.cancel', $item->order_id) }}" method="post">
                         @csrf
-                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('What are you sure? ..')" style="font-size:1rem"><i class="fa-solid fa-xmark"></i> Cancel</button>
+                        @if($item->status == 'Pending')
+                            <button type="submit" class="btn btn-outline-danger" onclick="return confirm('What are you sure? ..')" style="font-size:1rem"><i class="fa-solid fa-xmark"></i> Cancel</button>
+                        @else
+                            <button type="submit" disabled class="btn btn-outline-danger" onclick="return confirm('What are you sure? ..')" style="font-size:1rem"><i class="fa-solid fa-xmark"></i> Cancel</button>
+                        @endif
                     </form>
-                    {{-- <a href="{{ route('orders.cancel', $item->order_id) }}" class="btn btn-outline-danger"><i class="fa-solid fa-xmark"></i> Cancel</a> --}}
                 </td>
             </tr>
         @endforeach
     </tbody>
 </table>
-<script src="{{ asset('assets/js/datatables.js') }}"></script>
+{{-- <script src="{{ asset('assets/js/datatables.js') }}"></script> --}}
+<script src="{{ asset('assets/vendors/DataTables/datatables.js') }}"></script>
 <script>
     $(document).ready(function(){
         $('#tabel').DataTable({
             columnDefs: [{
-			targets: [0,4],
+			targets: [0,3,4],
 			orderable: false,
 		    }],
-            "order":[[1, 'asc']],
+            "language": {
+			"info": "_START_-_END_ of _TOTAL_ entries",
+			searchPlaceholder: "Search",
+            },
         });
     })
 </script>

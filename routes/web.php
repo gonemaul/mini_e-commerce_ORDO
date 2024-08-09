@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function(){
 
     Route::post('products/upload-image', [ImageController::class, 'uploadImage'])->name('upload_image');
     Route::post('products/delete-image', [ImageController::class, 'deleteImage'])->name('upload_image');
-    Route::post('products/load', [ProductController::class, 'load_data']);
+    Route::post('products/load', [ProductController::class, 'loadData']);
     Route::post('categories/load', [CategoryController::class, 'load_data']);
     Route::resources([
         'categories'=> CategoryController::class,

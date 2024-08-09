@@ -23,7 +23,6 @@ class OrderController extends Controller
     }
 
     public function checkout_orders(Request $request){
-
         $request->validate([
             'phone' => ['required','max:15'],
             'address' => ['required','max:100'],
@@ -33,13 +32,20 @@ class OrderController extends Controller
 
         $date = Carbon::now()->format('Ymd');
         $order_id = $date . rand(10000, 99999);
-        $user = auth()->user();
+        $user = $request->user();
         $cartItems = CartItem::where('user_id', $user->id)->with('product')->get();
 
         if($cartItems->isEmpty()){
             return response()->json(['message' => 'Cart is empty'], 400);
         }
-
+        foreach($cartItems as $item){
+            if($item->product->stock < $item->quantity){
+                return response()->json([
+                    'message' => 'Not enough stock for '. $item->product->name,
+                    'stock' => $item->product->stock
+                ], 400);
+            }
+        }
         try {
             $total = $cartItems->sum(function ($item) {
                 return $item->quantity * $item->product->price;
@@ -58,12 +64,6 @@ class OrderController extends Controller
             ]);
 
             $order_items = $cartItems->map(function ($item) use ($order) {
-                if($item->product->stock < $item->quantity){
-                    return response()->json([
-                        'message' => 'Not enough stock for '. $item->product->name,
-                        'stock' => $item->product->stock
-                    ], 400);
-                }
                 $order_item = new OrderItem([
                     'order_id' => $order->id,
                     'product_id' => $item->product->id,
@@ -72,7 +72,7 @@ class OrderController extends Controller
                     'quantity' => $item->quantity,
                     'price' => $item->product->price,
                 ]);
-
+                $item->product->decrement('stock', $item->quantity);
                 return $order_item;
             });
 
@@ -135,9 +135,9 @@ class OrderController extends Controller
         }
     }
 
-    public function order_history(){
+    public function order_history(Request $request){
         try {
-            $history = Order::where('user_id', auth()->user()->id)->with('orderItems.product')->get();
+            $history = Order::where('user_id', $request->user()->id)->with('orderItems.product')->get();
             $order_history = $history->map(function ($item) {
                 $order_items = $item->orderItems->map(function ($orderItem) {
                     return [
@@ -153,6 +153,7 @@ class OrderController extends Controller
                     'status' => $item->status,
                     'total' => $item->total,
                     'order_items' => $order_items,
+                    'payment_url' => $item->status === 'Pending' ? 'https://app.sandbox.midtrans.com/snap/v2/vtweb/' . $item->snap_token : ''
                 ];
             });
 

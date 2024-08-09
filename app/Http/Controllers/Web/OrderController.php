@@ -18,7 +18,7 @@ class OrderController extends Controller
 
     public function load_data(){
         return view('orders.item_tabel')->with([
-            'orders' => Order::with(['orderItems'])->paginate(10)
+            'orders' => Order::with(['orderItems'])->orderBy('created_at', 'desc')->get()
         ]);
     }
 
@@ -30,9 +30,9 @@ class OrderController extends Controller
     }
 
     public function cancel_order($order_id){
-        $order = Order::where('order_id', $order_id)->first();
 
         try {
+            $order = Order::where('order_id', $order_id)->first();
             Config::$serverKey = env('MIDTRANS_SERVER_KEY');
             Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
 
@@ -42,15 +42,12 @@ class OrderController extends Controller
                 $order->status = 'Canceled';
                 $order->save();
 
-                // return response()->json(['message' => 'Order canceled successfully'], 200);
-                return redirect()->route('orders.list');
+                return redirect()->back()->with(['success' => 'Order canceled successfully']);
             } else {
-                // return response()->json(['message' => 'Failed to cancel order'], 500);
-                return redirect()->route('orders.list');
+                return redirect()->back()->with(['error' => 'Failed to cancel order']);
             }
         } catch (\Exception $e) {
-            return redirect()->route('orders.list');
-            // return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
+            return redirect()->back()->with(['error' => 'Order transaction not found in midtrans']);
         }
     }
 

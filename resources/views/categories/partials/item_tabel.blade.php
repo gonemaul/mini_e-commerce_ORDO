@@ -12,7 +12,7 @@
       <tbody>
           @foreach ($category as $item)
               <tr>
-                  <td class="text-center"> {{ $category->firstItem() + $loop->index }} </td>
+                  <td class="text-center">{{ $loop->iteration }} </td>
                   <td> {{ $item->name }} </td>
                   <td class="text-center"> {{ count($item->products) }} </td>
                   <td class="justify-content-center d-flex">
