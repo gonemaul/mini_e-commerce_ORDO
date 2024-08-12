@@ -17,31 +17,50 @@ Route::middleware('guest')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
+    // Dashboard
     Route::get('/', [DashboardController::class,'index'])->name('dashboard');
-    // User
+
+    // User Authentication
     Route::post('logout', [AuthenticationController::class, 'logout'])->name('logout');
+
+    // User Profile
     Route::get('profile', [UserController::class, 'profile'])->name('profile');
     Route::get('change-password', [UserController::class, 'profile'])->name('change-password');
     Route::post('update-profile', [UserController::class, 'update_profile'])->name('update-profile');
     Route::post('update-password', [UserController::class, 'change_password'])->name('update-password');
-    Route::get('users', [UserController::class, 'list_users'])->name('users.list');
-    Route::get('user/{user}', [UserController::class, 'user_detail'])->name('users.detail');
-    Route::post('delete-account', [UserController::class, 'delete_account'])->name('delete-account');
-    Route::post('users/load', [UserController::class, 'load_data']);
 
-    Route::post('products/upload-image', [ImageController::class, 'uploadImage'])->name('upload_image');
-    Route::post('products/delete-image', [ImageController::class, 'deleteImage'])->name('upload_image');
-    Route::post('products/load', [ProductController::class, 'loadData']);
-    Route::post('categories/load', [CategoryController::class, 'load_data']);
+
+    // Users
+    Route::prefix('users')->group(function(){
+        Route::get('/', [UserController::class, 'list_users'])->name('users.list');
+        Route::get('{user}', [UserController::class, 'user_detail'])->name('users.detail');
+        Route::post('delete-account', [UserController::class, 'delete_account'])->name('delete-account');
+        Route::post('load', [UserController::class, 'load_data'])->name('users.load_data');
+    });
+
+    // Product
+    Route::prefix('products')->group(function(){
+        Route::post('upload-image', [ImageController::class, 'uploadImage'])->name('upload_image');
+        Route::post('delete-image', [ImageController::class, 'deleteImage'])->name('upload_image');
+        Route::post('load', [ProductController::class, 'loadData'])->name('products.load_data');
+    });
+
+    // Category
+    Route::prefix('categories')->group(function(){
+        Route::post('load', [CategoryController::class, 'load_data'])->name('categories.load_data');
+    });
+
+
+    // Order
+    Route::prefix('orders')->group(function() {
+        Route::get('/', [OrderController::class, 'index'])->name('orders.list');
+        Route::post('load', [OrderController::class, 'load_data'])->name('orders.load_data');
+        Route::get('{id}', [OrderController::class, 'detail'])->name('orders.detail');
+        Route::post('{order_id}/cancel', [OrderController::class, 'cancel_order'])->name('orders.cancel');
+    });
+
     Route::resources([
         'categories'=> CategoryController::class,
         'products' => ProductController::class,
     ]);
-
-    Route::prefix('orders')->group(function() {
-        Route::get('/', [OrderController::class, 'index'])->name('orders.list');
-        Route::get('{id}', [OrderController::class, 'detail'])->name('orders.detail');
-        Route::post('/load', [OrderController::class, 'load_data']);
-        Route::post('{order_id}/cancel', [OrderController::class, 'cancel_order'])->name('orders.cancel');
-    });
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -86,9 +87,26 @@ class UserController extends Controller
     }
 
     public function load_data(){
-        return view('users.item_tabel')->with([
-            'users' => User::orderBy('is_admin', 'desc')->get()
-        ]);
+        $users = User::all();
+        return DataTables::of($users)
+        ->addIndexColumn()
+        ->addColumn('profile', function($users){
+            if ($users->profile_image)
+                return '<img class="rounded-circle" style="width: 50px;height:50px" src="'. asset('storage/' . $users->profile_image).' "> </td>';
+            else
+                return '<img class="rounded-circle" style="width: 50px;height:50px" src="https://ui-avatars.com/api/?name='. $users->name .'&color=7F9CF5&background=EBF4FF"> </td>';
+        })
+        ->addColumn('action', function($users){
+            return '<a href="'.route('users.detail', $users->id) .'" class="btn btn-outline-info" style="font-size:1rem"><i class="fa-solid fa-eye"></i>Detail</a>';
+        })
+        ->addColumn('role', function($users){
+            if($users->is_admin)
+                return '<label class="badge '. (Auth::user()->id == $users->id ? 'badge-primary' : 'badge-outline-primary') .'">Admin</label>';
+            else
+                return '<label class="badge badge-outline-warning">User</label>';
+        })
+        ->rawColumns(['action','profile','role'])
+        ->make(true);
     }
 
     public function user_detail(User $user){

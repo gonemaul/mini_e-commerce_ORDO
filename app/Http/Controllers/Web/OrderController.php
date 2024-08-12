@@ -7,6 +7,7 @@ use App\Models\Order;
 use Midtrans\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
 {
@@ -17,9 +18,44 @@ class OrderController extends Controller
     }
 
     public function load_data(){
-        return view('orders.item_tabel')->with([
-            'orders' => Order::with(['orderItems'])->orderBy('created_at', 'desc')->get()
-        ]);
+        $orders = Order::select(['id','order_id','name','total','status']);
+        return DataTables::of($orders)
+        ->addIndexColumn()
+        ->addColumn('status', function($orders){
+            switch($orders->status){
+                case 'Success':
+                    return '<label class="badge badge-outline-success"><i class="fa-regular fa-circle-check mr-2"></i>'. $orders->status .'</label>';
+
+                case 'Pending':
+                    return '<label class="badge badge-outline-warning"><i class="fa-regular fa-clock mr-2"></i> '. $orders->status .'</label>';
+
+                case'Failed';
+                    return '<label class="badge badge-outline-danger">'. $orders->status .'</label>';
+
+                case'Expired';
+                    return '<label class="badge badge-outline-info">'. $orders->status .'</label>';
+
+                case'Canceled';
+                    return '<label class="badge badge-outline-danger"><i class="fa-solid fa-xmark mr-2"></i>'. $orders->status .'</label>';
+
+                default:
+                    return '<label class="badge badge-outline-secondary">'. $orders->status .'</label>';
+            }
+        })
+        ->addColumn('action', function($orders){
+            if($orders->status == "Pending")
+                $btn = '<button type="submit" class="btn btn-outline-danger" onclick="return confirm(\'What are you sure? ..\');" style="font-size:1rem"><i class="fa-solid fa-xmark"></i> Cancel</button>';
+            else
+                $btn = '<button type="submit" disabled class="btn btn-outline-danger" onclick="return confirm("What are you sure? ..")" style="font-size:1rem"><i class="fa-solid fa-xmark"></i> Cancel</button>';
+
+            return '<a href="'. route('orders.detail', $orders->id) .'" class="btn btn-outline-primary mr-1"><i class="fa-solid fa-eye"></i> Detail</a>
+                    <form action="'. route('orders.cancel', $orders->order_id) .'" method="post">
+                        '.csrf_field().'
+                        '.$btn.
+                        '</form>';
+        })
+        ->rawColumns(['status','action'])
+        ->make(true);
     }
 
     public function detail($id){

@@ -9,16 +9,30 @@ use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\Facades\DataTables;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function loadData(Request $request){
-        return view('products.partials.item_tabel')->with([
-            'products' => Product::orderBy('created_at', 'desc')->with('category')->get()
-        ]);
+    public function loadData(){
+        $products = Product::with('category')->select(['id','category_id','name','price','stock']);
+        return DataTables::of($products)
+        ->addIndexColumn()
+        ->addColumn('category',function($products){
+            return $products->category->name;
+        })
+        ->addColumn('action', function($products){
+            return '<a href="'.route('products.show', $products->id) .'" class="btn btn-outline-primary" style="margin-right: 0.5rem;font-size:1rem"><i class="fa-solid fa-eye"></i> Detail</a>
+                    <a href="'.route('products.edit', $products->id) .'" class="btn btn-outline-warning" style="margin-right: 0.5rem;font-size:1rem"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+                    <form action="'. route('products.destroy', $products->id) .'" method="post">
+                    '.method_field('DELETE').'
+                    '.csrf_field().'
+                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm(\'What are you sure? ..\');" style="font-size:1rem"><i class="fa-solid fa-trash"></i> Delete</button></form>';
+        })
+        ->rawColumns(['action'])
+        ->make(true);
     }
     public function index()
     {

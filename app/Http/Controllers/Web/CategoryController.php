@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Yajra\DataTables\Facades\DataTables;
 
 class CategoryController extends Controller
 {
@@ -21,9 +22,21 @@ class CategoryController extends Controller
     }
 
     public function load_data(){
-        return view('categories.partials.item_tabel')->with([
-            'category' => Category::orderBy('created_at', 'desc')->with('products')->get()
-        ]);
+        $categories = Category::select(['id','name']);
+        return DataTables::of($categories)
+        ->addIndexColumn()
+        ->addColumn('count_product', function($categories){
+            return count($categories->products);
+        })
+        ->addColumn('action', function($categories){
+            return '<a href="'. route('categories.edit', $categories->id) .'" class="btn btn-outline-warning" style="margin-right: 0.5rem;font-size:1rem"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+                      <form action="'.route('categories.destroy', $categories->id) .'" method="post">
+                          '.method_field('DELETE').'
+                          '.csrf_field().'
+                          <button type="submit" class="btn btn-outline-danger" onclick="return confirm(\'What are you sure? ..\');" style="font-size:1rem"><i class="fa-solid fa-trash"></i> Delete</button></form>';
+        })
+        ->rawColumns(['action'])
+        ->make(true);
     }
 
     /**
