@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Web;
 use Midtrans\Config;
 use App\Models\Order;
 use Midtrans\Transaction;
+use App\Exports\OrderExport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
@@ -21,6 +24,9 @@ class OrderController extends Controller
         $orders = Order::select(['id','order_id','name','total','status']);
         return DataTables::of($orders)
         ->addIndexColumn()
+        ->addColumn('total',function($orders){
+            return 'Rp. '.number_format($orders->total, 0, ',', '.');
+        })
         ->addColumn('status', function($orders){
             switch($orders->status){
                 case 'Success':
@@ -66,9 +72,8 @@ class OrderController extends Controller
     }
 
     public function cancel_order($order_id){
-
+        $order = Order::where('order_id', $order_id)->first();
         try {
-            $order = Order::where('order_id', $order_id)->first();
             Config::$serverKey = env('MIDTRANS_SERVER_KEY');
             Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
 
@@ -83,8 +88,14 @@ class OrderController extends Controller
                 return redirect()->back()->with(['error' => 'Failed to cancel order']);
             }
         } catch (\Exception $e) {
-            return redirect()->back()->with(['error' => 'Order transaction not found in midtrans']);
+            $order->status = 'Canceled';
+            $order->save();
+            return redirect()->back()->with(['success' => 'Order canceled successfully']);
         }
     }
 
+    public function export(){
+        $name = 'Orders_' . Carbon::now()->format('Ymd') . rand(10,99) . '.xlsx';
+        return Excel::download(new OrderExport(), $name);
+    }
 }

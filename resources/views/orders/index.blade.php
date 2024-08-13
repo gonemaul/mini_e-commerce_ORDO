@@ -29,6 +29,7 @@
     <div class="p-4" style="background-color: #191c24;border-radius:0.5rem">
         <div class="d-flex justify-content-between mb-3">
             <h3 class="my-auto">Orders List</h3>
+            <a href="{{ route('orders.export') }}" class="btn btn-outline-warning" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-up"></i>Export</a>
         </div>
         <div class="table-responsive">
             <table id="tabel" class="display row-border hover">

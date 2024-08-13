@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Imports\ProductImport;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use App\Exports\ProductExport;
+use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -20,6 +24,9 @@ class ProductController extends Controller
         $products = Product::with('category')->select(['id','category_id','name','price','stock']);
         return DataTables::of($products)
         ->addIndexColumn()
+        ->addColumn('price',function($products){
+            return 'Rp. '.number_format($products->price, 0, ',', '.');
+        })
         ->addColumn('category',function($products){
             return $products->category->name;
         })
@@ -40,8 +47,6 @@ class ProductController extends Controller
             'title' => 'Product',
         ]);
     }
-
-
     /**
      * Show the form for creating a new resource.
      */
@@ -156,5 +161,32 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
+    }
+
+    public function templates()
+    {
+        $path = '/template_import/product.xlsx';
+        return Storage::download($path, 'Template_Import_Product.xlsx');
+    }
+
+    public function import(Request $request){
+        $request->validate([
+            'file_up' => ['required','mimes:xlsx,xls']
+        ]);
+
+        $path = $request->file('file_up')->getRealPath();
+        $import = new ProductImport();
+        $import->import($path);
+        // if($import->failures()){
+        //     // return dd($import->failures());
+        //     return redirect()->back()->with(['failures' => $import->failures()]);
+        // }
+        // else{
+        //     return redirect()->back()->with('success', 'Data berhasil diimport.');
+        // }
+    }
+    public function export(){
+        $name = 'Product_' . Carbon::now()->format('Ymd') . rand(10,99) . '.xlsx';
+        return Excel::download(new ProductExport(), $name);
     }
 }

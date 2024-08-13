@@ -6,8 +6,15 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use App\Exports\CategoryExport;
+use App\Imports\CategoryImport;
+use App\Exports\CategoryTemplate;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class CategoryController extends Controller
 {
@@ -113,5 +120,32 @@ class CategoryController extends Controller
             $category->delete();
             return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
         }
+    }
+
+    public function templates(){
+        $path = '/template_import/category.xlsx';
+        return Storage::download($path, 'Template_Import_Category.xlsx');
+    }
+
+    public function import(Request $request){
+        $request->validate([
+            'file_up' => ['required','mimes:xlsx,xls']
+        ]);
+
+        $path = $request->file('file_up')->getRealPath();
+        $import = new CategoryImport();
+        $import->import($path);
+        if($import->failures()){
+            // return dd($import->failures());
+            return redirect()->back()->with(['failures' => $import->failures()]);
+        }
+        else{
+            return redirect()->back()->with('success', 'Data berhasil diimport.');
+        }
+    }
+
+    public function export(){
+        $name = 'Category_' . Carbon::now()->format('Ymd') . rand(10,99) . '.xlsx';
+        return Excel::download(new CategoryExport(), $name);
     }
 }

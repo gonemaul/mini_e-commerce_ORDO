@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function(){
     // Users
     Route::prefix('users')->group(function(){
         Route::get('/', [UserController::class, 'list_users'])->name('users.list');
+        Route::get('export', [UserController::class, 'export'])->name('users.export');
+        Route::get('customer/export', [UserController::class, 'export_customer'])->name('users.export_customer');
         Route::get('{user}', [UserController::class, 'user_detail'])->name('users.detail');
         Route::post('delete-account', [UserController::class, 'delete_account'])->name('delete-account');
         Route::post('load', [UserController::class, 'load_data'])->name('users.load_data');
@@ -43,11 +45,17 @@ Route::middleware('auth')->group(function(){
         Route::post('upload-image', [ImageController::class, 'uploadImage'])->name('upload_image');
         Route::post('delete-image', [ImageController::class, 'deleteImage'])->name('upload_image');
         Route::post('load', [ProductController::class, 'loadData'])->name('products.load_data');
+        Route::get('export', [ProductController::class, 'export'])->name('products.export');
+        Route::post('import', [ProductController::class, 'import'])->name('products.import');
+        Route::get('templates', [ProductController::class, 'templates'])->name('products.templates');
     });
 
     // Category
     Route::prefix('categories')->group(function(){
         Route::post('load', [CategoryController::class, 'load_data'])->name('categories.load_data');
+        Route::get('export', [CategoryController::class, 'export'])->name('categories.export');
+        Route::post('import', [CategoryController::class, 'import'])->name('categories.import');
+        Route::get('templates', [CategoryController::class, 'templates'])->name('categories.templates');
     });
 
 
@@ -55,6 +63,7 @@ Route::middleware('auth')->group(function(){
     Route::prefix('orders')->group(function() {
         Route::get('/', [OrderController::class, 'index'])->name('orders.list');
         Route::post('load', [OrderController::class, 'load_data'])->name('orders.load_data');
+        Route::get('export', [OrderController::class, 'export'])->name('orders.export');
         Route::get('{id}', [OrderController::class, 'detail'])->name('orders.detail');
         Route::post('{order_id}/cancel', [OrderController::class, 'cancel_order'])->name('orders.cancel');
     });

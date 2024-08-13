@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Web;
 
 use App\Models\User;
 use Illuminate\Support\Str;
+use App\Exports\AdminExport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use App\Exports\CustomerExport;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -114,5 +118,15 @@ class UserController extends Controller
             'title' => 'User Detail',
             'user' => $user
         ]);
+    }
+
+    public function export(){
+        $name = 'User_' . Carbon::now()->format('Ymd') . rand(10,99) . '.xlsx';
+        return Excel::download(new AdminExport(), $name);
+    }
+
+    public function export_customer(){
+        $name = 'Customer_' . Carbon::now()->format('Ymd') . rand(10,99) . '.xlsx';
+        return Excel::download(new CustomerExport(), $name);
     }
 }

@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthenticationController extends Controller
@@ -45,7 +46,7 @@ class AuthenticationController extends Controller
             'password' => ['required']
         ]);
 
-        if(auth()->attempt(['email' => $credentials['email'], 'password' => $credentials['password'], 'is_admin' => true])){
+        if(Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password'], 'is_admin' => true])){
             $request->session()->regenerate();
             $user->update(['last_login' => now()]);
 
@@ -56,7 +57,7 @@ class AuthenticationController extends Controller
     }
 
     public function logout(Request $request){
-        auth()->logout();
+        Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerate();

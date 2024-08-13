@@ -18,8 +18,8 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'order_id'=> rand(1000,9999),
-            'user_id' => rand(1,100),
+            'order_id'=> rand(1,10),
+            'user_id' => rand(1,10),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),

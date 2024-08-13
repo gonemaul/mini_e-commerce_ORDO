@@ -17,7 +17,7 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'category_id' => rand(1,100),
+            'category_id' => rand(1,10),
             'name' => $this->faker->word(),
             'description' => $this->faker->sentence(),
             'price' => $this->faker->randomFloat(2, 10, 1000), // Harga antara 10 sampai 1000 dengan 2 digit desimal
