@@ -64,7 +64,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required','string','max:250','regex:/^[\pL\s]+$/u'],
+            'name' => ['required','string','max:250','regex:/^[\pL\s]+$/u','unique:products,name'],
             'category' => ['required'],
             'price' => ['required', 'numeric','max:10000000','min:1'],
             'stock' => ['required', 'numeric','max:1000','min:1'],
@@ -177,13 +177,18 @@ class ProductController extends Controller
         $path = $request->file('file_up')->getRealPath();
         $import = new ProductImport();
         $import->import($path);
-        // if($import->failures()){
-        //     // return dd($import->failures());
-        //     return redirect()->back()->with(['failures' => $import->failures()]);
-        // }
-        // else{
-        //     return redirect()->back()->with('success', 'Data berhasil diimport.');
-        // }
+        $errors = $import->errors;
+        if($import->failures()->isNotEmpty() || !empty($errors)){
+            $alerts = [];
+            collect($import->failures())->map(function($failure) use (&$alerts){
+                $alerts[] = "Row {$failure->row()}  {$failure->errors()[0] }";
+            });
+
+            $allAlerts = array_merge($alerts, $errors);
+
+            return redirect()->back()->with(['alerts' => $allAlerts]);
+        }
+        return redirect()->back()->with('success', 'Data berhasil diimport.');
     }
     public function export(){
         $name = 'Product_' . Carbon::now()->format('Ymd') . rand(10,99) . '.xlsx';

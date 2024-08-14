@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="{{ asset('assets/css/modal.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/alert.css') }}">
 
-<ul class="notifications"></ul>
+<ul class="notifications mt-3"></ul>
 <script src="{{ asset('assets/js/alert.js') }}"></script>
 
 {{-- Alert --}}

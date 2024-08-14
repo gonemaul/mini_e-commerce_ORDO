@@ -7,16 +7,27 @@
 <link rel="stylesheet" href="{{ asset('assets/css/modal.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/alert.css') }}">
 
-<ul class="notifications"></ul>
+<ul class="notifications mt-3"></ul>
 
 <script src="{{ asset('assets/js/alert.js') }}"></script>
+
 @if(session()->has('success'))
-    <input type="hidden" id="myElement" message="{{ session('success') }}">
     <script>
-        var element = document.getElementById('myElement');
-        var message = element.getAttribute('message');
+        var message = "{{ session()->get('success') }}";
         createToast('success', message);
     </script>
+@elseif(session()->has('error'))
+    <script>
+        var message = "{{ session()->get('error') }}";
+        createToast('error', message);
+    </script>
+@elseif(session()->has('alerts'))
+    @foreach (session()->get('alerts') as $alert)
+    <script>
+        var message = "{{ $alert }}"
+        createToast('error', message);
+    </script>
+    @endforeach
 @endif
 
 {{-- Modal Import --}}
@@ -25,7 +36,6 @@
     <label for="toggle">
     <i class="cancel-icon fas fa-times"></i>
     </label>
-    {{-- <div class="icon"><i class="far fa-envelope"></i></div> --}}
     <div class="content">
       <header>Import Product</header>
       <p>Download Import Product Template if you don't have one</p>
@@ -54,7 +64,32 @@
                     </div>
                 </div>
             </div>
-            <div class="table-responsive">
+            {{-- @if (session()->has('failures'))
+                <div class="table-responsive d-none" id="tabel_error">
+                    <h4 class="text-danger">Error to import data : <small id="error_hide" class="text-primary ml-3" style="cursor: pointer">Hide</small></h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Row</th>
+                                <th>Attribute</th>
+                                <th>Error</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(session()->get('failures') as $failure)
+                                <tr>
+                                    <td>{{ $failure->row() }}</td>
+                                    <td>{{ $failure->attribute() }}</td>
+                                    <td>{{ $failure->errors()[0] }}</td>
+                                    <td>{{ $failure->values()[$failure->attribute()] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table
+                </div>
+            @endif --}}
+            <div class="table-responsive" id="tabel_data">
                 <table id="tabel" class="display hover row-border">
                     <thead>
                       <tr>
@@ -136,7 +171,21 @@
                             className: 'justify-content-center d-flex'
                         }
                 ]
-        });
+            });
+            // $('#error_show').click(function(){
+            //     $('#tabel_error').show();
+            //     $('#tabel_data').hide();
+            // })
+            // $('#error_hide').click(function(){
+            //     $('#tabel_error').hide();
+            //     $('#tabel_data').show();
+            // })
         })
     </script>
+    {{-- @if(session()->has('failures'))
+        <script>
+            $('#tabel_error').hide();
+            // $('#tabel_data').show();
+        </script>
+    @endif --}}
 @endsection

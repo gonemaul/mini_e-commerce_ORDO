@@ -6,7 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Models\ProductImage;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -14,8 +14,9 @@ use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 
-class ProductImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure
+class ProductImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure,SkipsEmptyRows
 {
     use Importable, SkipsFailures;
     /**
@@ -23,31 +24,73 @@ class ProductImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnF
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
+    public $errors = [];
+    private $row_count = 0;
     public function model(array $row)
     {
-        // return dd($row);
-        $category = Category::where('name', Str::title($row['category']))->firstOrFail();
-        $product = Product::firstOrCreate([
-            'name' => Str::title($row['name']),
-        ],[
-            'description' => $row['description'],
-            'price' => $row['price'],
-            'category_id' => $category->id,
-            'stock' => $row['stock'],
-            'sold' => $row['sold'],
-        ]);
+        $this->row_count++;
+        try {
+            $category = Category::where('name', Str::title($row['category']))->firstOrFail();
+            if (!$category){
+                throw new \Exception('Category not found');
+            }
 
-        $images = explode(', ', $row['image']);
+            $product = Product::where('name', Str::title($row['name']))->first();
+            if ($product){
+                throw new \Exception('Product already exists');
+            }
+            else{
+                $product = Product::create([
+                    'name' => Str::title($row['name']),
+                    'description' => $row['description'],
+                    'price' => $row['price'],
+                    'category_id' => $category->id,
+                    'stock' => $row['stock'],
+                    'sold' => $row['sold'],
+                ]);
+            }
+            $this->processImage($row,$product);
 
-        foreach ($images as $image){
-            $path = parse_url($image);
-            ProductImage::create([
-                'product_id' => $product->id,
-                'path' => ltrim($path['path'], '/storage/')
-            ]);
+            return $product;
+        }catch (\Exception $e) {
+            $this->errors[] = "Row {$this->row_count}  {$e->getMessage()}";
+            return null;
+        }
+    }
+
+    public function processImage($row,$product){
+        if(!empty($row['image'])){
+            $images = explode(', ', $row['image']);
+
+            foreach ($images as $image){
+                // $image = trim($image);
+                $newImage = $this->getImage($image);
+                if($newImage){
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'path' => $newImage,
+                    ]);
+                }
+            }
         }
 
-        return $product;
+    }
+
+    public function getImage($path){
+        try{
+            $img = file_get_contents($path);
+            $filename = Str::random(40);
+            if($img){
+                Storage::put('product_image/'. $filename, $img);
+                return 'product_image/'.$filename;
+            }
+        }
+        catch(\Exception $e){
+            Log::error('Product image not found');
+        }
+
+        $this->errors[] = 'Failed to process product image';
+        return null;
     }
 
     public function headingRow(): int
@@ -63,30 +106,17 @@ class ProductImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnF
             '*.price' => 'required|numeric|max:10000000|min:1',
             '*.stock' => 'required|numeric|max:1000|min:1',
             '*.sold' => 'nullable|integer',
+            '*.category' => 'required|exists:categories,name',
+            'images' => 'nullable|string'
         ];
     }
 
     public function customValidationMessages()
     {
         return [
-            'name.required' => 'Kolom nama wajib diisi.',
-            'name.max' => 'Kolom nama maksimal 250 karakter.',
-            'name.string' => 'Kolom nama harus berupa teks.',
             'price.max' => 'Price maximum 10.000.000',
             'stock.max' => 'Price maximum 1000',
             'name.regex' => 'Kolom hanya boleh mengandung huruf dan spasi...',
         ];
-    }
-
-    private function uploadImage($image)
-    {
-        if ($image) {
-            // $imageName = time();
-            // $image->storeAs('public/product_image', $imageName);
-            // return 'product_image/' . $imageName;
-            return $image;
-        }
-
-        return null;
     }
 }
