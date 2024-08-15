@@ -63,7 +63,7 @@ class ProductImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnF
             $images = explode(', ', $row['image']);
 
             foreach ($images as $image){
-                // $image = trim($image);
+                $image = trim($image);
                 $newImage = $this->getImage($image);
                 if($newImage){
                     ProductImage::create([

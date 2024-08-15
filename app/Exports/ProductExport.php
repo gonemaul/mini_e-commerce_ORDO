@@ -26,6 +26,7 @@ class ProductExport implements FromQuery , WithHeadings, WithCustomStartCell, Sh
     public function headings(): array
     {
         return [
+            'ID',
             'Name',
             'Description',
             'Price',
@@ -44,6 +45,7 @@ class ProductExport implements FromQuery , WithHeadings, WithCustomStartCell, Sh
     {
         // Menentukan mapping data yang akan diekspor
         return [
+            $product->id,
             $product->name,
             $product->description = strip_tags($product->description),
             $product->price,
@@ -68,7 +70,7 @@ class ProductExport implements FromQuery , WithHeadings, WithCustomStartCell, Sh
             ],
         ]);
 
-        $sheet->getStyle('B2:H2')->applyFromArray([
+        $sheet->getStyle('B2:I2')->applyFromArray([
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
             ],

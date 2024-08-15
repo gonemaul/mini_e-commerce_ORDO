@@ -16,32 +16,24 @@
 
 {{-- Alert --}}
 @if(session()->has('success'))
-    <input type="hidden" id="myElement" message="{{ session('success') }}">
     <script>
-        var element = document.getElementById('myElement');
-        var message = element.getAttribute('message');
+        var message = "{{ session()->get('success') }}";
         createToast('success', message);
     </script>
 @elseif(session()->has('error'))
-    <input type="hidden" id="myElement" message="{{ session('error') }}">
     <script>
-        var element = document.getElementById('myElement');
-        var message = element.getAttribute('message');
+        var message = "{{ session()->get('error') }}";
         createToast('error', message);
     </script>
-@endif
-@if(session()->has('failures'))
-    @foreach (session()->get('failures') as $failure)
-        @foreach($failure->errors() as $error)
-        <input type="hidden" id="myElement" row="Baris {{ $error }} ">
-            <script>
-                var element = document.getElementById('myElement');
-                var row = element.getAttribute('row');
-                createToast('error', row);
-            </script>
-        @endforeach
+@elseif (session()->has('alerts'))
+    @foreach (session()->get('alerts') as $alert)
+        <script>
+            var message = "{{ $alert }}"
+            createToast('error', message);
+        </script>
     @endforeach
 @endif
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 {{-- Modal Import --}}
@@ -50,7 +42,6 @@
     <label for="toggle">
     <i class="cancel-icon fas fa-times"></i>
     </label>
-    {{-- <div class="icon"><i class="far fa-envelope"></i></div> --}}
     <div class="content">
       <header>Import Category</header>
       <p>Download Import Category Template if you don't have one</p>
@@ -61,7 +52,6 @@
         <div class="button">
             <a id="upload_file" class="btn btn-primary mb-2"><i class="fa-solid fa-cloud-arrow-up"></i>Upload File</a>
             <a id="templates" href="{{ route('categories.templates') }}" class="btn btn-success mb-2"><i class="fa-solid fa-cloud-arrow-down"></i>Download Template</a>
-            {{-- <button type="submit" name="import" class="btn btn-primary">Submit</button> --}}
         </div>
     </form>
     <div class="text">We do not share your information.</div>

@@ -10,8 +10,9 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 
-class CategoryImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure
+class CategoryImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure, SkipsEmptyRows
 {
     use Importable, SkipsFailures;
     /**
@@ -19,12 +20,27 @@ class CategoryImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
+    public $errors = [];
+    private $row_count = 0;
     public function model(array $row)
     {
-        // return $row['name'];
-        return new Category([
-            'name' => Str::title($row['name'])
-        ]);
+        $this->row_count++;
+        try{
+            $category = Category::where('name', $row['name'])->first();
+            if(!$category){
+                $category = Category::create([
+                    'name' => Str::title($row['name'])
+                ]);
+                return $category;
+            }
+            else{
+                throw new \Exception('Category already exists');
+            }
+        }
+        catch(\Exception $e){
+            $this->errors[] = "Row {$this->row_count}  {$e->getMessage()}";
+            return null;
+        }
     }
 
     public function headingRow(): int
@@ -34,7 +50,7 @@ class CategoryImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     public function rules(): array
     {
         return [
-            '*.name' => 'required|string|max:255|unique:categories,name|regex:/^[\pL\s]+$/u',
+            '*.name' => 'required|string|max:255|regex:/^[\pL\s]+$/u',
         ];
     }
 
@@ -45,7 +61,6 @@ class CategoryImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             'name.max' => 'Kolom nama maksimal 250 karakter.',
             'name.string' => 'Kolom nama harus berupa teks.',
             'name.regex' => 'Kolom hanya boleh mengandung huruf dan spasi...',
-            'name.unique' => 'Data sudah tersedia.',
         ];
     }
 }

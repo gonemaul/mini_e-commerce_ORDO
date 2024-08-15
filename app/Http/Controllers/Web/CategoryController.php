@@ -62,7 +62,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required','string','max:250','regex:/^[\pL\s]+$/u'],
+            'name' => ['required','string','max:250','regex:/^[\pL\s]+$/u','unique:categories,name'],
         ], ['name.regex' => 'Input hanya boleh mengandung huruf dan spasi...']);
 
         Category::create([
@@ -132,16 +132,22 @@ class CategoryController extends Controller
             'file_up' => ['required','mimes:xlsx,xls']
         ]);
 
-        $path = $request->file('file_up')->getRealPath();
+        $path = $request->file('file_up')->store('imports/categories');
         $import = new CategoryImport();
         $import->import($path);
-        if($import->failures()){
-            // return dd($import->failures());
-            return redirect()->back()->with(['failures' => $import->failures()]);
+        $errors = $import->errors;
+        Storage::delete($path);
+        if($import->failures()->isNotEmpty() || !empty($errors)){
+            $alerts = [];
+            collect($import->failures())->map(function($failure) use (&$alerts){
+                $alerts[] = "Row {$failure->row()}  {$failure->errors()[0] }";
+            });
+
+            $allAlerts = array_merge($alerts, $errors);
+
+            return redirect()->back()->with(['alerts' => $allAlerts]);
         }
-        else{
             return redirect()->back()->with('success', 'Data berhasil diimport.');
-        }
     }
 
     public function export(){

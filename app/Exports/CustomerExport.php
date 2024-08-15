@@ -26,6 +26,7 @@ class CustomerExport implements FromQuery, WithHeadings, WithCustomStartCell, Sh
     public function headings(): array
     {
         return [
+            'ID',
             'Name',
             'Email',
             'Last Login',
@@ -39,6 +40,7 @@ class CustomerExport implements FromQuery, WithHeadings, WithCustomStartCell, Sh
     public function map($user): array
     {
         return [
+            $user->id,
             $user->name,
             $user->email,
             $user->last_login,
@@ -60,7 +62,7 @@ class CustomerExport implements FromQuery, WithHeadings, WithCustomStartCell, Sh
                 ],
             ],
         ]);
-        $sheet->getStyle('B2:E2')->applyFromArray([
+        $sheet->getStyle('B2:F2')->applyFromArray([
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
             ],

@@ -20,7 +20,7 @@ class CategoryExport implements FromCollection , WithHeadings, WithCustomStartCe
     */
     public function collection()
     {
-        return Category::select('name')->get();
+        return Category::select(['id','name'])->get();
     }
     public function startCell(): string
     {
@@ -29,6 +29,7 @@ class CategoryExport implements FromCollection , WithHeadings, WithCustomStartCe
     public function headings(): array
     {
         return [
+            'ID',
             'Category',
         ];
     }
@@ -45,7 +46,7 @@ class CategoryExport implements FromCollection , WithHeadings, WithCustomStartCe
                     'color' => ['argb' => '000000'],
                 ],
             ],
-        ]);$sheet->getStyle('B2')->applyFromArray([
+        ]);$sheet->getStyle('B2:C2')->applyFromArray([
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
             ],

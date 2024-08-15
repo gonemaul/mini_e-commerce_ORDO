@@ -15,6 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
+
 class ProductController extends Controller
 {
     /**
@@ -174,10 +175,11 @@ class ProductController extends Controller
             'file_up' => ['required','mimes:xlsx,xls']
         ]);
 
-        $path = $request->file('file_up')->getRealPath();
+        $path = $request->file('file_up')->store('imports/products');
         $import = new ProductImport();
         $import->import($path);
         $errors = $import->errors;
+        Storage::delete($path);
         if($import->failures()->isNotEmpty() || !empty($errors)){
             $alerts = [];
             collect($import->failures())->map(function($failure) use (&$alerts){
