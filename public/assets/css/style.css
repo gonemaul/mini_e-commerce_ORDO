@@ -20457,12 +20457,12 @@ div.tagsinput {
         width: 10px;
         height: 10px; }
       .navbar .navbar-menu-wrapper .count-indicator .count-number {
-        min-width: 14px;
-        height: 14px;
-        font-size: .5rem;
+        min-width: 15px;
+        height: 15px;
+        font-size: 0.6rem;
         color: #ffffff;
         bottom: 16px;
-        right: -5px;
+        right: -4px;
         line-height: 1;
         text-align: center; }
       .navbar .navbar-menu-wrapper .count-indicator:after {

@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Web;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Notifications\NewUser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 
 class AuthenticationController extends Controller
 {
@@ -29,13 +31,17 @@ class AuthenticationController extends Controller
             'email' => ['required', 'email', 'max:30', 'unique:users'],
             'password' => ['required', 'max:250', 'min:6', 'confirmed'],
         ]);
-        User::create([
+        $new_user = User::create([
             'name' => Str::title($request->name),
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'is_admin' => true
         ]);
 
+        $admin = User::where('is_admin', true)->where('id', '!=', $new_user->id)->get();
+        if($admin){
+            Notification::send($admin, new NewUser($new_user));
+        }
         return redirect()->route('login')->with('success', 'Registration successful. You can now login.');
     }
 

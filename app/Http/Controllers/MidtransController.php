@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Notifications\ChangeStatusOrder;
+use Illuminate\Support\Facades\Notification;
 
 class MidtransController extends Controller
 {
@@ -18,7 +21,7 @@ class MidtransController extends Controller
         $transactionStatus = $request->transaction_status;
         $orderId = $request->order_id;
         $order = Order::where('order_id', $orderId)->first();
-
+        $users = User::all();
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
@@ -28,8 +31,10 @@ class MidtransController extends Controller
                 if ($request->payment_type == 'credit_card') {
                     if ($request->fraud_status == 'challenge') {
                         $order->update(['status' => 'Pending']);
+                        Notification::send($users, new ChangeStatusOrder($order));
                     } else {
                         $order->update(['status' => 'Success']);
+                        Notification::send($users, new ChangeStatusOrder($order));
                         $order->orderItems->map(function ($item) {
                             $item->product->increment('sold', $item->quantity);
                         });
@@ -38,33 +43,39 @@ class MidtransController extends Controller
                 break;
             case 'settlement':
                 $order->update(['status' => 'Success']);
+                Notification::send($users, new ChangeStatusOrder($order));
                 $order->orderItems->map(function ($item) {
                     $item->product->increment('sold', $item->quantity);
                 });
                 break;
             case 'pending':
                 $order->update(['status' => 'Pending']);
+                Notification::send($users, new ChangeStatusOrder($order));
                 break;
             case 'deny':
                 $order->update(['status' => 'Failed']);
+                Notification::send($users, new ChangeStatusOrder($order));
                 $order->orderItems->map(function ($item) {
                     $item->product->increment('stock', $item->quantity);
                 });
                 break;
             case 'expire':
                 $order->update(['status' => 'Expired']);
+                Notification::send($users, new ChangeStatusOrder($order));
                 $order->orderItems->map(function ($item) {
                     $item->product->increment('stock', $item->quantity);
                 });
                 break;
             case 'cancel':
                 $order->update(['status' => 'Canceled']);
+                Notification::send($users, new ChangeStatusOrder($order));
                 $order->orderItems->map(function ($item) {
                     $item->product->increment('stock', $item->quantity);
                 });
                 break;
             default:
                 $order->update(['status' => 'Unknown']);
+                Notification::send($users, new ChangeStatusOrder($order));
                 break;
         }
 

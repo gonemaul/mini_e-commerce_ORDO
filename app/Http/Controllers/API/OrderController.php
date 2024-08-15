@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Midtrans\Snap;
+use App\Models\User;
 use Midtrans\Config;
 use App\Models\Order;
 use App\Models\CartItem;
@@ -10,7 +11,10 @@ use App\Models\OrderItem;
 use Midtrans\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Notifications\NewOrder;
 use App\Http\Controllers\Controller;
+use App\Notifications\ChangeStatusOrder;
+use Illuminate\Support\Facades\Notification;
 
 class OrderController extends Controller
 {
@@ -114,7 +118,10 @@ class OrderController extends Controller
             $order->save();
 
             $cartItems = CartItem::where('user_id', $user->id)->delete();
-
+            $admin = User::where('is_admin', true)->get();
+            if($admin){
+                Notification::send($admin, new NewOrder($order));
+            }
             return response()->json([
                 'status' => 'success',
                 'message' => 'Please ndang bayar!!',
@@ -177,7 +184,7 @@ class OrderController extends Controller
 
     public function cancel_order($order_id){
         $order = Order::where('order_id', $order_id)->first();
-
+        $users = User::all();
         try {
             Config::$serverKey = env('MIDTRANS_SERVER_KEY');
             Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
@@ -187,13 +194,16 @@ class OrderController extends Controller
             if ($canceled == 200) {
                 $order->status = 'Canceled';
                 $order->save();
-
+                Notification::send($users, new ChangeStatusOrder($order));
                 return response()->json(['message' => 'Order canceled successfully'], 200);
             } else {
                 return response()->json(['message' => 'Failed to cancel order'], 500);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
+            $order->status = 'Canceled';
+            $order->save();
+            Notification::send($users, new ChangeStatusOrder($order));
+            return response()->json(['message' => 'Order canceled successfully'], 200);
         }
     }
 }

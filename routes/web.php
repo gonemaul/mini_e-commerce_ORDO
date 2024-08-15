@@ -1,12 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Web\ImageController;
 use App\Http\Controllers\Web\UserController;
+use App\Http\Controllers\Web\ImageController;
 use App\Http\Controllers\Web\OrderController;
 use App\Http\Controllers\Web\ProductController;
 use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\NotificationController;
 use App\Http\Controllers\Web\AuthenticationController;
 
 Route::middleware('guest')->group(function(){
@@ -66,6 +67,12 @@ Route::middleware('auth')->group(function(){
         Route::get('export', [OrderController::class, 'export'])->name('orders.export');
         Route::get('{id}', [OrderController::class, 'detail'])->name('orders.detail');
         Route::post('{order_id}/cancel', [OrderController::class, 'cancel_order'])->name('orders.cancel');
+    });
+
+    Route::prefix('notifications')->group(function() {
+        Route::get('/', [NotificationController::class, 'index'])->name('notifications');
+        Route::get('detail/{url}', [NotificationController::class, 'detail'])->name('notifications.detail');
+        Route::post('remove/{id}', [NotificationController::class, 'remove'])->name('notifications.remove');
     });
 
     Route::resources([

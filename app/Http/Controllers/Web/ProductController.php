@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Imports\ProductImport;
+use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use App\Exports\ProductExport;
+use App\Imports\ProductImport;
 use Illuminate\Support\Carbon;
+use App\Notifications\NewProduct;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Notification;
 
 
 class ProductController extends Controller
@@ -88,6 +91,10 @@ class ProductController extends Controller
                 $product_image = ProductImage::where('path', $path)->first();
                 $product_image->update(['product_id' => $product_id->id]);
             }
+        }
+        $user = User::where('is_admin', false)->get();
+        if($user){
+            Notification::send($user,new NewProduct($product,$request->category));
         }
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }

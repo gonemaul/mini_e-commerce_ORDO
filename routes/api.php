@@ -6,6 +6,7 @@ use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\AuthenticationController;
 
 Route::post('register', [AuthenticationController::class, 'register']);
@@ -35,6 +36,12 @@ Route::middleware('auth:sanctum')->group( function(){
         Route::post('{order_id}/cancel', [OrderController::class, 'cancel_order']);
     });
 
+    // Notification
+    Route::prefix('notifications')->group(function(){
+        Route::get('/', [NotificationController::class, 'index']);
+        Route::post('markAsRead/{id}', [NotificationController::class, 'mark']);
+        Route::delete('remove/{id}', [NotificationController::class, 'remove']);
+    });
 });
 // Midtrans
 Route::post('midtrans-callback', [MidtransController::class, 'callback']);

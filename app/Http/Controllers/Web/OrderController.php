@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Models\User;
 use Midtrans\Config;
 use App\Models\Order;
 use Midtrans\Transaction;
@@ -10,7 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Notifications\ChangeStatusOrder;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Notification;
 
 class OrderController extends Controller
 {
@@ -73,6 +76,7 @@ class OrderController extends Controller
 
     public function cancel_order($order_id){
         $order = Order::where('order_id', $order_id)->first();
+        $users = User::all();
         try {
             Config::$serverKey = env('MIDTRANS_SERVER_KEY');
             Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
@@ -83,6 +87,7 @@ class OrderController extends Controller
                 $order->status = 'Canceled';
                 $order->save();
 
+                Notification::send($users, new ChangeStatusOrder($order));
                 return redirect()->back()->with(['success' => 'Order canceled successfully']);
             } else {
                 return redirect()->back()->with(['error' => 'Failed to cancel order']);
@@ -90,6 +95,7 @@ class OrderController extends Controller
         } catch (\Exception $e) {
             $order->status = 'Canceled';
             $order->save();
+            Notification::send($users, new ChangeStatusOrder($order));
             return redirect()->back()->with(['success' => 'Order canceled successfully']);
         }
     }

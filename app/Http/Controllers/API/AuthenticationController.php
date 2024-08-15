@@ -5,10 +5,12 @@ namespace App\Http\Controllers\API;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Notifications\NewUser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
 
 class AuthenticationController extends Controller
 {
@@ -27,12 +29,15 @@ class AuthenticationController extends Controller
             ],400);
         }
 
-        User::create([
+        $new_user = User::create([
             'name' => Str::title($request->name),
             'email' => $request->email,
             'password' =>  Hash::make($request->password),
         ]);
-
+        $admin = User::where('is_admin', true)->get();
+        if($admin){
+            Notification::send($admin, new NewUser($new_user));
+        }
         return response()->json([
             'status' => 'success',
             'message' => 'You have successfully registered',
@@ -94,7 +99,7 @@ class AuthenticationController extends Controller
     }
 
     public function update_me(Request $request){
-        $user = User::findOrFail(auth()->user()->id);
+        $user = User::findOrFail(Auth::user()->id);
 
         $request->validate([
             'name' => ['string', 'max:250'],
