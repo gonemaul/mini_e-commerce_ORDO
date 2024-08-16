@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Models\User;
+use App\Models\Order;
 use Illuminate\Support\Str;
 use App\Exports\AdminExport;
 use Illuminate\Http\Request;
@@ -116,7 +117,8 @@ class UserController extends Controller
     public function user_detail(User $user){
         return view('users.detail')->with([
             'title' => 'User Detail',
-            'user' => $user
+            'user' => $user,
+            'orders' => Order::where('user_id', $user->id)->with('orderItems')->get(),
         ]);
     }
 

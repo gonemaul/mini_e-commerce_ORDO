@@ -15,7 +15,7 @@ class NotificationController extends Controller
         ]);
     }
 
-    public function detail($notificationId,$request){
+    public function detail($notificationId){
         $notifications = Auth::user()->notifications;
         $notification = $notifications->where('id', $notificationId)->first();
         $notification->markAsRead();

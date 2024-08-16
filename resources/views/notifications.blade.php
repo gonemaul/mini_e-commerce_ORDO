@@ -49,7 +49,7 @@
         @forelse ($notifications as $notification)
             <div class="item mb-2 d-flex {{ $notification->read_at == null ? 'before' : 'after' }}">
                 <div class="preview-icon p-3 pl-4 text-center">
-                    <i class="mdi mdi-"></i>
+                    <i class="mdi {{ $notification->data['type'] }}"></i>
                 </div>
                 <div class="preview-item-content pl-3 py-2">
                     <a href="{{ route('notifications.detail' , $notification->id) }}" style="text-decoration: none;color:transparent">
