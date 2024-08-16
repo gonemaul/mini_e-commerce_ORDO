@@ -44,7 +44,7 @@ Route::middleware('auth')->group(function(){
     // Product
     Route::prefix('products')->group(function(){
         Route::post('upload-image', [ImageController::class, 'uploadImage'])->name('upload_image');
-        Route::post('delete-image', [ImageController::class, 'deleteImage'])->name('upload_image');
+        Route::post('delete-image', [ImageController::class, 'deleteImage'])->name('delete_image');
         Route::post('load', [ProductController::class, 'loadData'])->name('products.load_data');
         Route::get('export', [ProductController::class, 'export'])->name('products.export');
         Route::post('import', [ProductController::class, 'import'])->name('products.import');
