@@ -15,16 +15,35 @@ class NotificationController extends Controller
         ]);
     }
 
-    public function detail($notificationId){
+    public function detail($notificationId,$request){
         $notifications = Auth::user()->notifications;
         $notification = $notifications->where('id', $notificationId)->first();
         $notification->markAsRead();
-        return redirect($notification->data['url']);
+       return redirect($notification->data['url']);
+    }
+
+    public function mark($notificationId){
+        $notifications = Auth::user()->notifications;
+        $notification = $notifications->where('id', $notificationId)->first();
+        $notification->markAsRead();
+        return back()->with('success', 'Notification marked as read');
     }
 
     public function remove($notificationId){
         $notification = Auth::user()->notifications->where('id', $notificationId)->first();
         $notification->delete();
         return back()->with('success', 'Notification removed successfully');
+    }
+
+    public function readAll(){
+        $notifications = Auth::user()->unreadNotifications;
+        $notifications->markAsRead();
+        return back()->with('success', 'All notifications have been marked as read');
+    }
+
+    public function removeAll(){
+        $notifications = Auth::user()->notifications;
+        $notifications->delete();
+        return back()->with('success', 'All notifications have been removed');
     }
 }

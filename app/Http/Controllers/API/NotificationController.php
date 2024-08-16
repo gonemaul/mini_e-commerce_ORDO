@@ -10,13 +10,14 @@ class NotificationController extends Controller
 {
     public function index(Request $request){
         try{
-            $all_notification = Auth::user()->notifications;
+            $all_notification = $request->user()->notifications;
             $notifications = $all_notification->map(function($notification){
                 return [
                     'id' => $notification->id,
                     'title' => $notification->data['title'],
                     'message' => $notification->data['message'],
                     'status' => $notification->read_at == null ? 'unread' : 'read',
+                    // 'url' => $notification->data['url'],
                 ];
             });
             if($notifications->isNotEmpty()){

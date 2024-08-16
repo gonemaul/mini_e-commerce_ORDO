@@ -21,7 +21,7 @@ class MidtransController extends Controller
         $transactionStatus = $request->transaction_status;
         $orderId = $request->order_id;
         $order = Order::where('order_id', $orderId)->first();
-        $users = User::all();
+        $users = User::where('is_admin', true)->orWhere('id', $order->user_id)->get();
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }

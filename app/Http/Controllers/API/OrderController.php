@@ -118,9 +118,9 @@ class OrderController extends Controller
             $order->save();
 
             $cartItems = CartItem::where('user_id', $user->id)->delete();
-            $admin = User::where('is_admin', true)->get();
-            if($admin){
-                Notification::send($admin, new NewOrder($order));
+            $users = User::where('is_admin', true)->orWhere('id', $user->id)->get();
+            if($users){
+                Notification::send($users, new NewOrder($order));
             }
             return response()->json([
                 'status' => 'success',
@@ -184,7 +184,7 @@ class OrderController extends Controller
 
     public function cancel_order($order_id){
         $order = Order::where('order_id', $order_id)->first();
-        $users = User::all();
+        $users = User::where('is_admin', true)->orWhere('id', $order->user_id)->get();
         try {
             Config::$serverKey = env('MIDTRANS_SERVER_KEY');
             Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);

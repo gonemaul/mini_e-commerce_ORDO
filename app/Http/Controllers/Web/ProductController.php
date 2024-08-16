@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
+use App\Notifications\NewProductImport;
 use Illuminate\Support\Str;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
@@ -84,17 +85,18 @@ class ProductController extends Controller
             'description' => $request->description,
         ]);
 
+        $product_id = $product->orderBy('id', 'desc')->first();
         if($request->has('path_image') && $request->input('path_image') !== null) {
-            $product_id = $product->orderBy('id', 'desc')->first();
             $images = json_decode($request->path_image, true);
             foreach ($images as $path) {
                 $product_image = ProductImage::where('path', $path)->first();
                 $product_image->update(['product_id' => $product_id->id]);
             }
         }
+
         $user = User::where('is_admin', false)->get();
         if($user){
-            Notification::send($user,new NewProduct($product,$request->category));
+            Notification::send($user,new NewProduct($product_id,$request->category));
         }
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
@@ -196,6 +198,10 @@ class ProductController extends Controller
             $allAlerts = array_merge($alerts, $errors);
 
             return redirect()->back()->with(['alerts' => $allAlerts]);
+        }
+        $user = User::where('is_admin', false)->get();
+        if($user){
+            Notification::send($user,new NewProductImport());
         }
         return redirect()->back()->with('success', 'Data berhasil diimport.');
     }

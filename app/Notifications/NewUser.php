@@ -51,7 +51,7 @@ class NewUser extends Notification
         return [
             'title' => 'New User Registration',
             'message' => 'New user registered with email '. $this->user->email,
-            'url' => 'users/' . $this->user->id,
+            'url' => url('users/'. $this->user->id) ,
             'type' => 'mdi-account-multiple text-primary'
         ];
     }

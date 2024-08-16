@@ -64,31 +64,6 @@
                     </div>
                 </div>
             </div>
-            {{-- @if (session()->has('failures'))
-                <div class="table-responsive d-none" id="tabel_error">
-                    <h4 class="text-danger">Error to import data : <small id="error_hide" class="text-primary ml-3" style="cursor: pointer">Hide</small></h4>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Row</th>
-                                <th>Attribute</th>
-                                <th>Error</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach(session()->get('failures') as $failure)
-                                <tr>
-                                    <td>{{ $failure->row() }}</td>
-                                    <td>{{ $failure->attribute() }}</td>
-                                    <td>{{ $failure->errors()[0] }}</td>
-                                    <td>{{ $failure->values()[$failure->attribute()] }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table
-                </div>
-            @endif --}}
             <div class="table-responsive" id="tabel_data">
                 <table id="tabel" class="display hover row-border">
                     <thead>

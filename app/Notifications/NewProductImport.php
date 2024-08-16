@@ -7,17 +7,16 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewOrder extends Notification
+class NewProductImport extends Notification
 {
     use Queueable;
-    private $order;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($order)
+    public function __construct()
     {
-        $this->order = $order;
+        //
     }
 
     /**
@@ -49,10 +48,8 @@ class NewOrder extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'title' => 'New Order',
-            'message' => 'New Order with ID '. $this->order->order_id ,
-            'url' => url('orders/'. $this->order->id) ,
-            'type' => 'mdi-cart text-warning'
+            'title' => 'New Product',
+            'message' => 'New product available',
         ];
     }
 }

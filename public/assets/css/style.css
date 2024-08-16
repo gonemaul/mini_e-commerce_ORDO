@@ -20457,13 +20457,13 @@ div.tagsinput {
         width: 10px;
         height: 10px; }
       .navbar .navbar-menu-wrapper .count-indicator .count-number {
-        min-width: 15px;
-        height: 15px;
+        min-width: 16px;
+        height: 16px;
         font-size: 0.6rem;
         color: #ffffff;
         bottom: 16px;
         right: -4px;
-        line-height: 1;
+        line-height: 1.2;
         text-align: center; }
       .navbar .navbar-menu-wrapper .count-indicator:after {
         display: none; }
@@ -20492,7 +20492,7 @@ div.tagsinput {
             margin-left: .8rem;
             margin-right: .8rem; } }
         .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link i {
-          font-size: 1.125rem; }
+          font-size: 1.5rem; }
         .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link .navbar-profile {
           display: flex;
           font-weight: normal;

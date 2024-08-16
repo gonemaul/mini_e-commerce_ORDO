@@ -51,7 +51,7 @@ class ChangeStatusOrder extends Notification
         return [
             'title' => 'Change Status Order',
             'message' => 'Change status order with ID '. $this->order->order_id ,
-            'url' => 'orders/' . $this->order->id,
+            'url' => url('orders/' . $this->order->id) ,
             'type' => 'mdi-cart text-success'
         ];
     }

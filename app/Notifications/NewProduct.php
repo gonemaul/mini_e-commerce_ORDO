@@ -53,7 +53,8 @@ class NewProduct extends Notification
     {
         return [
             'title' => 'New Product',
-            'message' => 'New Product with category '. $this->category->name,
+            'message' => 'New Product available with category '. $this->category->name,
+            'url' => url('products/'. $this->product->id)
         ];
     }
 }
