@@ -43,7 +43,9 @@ class NotificationController extends Controller
 
     public function removeAll(){
         $notifications = Auth::user()->notifications;
-        $notifications->delete();
+        foreach ($notifications as $notification){
+            $notification->delete();
+        }
         return back()->with('success', 'All notifications have been removed');
     }
 }
