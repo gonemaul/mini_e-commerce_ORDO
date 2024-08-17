@@ -63,14 +63,16 @@
             <li class="nav-item dropdown border-left">
             <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
                 <i class="mdi mdi-bell"></i>
-                <span class="count-number bg-danger">{{ count(auth()->user()->unreadNotifications) }}</span>
+                @if(auth()->user()->unreadNotifications->isNotEmpty())
+                    <span class="count-number bg-danger">{{ count(auth()->user()->unreadNotifications) }}</span>
+                @endif
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
                 <h6 class="p-3 mb-0">Notifications</h6>
                 <div class="dropdown-divider"></div>
                 @forelse (auth()->user()->notifications as $index => $notification)
                     @if($index < 3)
-                        <a class="dropdown-item preview-item {{ $notification->read_at == null ? 'before' : 'after' }}" href="{{ route('notifications.detail', $notification->id) }}">
+                        <a class="dropdown-item preview-item {{ $notification->unread() ? 'before' : 'after' }}" href="{{ route('notifications.detail', $notification->id) }}">
                             <div class="preview-thumbnail">
                                 <div class="preview-icon bg-dark rounded-circle">
                                 <i class="mdi {{ $notification->data['type'] }}"></i>

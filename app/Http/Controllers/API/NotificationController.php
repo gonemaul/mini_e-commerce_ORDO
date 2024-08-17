@@ -17,7 +17,7 @@ class NotificationController extends Controller
                     'title' => $notification->data['title'],
                     'message' => $notification->data['message'],
                     'status' => $notification->read_at == null ? 'unread' : 'read',
-                    // 'url' => $notification->data['url'],
+                    'url' => $notification->data['url'],
                 ];
             });
             if($notifications->isNotEmpty()){
