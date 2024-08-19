@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class NotificationController extends Controller
 {
     public function index(){
-        return view('notifications')->with([
+        return view('components.pages.notifications')->with([
             'title' => 'Notification',
             'notifications' => Auth::user()->notifications
         ]);

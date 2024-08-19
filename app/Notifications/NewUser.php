@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewUser extends Notification
+class NewUser extends Notification implements ShouldQueue
 {
     use Queueable;
     private $user;
@@ -27,17 +27,18 @@ class NewUser extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database','mail'];
     }
 
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail(object $notifiable,): MailMessage
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
+                    ->greeting('Hello, ' . $notifiable->name)
+                    ->line('New user registration with email ' . $this->user->email)
+                    ->action('Detail user', url('users/'. $this->user->id))
                     ->line('Thank you for using our application!');
     }
 
