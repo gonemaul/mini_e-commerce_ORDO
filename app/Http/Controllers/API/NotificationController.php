@@ -10,19 +10,30 @@ class NotificationController extends Controller
 {
     public function index(Request $request){
         try{
-            $all_notification = $request->user()->notifications;
+            $all_notification = $request->user()->notifications()->paginate(10);
             $notifications = $all_notification->map(function($notification){
                 return [
                     'id' => $notification->id,
                     'title' => $notification->data['title'],
                     'message' => $notification->data['message'],
-                    'status' => $notification->read_at == null ? 'unread' : 'read',
+                    'status' => $notification->unread() ? 'unread' : 'read',
                     'url' => $notification->data['url'],
+                    'timestamps' => $notification->created_at->format('Y-m-d H:i:s'),
                 ];
             });
             if($notifications->isNotEmpty()){
                 return response()->json([
-                    'notifications' => $notifications
+                    'data' => $notifications,
+                'meta' => [
+                        'pagination' => [
+                            'total' => $all_notification->total(),
+                            'per_page' => $all_notification->perPage(),
+                            'current_page' => $all_notification->currentPage(),
+                            'last_page' => $all_notification->lastPage(),
+                        ]
+                ],
+                'status' => 'success',
+                'message' => 'Data retrieved successfully',
                 ], 200);
             }
             else{

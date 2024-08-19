@@ -42,7 +42,19 @@ class ProductController extends Controller
     public function products_by_category(Category $category){
         try {
             $products = Product::where('category_id', $category->id)->paginate(10);
-            return ProductResource::collection($products);
+            return response()->json([
+                'data' => ProductResource::collection($products),
+                'meta' => [
+                        'pagination' => [
+                            'total' => $products->total(),
+                            'per_page' => $products->perPage(),
+                            'current_page' => $products->currentPage(),
+                            'last_page' => $products->lastPage(),
+                        ]
+                ],
+                'status' => 'success',
+                'message' => 'Data retrieved successfully',
+            ],200);
         } catch (\Exception $e){
             return response()->json([
                 'data' => null,
@@ -59,7 +71,19 @@ class ProductController extends Controller
         try {
             $products = Product::orderBy('price', $sort_by)->paginate(10);
 
-            return ProductResource::collection($products);
+            return response()->json([
+                'data' => ProductResource::collection($products),
+                'meta' => [
+                        'pagination' => [
+                            'total' => $products->total(),
+                            'per_page' => $products->perPage(),
+                            'current_page' => $products->currentPage(),
+                            'last_page' => $products->lastPage(),
+                        ]
+                ],
+                'status' => 'success',
+                'message' => 'Data retrieved successfully',
+            ],200);
         } catch (\Exception $e){
             return response()->json([
                 'data' => null,

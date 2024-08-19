@@ -144,7 +144,7 @@ class OrderController extends Controller
 
     public function order_history(Request $request){
         try {
-            $history = Order::where('user_id', $request->user()->id)->with('orderItems.product')->get();
+            $history = Order::where('user_id', $request->user()->id)->with('orderItems.product')->paginate(10);
             $order_history = $history->map(function ($item) {
                 $order_items = $item->orderItems->map(function ($orderItem) {
                     return [
@@ -167,9 +167,17 @@ class OrderController extends Controller
             $order_history = $order_history->toArray();
 
             return response()->json([
+                'data' => $order_history,
+                'meta' => [
+                    'pagination' => [
+                        'total' => $history->total(),
+                        'per_page' => $history->perPage(),
+                        'current_page' => $history->currentPage(),
+                        'last_page' => $history->lastPage(),
+                    ]
+                ],
                 'status' => 'success',
                 'message' => 'Data retrieved successfully',
-                'order_history' => $order_history
             ],200);
         } catch (\Exception $e) {
             return response()->json([

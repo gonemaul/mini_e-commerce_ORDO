@@ -17,7 +17,6 @@ return new class extends Migration
             $table->morphs('notifiable');
             $table->text('data');
             $table->timestamp('read_at')->nullable();
-            $table->boolean('serialized')->nullable()->default(false);
             $table->timestamps();
         });
     }

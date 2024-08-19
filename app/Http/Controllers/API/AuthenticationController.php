@@ -33,6 +33,7 @@ class AuthenticationController extends Controller
             'name' => Str::title($request->name),
             'email' => $request->email,
             'password' =>  Hash::make($request->password),
+            'is_admin' => false
         ]);
         $admin = User::where('is_admin', true)->get();
         if($admin){
@@ -63,7 +64,7 @@ class AuthenticationController extends Controller
                 'data' => [
                     'name' => $user->name,
                     'email' => $user->email,
-                    'profile_image' => $user->profile_image,
+                    'profile_image' => $user->profile_image ? url('storage/' . $user->profile_image) : 'No Profile Image',
                     'last_login' => $user->last_login,
                     'created_at' => $user->created_at,
                     'token' => [
@@ -90,7 +91,7 @@ class AuthenticationController extends Controller
             'account' => [
                 'name' => $user->name,
                 'email' => $user->email,
-                'profile_image' => url('storage/' . $user->profile_image),
+                'profile_image' => $user->profile_image ? url('storage/' . $user->profile_image) : 'No Profile Image',
                 'last_login' => $user->last_login,
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at,

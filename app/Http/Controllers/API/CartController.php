@@ -80,8 +80,6 @@ class CartController extends Controller
                 ],200);
             }
             return response()->json([
-                'status' => 'success',
-                'message' => 'Cart items retrieved successfully',
                 'data' => [
                     'cartItems' => $cartItems->map(function ($cartItem) {
                         return [
@@ -93,6 +91,9 @@ class CartController extends Controller
                     }),
                     'totalPrice' => $totalPrice
                 ],
+                'status' => 'success',
+                'message' => 'Cart items retrieved successfully',
+
             ],200);
         } catch (\Exception $e) {
             return response()->json([
