@@ -15,9 +15,12 @@ Route::middleware('guest')->group(function(){
     Route::get('register', [AuthenticationController::class, 'register'])->name('register');
     Route::post('store', [AuthenticationController::class, 'store'])->name('store');
     Route::post('authenticate', [AuthenticationController::class, 'authenticate'])->name('authenticate');
+    // Route::get('forgotPassword', [AuthenticationController::class, 'forgotPasswordForm'])->name('forgotPassword');
 });
+Route::get('verify', [AuthenticationController::class, 'verify'])->middleware('auth')->name('verifyForm');
+Route::post('verify/{hash}', [AuthenticationController::class, 'verifyHandler'])->middleware(['auth', 'signed'])->name('verification.verify');
 
-Route::middleware('auth')->group(function(){
+Route::middleware(['auth','verified'])->group(function(){
     // Dashboard
     Route::get('/', [DashboardController::class,'index'])->name('dashboard');
 

@@ -35,6 +35,13 @@
                 </div>
               @enderror
             </div>
+            <div class="form-group d-flex align-items-center justify-content-between">
+                <div class="form-check">
+                  <label class="form-check-label" for="remember_me">
+                    <input type="checkbox" id="remember_me" name="remember" class="form-check-input"> Remember me </label>
+                </div>
+                <a href="#" class="forgot-pass">Forgot password</a>
+              </div>
             <div class="text-center">
               <button type="submit" class="btn btn-primary btn-block enter-btn">Login</button>
             </div>
