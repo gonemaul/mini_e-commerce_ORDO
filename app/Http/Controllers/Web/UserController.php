@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Storage;
 class UserController extends Controller
 {
     public function profile(){
-        return view('profile')->with([
+        return view('users.profile')->with([
             'title' => 'Profile',
             'user' => Auth::user()
         ]);

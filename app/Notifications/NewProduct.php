@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class NewProduct extends Notification
+class NewProduct extends Notification implements ShouldQueue
 {
     use Queueable;
     private $product;
@@ -30,7 +30,7 @@ class NewProduct extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database','mail'];
     }
 
     /**
@@ -39,8 +39,9 @@ class NewProduct extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
+                    ->greeting('Hello, ' . $notifiable->name)
+                    ->line('New Product available with category '. $this->category->name)
+                    ->action('Detail product', url('api/products/'. $this->product->id))
                     ->line('Thank you for using our application!');
     }
 
@@ -54,7 +55,7 @@ class NewProduct extends Notification
         return [
             'title' => 'New Product',
             'message' => 'New Product available with category '. $this->category->name,
-            'url' => url('products/'. $this->product->id)
+            'url' => url('api/products/'. $this->product->id)
         ];
     }
 }

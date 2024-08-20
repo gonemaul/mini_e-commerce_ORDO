@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ChangeStatusOrder extends Notification
+class ChangeStatusOrder extends Notification implements ShouldQueue
 {
     use Queueable;
     private $order;
@@ -27,7 +27,7 @@ class ChangeStatusOrder extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database','mail'];
     }
 
     /**
@@ -35,9 +35,15 @@ class ChangeStatusOrder extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        if($notifiable->is_admin == true){
+            $url = 'orders/' . $this->order->id;
+        }else{
+            $url = 'api/orders/history';
+        }
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
+                    ->greeting('Hello, ' . $notifiable->name)
+                    ->line('Change status order with ID '. $this->order->order_id)
+                    ->action('Detail order', url($url))
                     ->line('Thank you for using our application!');
     }
 
@@ -48,10 +54,15 @@ class ChangeStatusOrder extends Notification
      */
     public function toArray(object $notifiable): array
     {
+        if($notifiable->is_admin == true){
+            $url = 'orders/' . $this->order->id;
+        }else{
+            $url = 'api/orders/history';
+        }
         return [
             'title' => 'Change Status Order',
             'message' => 'Change status order with ID '. $this->order->order_id ,
-            'url' => url('orders/' . $this->order->id) ,
+            'url' => url($url) ,
             'type' => 'mdi-cart text-success'
         ];
     }
