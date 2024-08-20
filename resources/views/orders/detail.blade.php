@@ -134,13 +134,14 @@
             </div>
         </div>
         <div class="d-flex mt-4 justify-content-end">
-            <a href="{{ route('orders.list') }}" class="ml-2 mr-2 btn btn-primary">Back</a>
+            <a href="{{ route('orders.list') }}" class="mr-2 btn btn-primary"><i class="fa-solid fa-arrow-left"></i> Back</a>
             @if($order->status !== 'Canceled')
                 <form action="{{ route('orders.cancel', $order->order_id) }}" method="post">
                     @csrf
                     <button type="submit" class="btn btn-danger" onclick="return confirm('What are you sure? ..')" style="font-size:1rem"><i class="fa-solid fa-xmark"></i> Cancel</button>
                 </form>
             @endif
+            <a href="{{ route('orders.invoice', $order->order_id) }}" class="btn btn-info ml-2" style="font-size:1rem"><i class="fa-regular fa-file-pdf"></i> Invoice</a>
         </div>
     </div>
 </div>

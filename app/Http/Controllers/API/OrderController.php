@@ -12,6 +12,7 @@ use Midtrans\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Notifications\NewOrder;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use App\Notifications\ChangeStatusOrder;
 use Illuminate\Support\Facades\Notification;
@@ -213,5 +214,15 @@ class OrderController extends Controller
             Notification::send($users, new ChangeStatusOrder($order));
             return response()->json(['message' => 'Order canceled successfully'], 200);
         }
+    }
+
+    public function invoice($order_id){
+        $order = Order::with(['user','orderItems.product.category', 'orderItems.product.productImage'])->where('order_id', $order_id)->first();
+
+        // Buat PDF dari tampilan
+        $pdf = Pdf::loadView('orders.invoice', ['order' => $order, 'button' => '']);
+
+        // Mengunduh PDF dengan nama file tertentu
+        return $pdf->download('invoice_'.$order->order_id.'.pdf');
     }
 }

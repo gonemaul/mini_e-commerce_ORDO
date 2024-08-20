@@ -36,15 +36,20 @@ class NewOrder extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         if($notifiable->is_admin == true){
-            $url = 'orders/' . $this->order->id;
-        }else{
-            $url = 'api/orders/history';
-        }
-        return (new MailMessage)
+            return (new MailMessage)
                     ->greeting('Hello, ' . $notifiable->name)
                     ->line('New Order with ID '. $this->order->order_id)
-                    ->action('Detail order', url($url))
+                    ->action('Detail order', url('orders/' . $this->order->id))
                     ->line('Thank you for using our application!');
+        }else{
+            return (new MailMessage)
+                    ->greeting('Hello, ' . $notifiable->name)
+                    ->line('New Order with ID '. $this->order->order_id)
+                    ->line('Please make the payment immediately!!!')
+                    ->action('Download invoice', url('invoice/' . $this->order->order_id))
+                    ->line('Thank you for using our application!');
+        }
+
     }
     /**
      * Get the array representation of the notification.
@@ -54,15 +59,20 @@ class NewOrder extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         if($notifiable->is_admin == true){
-            $url = 'orders/' . $this->order->id;
+            return [
+                'title' => 'New Order',
+                'message' => 'New Order with ID '. $this->order->order_id ,
+                'url' => url('orders/' . $this->order->id) ,
+                'type' => 'mdi-cart text-warning'
+            ];
         }else{
-            $url = 'api/orders/history';
+            $url = 'api/invoice/' . $this->order->order_id;
+            return [
+                'title' => 'New Order',
+                'message' => 'New Order with ID '. $this->order->order_id . ', Please make the payment immediately!!!',
+                'url' => url('api/invoice/' . $this->order->order_id) ,
+            ];
         }
-        return [
-            'title' => 'New Order',
-            'message' => 'New Order with ID '. $this->order->order_id ,
-            'url' => url($url) ,
-            'type' => 'mdi-cart text-warning'
-        ];
+
     }
 }

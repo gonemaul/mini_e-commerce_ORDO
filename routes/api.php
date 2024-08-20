@@ -35,6 +35,8 @@ Route::middleware('auth:sanctum')->group( function(){
         Route::get('history', [OrderController::class, 'order_history']);
         Route::post('{order_id}/cancel', [OrderController::class, 'cancel_order']);
     });
+    // Invoice
+    Route::get('invoice/{order_id}', [OrderController::class, 'invoice']);
 
     // Notification
     Route::prefix('notifications')->group(function(){

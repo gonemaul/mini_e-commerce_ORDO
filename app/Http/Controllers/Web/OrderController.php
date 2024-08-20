@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Models\User;
 use Midtrans\Config;
 use App\Models\Order;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Midtrans\Transaction;
 use App\Exports\OrderExport;
 use Illuminate\Http\Request;
@@ -103,5 +104,38 @@ class OrderController extends Controller
     public function export(){
         $name = 'Orders_' . Carbon::now()->format('Ymd') . rand(10,99) . '.xlsx';
         return Excel::download(new OrderExport(), $name);
+    }
+
+    public function invoice($order_id){
+        $order =Order::with(['user','orderItems.product.category', 'orderItems.product.productImage'])->where('order_id', $order_id)->first();
+        $order->invoice_id = now()->format('Ymd') . rand(100,999);
+        return view('orders.invoice')->with([
+            'title' => 'Invoice',
+            'order' => $order,
+            'button' => '<div class="container mt-3">
+            <a href="'. route('orders.invoice_download', $order->order_id) .'" class="btn btn-outline-info" style="font-size:1rem"><i class="fa-regular fa-file-pdf"></i>Download</a>
+            <a href="'. route('orders.invoice_preview', $order->order_id) .'" target="blank" class="btn btn-outline-warning" style="font-size:1rem"><i class="fa-solid fa-print"></i>Preview</a>
+            </div>'
+        ]);
+    }
+
+    public function invoice_download($order_id){
+        $order = Order::with(['user','orderItems.product.category', 'orderItems.product.productImage'])->where('order_id', $order_id)->first();
+
+        // Buat PDF dari tampilan
+        $pdf = Pdf::loadView('orders.invoice', ['order' => $order, 'button' => '']);
+
+        // Mengunduh PDF dengan nama file tertentu
+        return $pdf->download('invoice_'.$order->order_id.'.pdf');
+    }
+
+    public function invoice_preview($order_id){
+        $order = Order::with(['user','orderItems.product.category', 'orderItems.product.productImage'])->where('order_id', $order_id)->first();
+
+        // Buat PDF dari tampilan
+        $pdf = Pdf::loadView('orders.invoice', ['order' => $order, 'button' => '']);
+
+        // Mengunduh PDF dengan nama file tertentu
+        return $pdf->stream('invoice_'.$order->order_id.'.pdf');
     }
 }

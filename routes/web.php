@@ -1,7 +1,12 @@
 <?php
 
+use App\Models\Order;
+use App\Notifications\NewOrder;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\UserController;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\Web\ImageController;
 use App\Http\Controllers\Web\OrderController;
 use App\Http\Controllers\Web\ProductController;
@@ -60,6 +65,10 @@ Route::middleware('auth')->group(function(){
     });
 
 
+
+    Route::get('invoice/{order_id}', [OrderController::class, 'invoice'])->name('orders.invoice');
+    Route::get('invoice/{order_id}/download', [OrderController::class, 'invoice_download'])->name('orders.invoice_download');
+    Route::get('invoice/{order_id}/preview', [OrderController::class, 'invoice_preview'])->name('orders.invoice_preview');
     // Order
     Route::prefix('orders')->group(function() {
         Route::get('/', [OrderController::class, 'index'])->name('orders.list');
