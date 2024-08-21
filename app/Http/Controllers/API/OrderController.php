@@ -40,6 +40,7 @@ class OrderController extends Controller
         $order_id = $date . rand(10000, 99999);
         $user = $request->user();
         $cartItems = CartItem::where('user_id', $user->id)->with('product')->get();
+        $lastOrder = Order::orderBy('created_at', 'desc')->first();
 
         if($cartItems->isEmpty()){
             return response()->json(['message' => 'Cart is empty'], 400);
@@ -120,18 +121,18 @@ class OrderController extends Controller
             $order->save();
 
             $cartItems = CartItem::where('user_id', $user->id)->delete();
-
             $invoice = Pdf::loadView('orders.invoice', ['order' => $order, 'button' => '']);
             $path = storage_path('app/public/invoices/' . 'invoice_'.$order->order_id.'.pdf');
             Storage::put('invoices/' . 'invoice_'.$order->order_id.'.pdf', $invoice->output());
             $users = User::where('is_admin', true)->orWhere('id', $user->id)->get();
             if($users){
                 Notification::send($users, new NewOrder($order,$path));
-                Storage::delete('invoices/' . 'invoice_'.$order->order_id . 'pdf');
             }
+            Storage::delete('invoices/' . 'invoice_'.$lastOrder->order_id . '.pdf');
             return response()->json([
                 'status' => 'success',
                 'message' => 'Please ndang bayar!!',
+                'lats_order' => $lastOrder->order_id,
                 'payment' => [
                     'token' => $snapToken,
                     'link' => 'https://app.sandbox.midtrans.com/snap/v2/vtweb/'.$snapToken,
