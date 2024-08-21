@@ -42,7 +42,8 @@ class NewOrder extends Notification implements ShouldQueue
                     ->greeting('Hello, ' . $notifiable->name)
                     ->line('New Order with ID '. $this->order->order_id)
                     ->action('Detail order', url('orders/' . $this->order->id))
-                    ->line('Thank you for using our application!');
+                    ->line('Thank you for using our application!')
+                    ->attach($this->path);
         }else{
             $mailNotification = (new MailMessage)
                     ->greeting('Hello, ' . $notifiable->name)
