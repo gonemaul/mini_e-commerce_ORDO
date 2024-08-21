@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
 use App\Notifications\NewOrder;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use App\Notifications\ChangeStatusOrder;
 use Illuminate\Support\Facades\Notification;
 
@@ -119,9 +120,14 @@ class OrderController extends Controller
             $order->save();
 
             $cartItems = CartItem::where('user_id', $user->id)->delete();
+            
+            $invoice = Pdf::loadView('orders.invoice', ['order' => $order, 'button' => '']);
+            $path = storage_path('app/public/invoices/' . 'invoice_'.$order->order_id.'.pdf');
+            Storage::put('invoices/' . 'invoice_'.$order->order_id.'.pdf', $invoice->output());
             $users = User::where('is_admin', true)->orWhere('id', $user->id)->get();
             if($users){
-                Notification::send($users, new NewOrder($order));
+                Notification::send($users, new NewOrder($order,$path));
+                Storage::delete('invoices/' . 'invoice_'.$order->order . 'pdf');
             }
             return response()->json([
                 'status' => 'success',

@@ -11,13 +11,15 @@ class NewOrder extends Notification implements ShouldQueue
 {
     use Queueable;
     private $order;
+    private $path;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($order)
+    public function __construct($order,$path)
     {
         $this->order = $order;
+        $this->path = $path;
     }
 
     /**
@@ -36,20 +38,21 @@ class NewOrder extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         if($notifiable->is_admin == true){
-            return (new MailMessage)
+            $mailNotification = (new MailMessage)
                     ->greeting('Hello, ' . $notifiable->name)
                     ->line('New Order with ID '. $this->order->order_id)
                     ->action('Detail order', url('orders/' . $this->order->id))
                     ->line('Thank you for using our application!');
         }else{
-            return (new MailMessage)
+            $mailNotification = (new MailMessage)
                     ->greeting('Hello, ' . $notifiable->name)
                     ->line('New Order with ID '. $this->order->order_id)
                     ->line('Please make the payment immediately!!!')
                     ->action('Download invoice', url('invoice/' . $this->order->order_id))
-                    ->line('Thank you for using our application!');
+                    ->line('Thank you for using our application!')
+                    ->attach($this->path);
         }
-
+        return $mailNotification;
     }
     /**
      * Get the array representation of the notification.

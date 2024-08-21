@@ -113,8 +113,8 @@ class OrderController extends Controller
             'title' => 'Invoice',
             'order' => $order,
             'button' => '<div class="container mt-3">
-            <a href="'. route('orders.invoice_download', $order->order_id) .'" class="btn btn-outline-info" style="font-size:1rem"><i class="fa-regular fa-file-pdf"></i>Download</a>
-            <a href="'. route('orders.invoice_preview', $order->order_id) .'" target="blank" class="btn btn-outline-warning" style="font-size:1rem"><i class="fa-solid fa-print"></i>Preview</a>
+                <a href="'. route('orders.invoice_download', $order->order_id) .'" class="btn btn-outline-info" style="font-size:1rem"><i class="fa-regular fa-file-pdf"></i>Download</a>
+                <a href="'. route('orders.invoice_preview', $order->order_id) .'" target="blank" class="btn btn-outline-warning" style="font-size:1rem"><i class="fa-solid fa-print"></i>Preview</a>
             </div>'
         ]);
     }

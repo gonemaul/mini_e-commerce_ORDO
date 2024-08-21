@@ -3,7 +3,6 @@
 @section('content')
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/1b48e60650.js" crossorigin="anonymous"></script>
-
 <ul class="notifications"></ul>
 
 <link rel="stylesheet" href="{{ asset('assets/css/alert.css') }}">
@@ -115,7 +114,7 @@
             <div class="right d-flex align-content-center justify-content-between col-md-4">
                 <div class="title">
                     <span class="d-block">Total Product</span>
-                    <span class="d-block">Ongkir</span>
+                    <span class="d-block">Discon</span>
                     <span class="d-block">Biaya Layanan</span>
                     <span class="d-block">Total Payment</span>
                 </div>
@@ -127,9 +126,9 @@
                 </div>
                 <div class="body">
                     <span class="d-block">{{ number_format($order->total, 0, ',', '.') }}</span>
-                    <span class="d-block">10.000</span>
+                    <span class="d-block">0</span>
                     <span class="d-block">1.000</span>
-                    <span class="d-block">{{ number_format(($order->total + 10000 + 1000), 0, ',', '.') }}</span>
+                    <span class="d-block">{{ number_format(($order->total + 1000), 0, ',', '.') }}</span>
                 </div>
             </div>
         </div>
@@ -141,7 +140,7 @@
                     <button type="submit" class="btn btn-danger" onclick="return confirm('What are you sure? ..')" style="font-size:1rem"><i class="fa-solid fa-xmark"></i> Cancel</button>
                 </form>
             @endif
-            <a href="{{ route('orders.invoice', $order->order_id) }}" class="btn btn-info ml-2" style="font-size:1rem"><i class="fa-regular fa-file-pdf"></i> Invoice</a>
+            <a href="{{ route('orders.invoice', $order->order_id) }}" target="blank" class="btn btn-info ml-2" style="font-size:1rem"><i class="fa-regular fa-file-pdf"></i> Invoice</a>
         </div>
     </div>
 </div>
