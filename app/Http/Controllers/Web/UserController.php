@@ -14,7 +14,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\emailVerification;
+use Illuminate\Support\Facades\Notification;
 
 class UserController extends Controller
 {
@@ -28,7 +31,7 @@ class UserController extends Controller
     public function update_profile(Request $request){
         $user = User::findOrFail($request->id);
 
-        $validatedData = $request->validate([
+        $request->validate([
             'name' => ['required','string','max:255','regex:/^[\pL\s]+$/u'],
             'email' => ['required','string','email','max:255'],
             'profile_image' => ['image','max:1024','mimes:jpeg,png,jpg,gif,svg',],
@@ -38,12 +41,18 @@ class UserController extends Controller
             if($user->profile_image){
                 Storage::delete($user->profile_image);
             }
-            $validatedData['profile_image'] = $request->file('profile_image')->store('profile_image','public');
+            $user->profile_image = $request->file('profile_image')->store('profile_image','public');
         }
+        $user->name = Str::title($request->name);
 
-        $validatedData['name'] = Str::title($request->name);
-
-        $user->update($validatedData);
+        $user->save();
+        if($request->email !== $user->email){
+            $user->email_verified_at = null;
+            $user->email = $request->email;
+            $user->save();
+            $user->sendEmailVerificationNotification();
+            return redirect()->route('verification.notice')->with('success', 'Verification link sent!');
+        }
         return redirect()->route('dashboard')->with(['success' => "Your profile has been updated successfully"]);
     }
 

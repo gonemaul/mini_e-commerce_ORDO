@@ -9,10 +9,21 @@ use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\AuthenticationController;
 
-Route::post('register', [AuthenticationController::class, 'register']);
-Route::post('login', [AuthenticationController::class, 'login']);
+// Email Verification
+Route::post('/email/verify/send', [AuthenticationController::class, 'verifySend'])->middleware(['throttle:6,1'])->name('api.verification.resend');
+Route::get('/email/verify-status', [AuthenticationController::class, 'verifyStatus'])->middleware(['auth:sanctum', 'verified']);
+Route::get('/email/verify/{id}/{hash}', [AuthenticationController::class, 'verifyHandler'])->middleware(['signed'])->name('api.verification.verify');
 
-Route::middleware('auth:sanctum')->group( function(){
+Route::middleware(['guest'])->group( function(){
+    Route::post('register', [AuthenticationController::class, 'register']);
+    Route::post('login', [AuthenticationController::class, 'login']);
+    // Forgot Password
+    Route::post('forgot-password/reset', [AuthenticationController::class, 'forgot_reset']);
+    Route::post('forgot-password/request', [AuthenticationController::class, 'forgot_request']);
+    Route::get('forgot-password/{token}', [AuthenticationController::class, 'forgot_verify'])->name('api.password.reset');
+});
+
+Route::middleware(['auth:sanctum' , 'verified'])->group( function(){
     Route::get('me', [AuthenticationController::class, 'me']);
     Route::post('me', [AuthenticationController::class, 'update_me']);
     Route::post('logout', [AuthenticationController::class, 'logout']);

@@ -20,10 +20,17 @@ Route::middleware('guest')->group(function(){
     Route::get('register', [AuthenticationController::class, 'register'])->name('register');
     Route::post('store', [AuthenticationController::class, 'store'])->name('store');
     Route::post('authenticate', [AuthenticationController::class, 'authenticate'])->name('authenticate');
-    // Route::get('forgotPassword', [AuthenticationController::class, 'forgotPasswordForm'])->name('forgotPassword');
+
+    // Forgot Password
+    Route::get('forgot-password', [AuthenticationController::class, 'forgotPWverify'])->name('password.request');
+    Route::post('forgot-password/send', [AuthenticationController::class, 'forgotPWsend'])->name('password.email');
+    Route::get('forgot-password/{token}', [AuthenticationController::class, 'forgotPWreset'])->name('password.reset');
+    Route::post('reset-password', [AuthenticationController::class, 'resetPassword'])->name('password.update');
 });
-Route::get('verify', [AuthenticationController::class, 'verify'])->middleware('auth')->name('verifyForm');
-Route::post('verify/{hash}', [AuthenticationController::class, 'verifyHandler'])->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::get('email/verify', [AuthenticationController::class, 'verify'])->middleware(['auth'])->name('verification.notice');
+Route::get('email/verify/{id}/{hash}', [AuthenticationController::class, 'verifyHandler'])->middleware(['auth','signed'])->name('verification.verify');
+Route::post('email/verify/send', [AuthenticationController::class, 'verifySend'])->middleware(['auth','throttle:6,1'])->name('verification.send');
 
 Route::middleware(['auth','verified'])->group(function(){
     // Dashboard

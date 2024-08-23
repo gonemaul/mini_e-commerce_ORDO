@@ -11,6 +11,13 @@
     .invalid-feedback{
         display: block
     }
+    .detail-field{
+        display: block;
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 85%;
+        color: #c1c1c1;
+    }
 </style>
 <div class="content-wrapper">
     @if (url()->current() == Route('profile'))
@@ -68,13 +75,16 @@
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Email" value="{{ $user->email }}">
+                        <div class="detail-field">
+                            Please enter a valid email...
+                        </div>
                         @error('email')
-                            <div class="invalid-feedback">
+                        <div class="invalid-feedback">
                             {{ $message }}
                             </div>
                         @enderror
                     </div>
-                    <button class="btn btn-primary" type="submit">Save</button>
+                    <button class="btn btn-primary" type="submit">Update</button>
                 </form>
             </div>
         </div>
