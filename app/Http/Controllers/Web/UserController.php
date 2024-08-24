@@ -18,6 +18,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\emailVerification;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\Auth\EmailVerifyNotification;
 
 class UserController extends Controller
 {
@@ -50,8 +51,15 @@ class UserController extends Controller
             $user->email_verified_at = null;
             $user->email = $request->email;
             $user->save();
-            $user->sendEmailVerificationNotification();
-            return redirect()->route('verification.notice')->with('success', 'Verification link sent!');
+            Notification::send($user, new EmailVerifyNotification());
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerate();
+            $request->session()->forget('remember_me');
+            return redirect()->route('verification.notice')->with([
+                'email' => $user->email,
+                'success' => 'Verification link sent!, Please check your inbox for email verification before logging back in.'
+            ]);
         }
         return redirect()->route('dashboard')->with(['success' => "Your profile has been updated successfully"]);
     }

@@ -21,6 +21,10 @@ Route::middleware('guest')->group(function(){
     Route::post('store', [AuthenticationController::class, 'store'])->name('store');
     Route::post('authenticate', [AuthenticationController::class, 'authenticate'])->name('authenticate');
 
+    Route::get('email/verify', [AuthenticationController::class, 'verify'])->name('verification.notice');
+    Route::get('verify/{email}', function($email){
+        return redirect()->route('verification.notice')->with('email', $email);
+    })->name('verification.email');
     // Forgot Password
     Route::get('forgot-password', [AuthenticationController::class, 'forgotPWverify'])->name('password.request');
     Route::post('forgot-password/send', [AuthenticationController::class, 'forgotPWsend'])->name('password.email');
@@ -28,9 +32,8 @@ Route::middleware('guest')->group(function(){
     Route::post('reset-password', [AuthenticationController::class, 'resetPassword'])->name('password.update');
 });
 
-Route::get('email/verify', [AuthenticationController::class, 'verify'])->middleware(['auth'])->name('verification.notice');
-Route::get('email/verify/{id}/{hash}', [AuthenticationController::class, 'verifyHandler'])->middleware(['auth','signed'])->name('verification.verify');
-Route::post('email/verify/send', [AuthenticationController::class, 'verifySend'])->middleware(['auth','throttle:6,1'])->name('verification.send');
+Route::get('email/verify/{id}/{hash}', [AuthenticationController::class, 'verifyHandler'])->middleware(['signed'])->name('verification.verify');
+Route::post('email/verify/send', [AuthenticationController::class, 'verifySend'])->middleware(['throttle:6,1'])->name('verification.send');
 
 Route::middleware(['auth','verified'])->group(function(){
     // Dashboard

@@ -4,12 +4,18 @@
         height: 100vh;
         width: 100%;
     }
+    .invalid-feedback{
+        display: block;
+    }
+    .info{
+        color: #6c7293;
+        margin-bottom: 10px;
+    }
 </style>
 
-    <div class="content-wrapper full-page-wrapper d-flex align-items-center">
+    <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-half-bg">
       <div class="card col-lg-4 mx-auto">
         <div class="card-body px-5 py-5">
-          <h6>Please check your inbox for a verification account.</h6>
           <form action="{{ route('verification.send') }}" method="post">
             @csrf
             @if(session()->has('success'))
@@ -21,10 +27,27 @@
                     {{ session('error') }}
                 </div>
             @endif
-            <div class="text-center">
-              <button type="submit" class="btn btn-primary btn-block enter-btn">Resend Link</button>
-            </div>
+            <form action="">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" name="email" class="form-control p_input @error('email') is-invalid @enderror" value="{{ session('email') ?? '' }}" required autofocus>
+                    @error('email')
+                        <div class="invalid-feedback">
+                        {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="invalid-feedback info">
+                    If you haven't received the email please press the button below
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary btn-block enter-btn">Resend Link</button>
+                </div>
+            </form>
           </form>
         </div>
       </div>
     </div>
+<script>
+
+</script>

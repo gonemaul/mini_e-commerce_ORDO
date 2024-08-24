@@ -14,7 +14,7 @@
                 </div>
             @elseif (session()->has('error'))
                 <div class="alert alert-danger" role="alert">
-                    {{ session('error') }}
+                    {!! session('error') !!}
                 </div>
             @endif
             <div class="form-group">

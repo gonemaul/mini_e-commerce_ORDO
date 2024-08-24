@@ -3,17 +3,20 @@
 namespace App\Http\Controllers\Web;
 
 use App\Models\User;
+use App\Models\EmailVerify;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Notifications\NewUser;
+use Illuminate\Support\Carbon;
+use \Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\Auth\EmailVerifyNotification;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class AuthenticationController extends Controller
@@ -42,13 +45,15 @@ class AuthenticationController extends Controller
             'password' => Hash::make($request->password),
             'is_admin' => true
         ]);
-        Auth::login($new_user);
         $admin = User::where('is_admin', true)->where('id', '!=', $new_user->id)->get();
         if($admin){
             Notification::send($admin, new NewUser($new_user));
         }
-        event(new Registered($new_user));
-        return redirect()->route('verification.notice')->with('success', 'Verification link sent successfully, Please check your inbox for a verification email.');
+        Notification::send($new_user, new EmailVerifyNotification());
+        return redirect()->route('verification.notice')->with([
+            'email' => $new_user->email,
+            'success' => 'You have successfully registered, Please check your inbox for a verification email.'
+        ]);
     }
 
     public function authenticate(Request $request){
@@ -58,47 +63,93 @@ class AuthenticationController extends Controller
         ]);
         $user = User::where('email', $request->email)->first();
         $remember = $request->has('remember');
-        if(!$user->hasVerifiedEmail()){
-            return back()->with(['error' => 'Email not verified!, Please verify your email']);
-        } else {
-            if(Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password'], 'is_admin' => true],$remember)){
-                $request->session()->regenerate();
-                $user->update(['last_login' => now()]);
+        if($user){
+            if(!$user->hasVerifiedEmail()){
+                return back()->with(['error' => 'Account not actived, Please verify your email, <a href="'.route('verification.email', $request->email).'">Verify</a>']);
+            } else {
+                if(Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password'], 'is_admin' => true],$remember)){
+                    $request->session()->regenerate();
+                    $user->update(['last_login' => now()]);
 
-                return redirect()->route('dashboard');
+                    return redirect()->route('dashboard');
+                }
+                return back()->with(['error' => 'Your provided credentials do not match in our records!!'])->onlyInput('email');
             }
-            return back()->with(['error' => 'Your provided credentials do not match in our records!!'])->onlyInput('email');
         }
+        return back()->with(['error' => 'Your provided credentials do not match in our records!! Please register your account.'])->onlyInput('email');
 
     }
 
-    public function verify(){
-        if(Auth::user()->email_verified_at == null){
-            return view('auth.verification')->with('title', 'Email verification');
-        }
-        else{
-            return redirect()->route('dashboard')->with('success', 'Email already verified');
-        }
+    public function verify(Request $request ){
+        return view('auth.verification')->with([
+            'title' => 'Email verification',
+        ]);
     }
 
-    public function verifyHandler(EmailVerificationRequest $request){
-        if (!$request->hasValidSignature()) {
-            return redirect()->route('verification.notice')->with('error', 'Invalid/Expired url provided.');
+    public function verifyHandler($id,$hash,Request $request ){
+        $verify = EmailVerify::where('token', $hash)->first();
+        if(!$verify){
+            return 'Your verification is invalid';
         }
-        $user = $request->user();
-        if ($user->hasVerifiedEmail()) {
-            return redirect()->route('dashboard')->with('status', 'Email already verified.');
+        try {
+            $user = User::where('id', $id)->where('email', $verify->email)->first();
+
+            if(Carbon::now()->greaterThan($verify->created_at->addMinutes(10))){
+                $verify->delete();
+                return 'Verification link expired.';
+            }
+
+            if($user->hasVerifiedEmail()){
+                if($request->is('api/*')){
+                    return response()->json([
+                       'status' => 'error',
+                       'message' => 'Email already verified.'
+                    ], 200);
+                } else{
+                    return redirect()->route('login')->with([
+                        'success' => 'Email already verified'
+                    ]);
+                }
+            }
+
+            if ($user->markEmailAsVerified()) {
+                event(new Verified($user));
+            }
+            $verify->delete();
+
+            if($request->is('api/*')){
+                return response()->json([
+                   'status' =>'success',
+                   'message' => 'Email verified successfully. Your account has been actived.'
+                ], 200);
+            } else{
+                return redirect()->route('login')->with([
+                   'success' => 'Email verified successfully. Your account has been actived.'
+                ]);
+            }
+        } catch (\Exception $e){
+            Log::error($e->getMessage());
+            return 'Error verifying email.';
         }
-
-        $request->fulfill();
-
-        return redirect()->route('dashboard')->with('status', 'Email verified successfully.');
     }
 
     public function verifySend(Request $request){
-        $request->user()->sendEmailVerificationNotification();
+        $request->validate([
+            'email' => ['required', 'email', 'exists:users']
+        ],['email.exists' => 'Invalid email address']);
+        $user = User::where('email', $request->email)->first();
+        if($user->hasVerifiedEmail()){
+            return redirect()->route('login')->with([
+                'success' => 'Email already verified'
+            ]);
+        }
 
-        return back()->with('success', 'Verification link sent successfully, Please check your inbox for a verification email.');
+        Notification::send($user, new EmailVerifyNotification());
+
+        return redirect()->route('verification.notice')->with([
+            'email' => $user->email,
+            'success' => 'Verification link sent successfully, Please check your inbox for a verification email.'
+        ]);
     }
 
     public function forgotPWverify(){

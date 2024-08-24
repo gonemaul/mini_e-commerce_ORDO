@@ -84,7 +84,7 @@
                             </div>
                         @enderror
                     </div>
-                    <button class="btn btn-primary" type="submit">Update</button>
+                    <button class="btn btn-primary" onclick="return confirm('What are you sure? ..')" type="submit">Update</button>
                 </form>
             </div>
         </div>
