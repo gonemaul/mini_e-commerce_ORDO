@@ -38,7 +38,7 @@
                   <h3 class="mb-0" style="font-size: 1.6rem;font-weight:500">{{ count($users) }}</h3>
                 </div>
             </div>
-            <h6 class="text-muted font-weight-normal">Total Users</h6>
+            <h6 class="text-muted font-weight-normal">{{ __('dashboard.total_user') }}</h6>
           </div>
         </div>
       </div>
@@ -55,7 +55,7 @@
                   <h3 class="mb-0" style="font-size: 1.6rem;font-weight:500">{{ count($categories) }}</h3>
                 </div>
             </div>
-            <h6 class="text-muted font-weight-normal">Total Category</h6>
+            <h6 class="text-muted font-weight-normal">{{ __('dashboard.total_category') }}</h6>
           </div>
         </div>
       </div>
@@ -72,7 +72,7 @@
                   <h3 class="mb-0" style="font-size: 1.6rem;font-weight:500">{{ count($products) }}</h3>
                 </div>
             </div>
-            <h6 class="text-muted font-weight-normal">Total Product</h6>
+            <h6 class="text-muted font-weight-normal">{{ __('dashboard.total_product') }}</h6>
           </div>
         </div>
       </div>
@@ -89,7 +89,7 @@
                   <h3 class="mb-0" style="font-size: 1.6rem;font-weight:500">{{ count($orders) }}</h3>
                 </div>
             </div>
-            <h6 class="text-muted font-weight-normal">Total Order</h6>
+            <h6 class="text-muted font-weight-normal">{{ __('dashboard.total_order') }}</h6>
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@
         <div class="card">
           <div class="card-body">
             <div class="d-flex flex-row justify-content-between">
-                <h4 class="card-title mb-1 text-primary" style="border-bottom: 3.5px solid #0090e7;">New Users</h4>
+                <h4 class="card-title mb-1 text-primary" style="border-bottom: 3.5px solid #0090e7;">{{ __('dashboard.new_user') }}</h4>
             </div>
                 <div class="row">
                     <div class="col-12">
@@ -118,7 +118,7 @@
                                         <div class="flex-grow">
                                             <h6 class="preview-subject">{{ $user->name }}</h6>
                                             <p class="text-muted mb-2">{{ $user->email }}</p>
-                                            <p class="text-muted">joined {{ $user->created_at->diffForHumans() }}</p>
+                                            <p class="text-muted">{{ __('general.join') }} {{ $user->created_at->diffForHumans() }}</p>
                                         </div>
                                         <div class="mr-auto text-sm-right pt-2 pt-sm-0 align-content-center">
                                             <label class="badge {{ $user->is_admin ? 'badge-outline-primary' : 'badge-outline-warning' }} ">{{ $user->is_admin ? 'Admin' : 'User' }}</label>
@@ -137,7 +137,7 @@
         <div class="card">
             <div class="card-body">
               <div class="d-flex flex-row justify-content-between">
-                  <h4 class="card-title mb-1 text-success" style="border-bottom: 3.5px solid #00d25b;">New Products</h4>
+                  <h4 class="card-title mb-1 text-success" style="border-bottom: 3.5px solid #00d25b;">{{ __('dashboard.new_product') }}</h4>
                   <p class="text-muted mb-1"></p>
               </div>
                   <div class="row">
@@ -159,13 +159,13 @@
                                                 <p class="text-muted mb-0">{{ $product->category->name }}</p>
                                             </div>
                                             <div class="mr-auto text-sm-right pt-2 pt-sm-0 align-content-end">
-                                                <p class="text-muted mb-0">Added {{ $product->created_at->diffForHumans() }}</p>
+                                                <p class="text-muted mb-0">{{ __('general.added') }} {{ $product->created_at->diffForHumans() }}</p>
                                             </div>
                                         </div>
                                     </div>
                                     @endif
                                 @empty
-                                    <h4 class="text-center mt-4 text-muted">No Data Available !</h4>
+                                    <h4 class="text-center mt-4 text-muted">{{ __('general.no_data') }}</h4>
                                 @endforelse
                           </div>
                       </div>
@@ -177,7 +177,7 @@
         <div class="card">
             <div class="card-body">
               <div class="d-flex flex-row justify-content-between">
-                  <h4 class="card-title mb-1 text-info" style="border-bottom: 3.5px solid #8f5fe8;">Best Saller</h4>
+                  <h4 class="card-title mb-1 text-info" style="border-bottom: 3.5px solid #8f5fe8;">{{ __('dashboard.best_seller') }}</h4>
                   <p class="text-muted mb-1"></p>
               </div>
                   <div class="row">
@@ -199,13 +199,13 @@
                                                 <p class="text-muted mb-0">{{ $product->category->name }}</p>
                                             </div>
                                             <div class="mr-auto text-sm-right pt-2 pt-sm-0 align-content-end">
-                                                <p class="text-muted mb-0">Sold {{ $product->sold }}</p>
+                                                <p class="text-muted mb-0">{{ __('general.sold') }} {{ $product->sold }}</p>
                                             </div>
                                         </div>
                                     </div>
                                     @endif
                                 @empty
-                                    <h4 class="text-center mt-4 text-muted">No Data Available !</h4>
+                                    <h4 class="text-center mt-4 text-muted">{{ __('general.no_data') }}</h4>
                                 @endforelse
                           </div>
                       </div>
@@ -217,7 +217,7 @@
         <div class="card">
             <div class="card-body">
               <div class="d-flex flex-row justify-content-between">
-                  <h4 class="card-title mb-1 text-warning" style="border-bottom: 3.5px solid #ffab00;">New Category</h4>
+                  <h4 class="card-title mb-1 text-warning" style="border-bottom: 3.5px solid #ffab00;">{{ __('dashboard.new_category') }}</h4>
                   <p class="text-muted mb-1"></p>
               </div>
                   <div class="row">
@@ -235,13 +235,13 @@
                                                 <p class="text-muted mb-0">Products {{ count($category->products) }}</p>
                                             </div>
                                             <div class="mr-auto text-sm-right pt-2 pt-sm-0 align-content-end">
-                                                <p class="text-muted mb-0">Added {{ $category->created_at->diffForHumans() }}</p>
+                                                <p class="text-muted mb-0">{{ __('general.added') }} {{ $category->created_at->diffForHumans() }}</p>
                                             </div>
                                         </div>
                                     </div>
                                     @endif
                                 @empty
-                                  <h4 class="text-center mt-4 text-muted">No Data Available !</h4>
+                                  <h4 class="text-center mt-4 text-muted">{{ __('general.no_data') }}</h4>
                                 @endforelse
                           </div>
                       </div>
@@ -253,7 +253,7 @@
         <div class="card">
             <div class="card-body">
               <div class="d-flex flex-row justify-content-between">
-                  <h4 class="card-title mb-1 text-danger" style="border-bottom: 3.5px solid #fc424a;">New Orders</h4>
+                  <h4 class="card-title mb-1 text-danger" style="border-bottom: 3.5px solid #fc424a;">{{ __('dashboard.new_order') }}</h4>
                   <p class="text-muted mb-1"></p>
               </div>
                   <div class="row">
@@ -276,7 +276,7 @@
                                         </div>
                                     @endif
                                 @empty
-                                  <h4 class="text-center mt-4 text-muted">No Data Available !</h4>
+                                  <h4 class="text-center mt-4 text-muted">{{ __('general.no_data') }}</h4>
                                 @endforelse
                           </div>
                       </div>

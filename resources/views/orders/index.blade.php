@@ -28,7 +28,7 @@
 <div class="content-wrapper">
     <div class="p-4" style="background-color: #191c24;border-radius:0.5rem">
         <div class="d-flex justify-content-between mb-3">
-            <h3 class="my-auto">Orders List</h3>
+            <h3 class="my-auto">{{ __('order.title') }}</h3>
             <a href="{{ route('orders.export') }}" class="btn btn-outline-warning" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-up"></i>Export</a>
         </div>
         <div class="table-responsive">
@@ -39,7 +39,7 @@
                     <th class="text-center" style="font-weight:600;"> User </th>
                     <th class="text-center" style="font-weight:600;"> Total </th>
                     <th class="text-center" style="font-weight:600;"> Status </th>
-                    <th class="text-center" style="font-weight:600;"> Action </th>
+                    <th class="text-center" style="font-weight:600;"> {{ __('general.action') }} </th>
                     </tr>
                 </thead>
                 <tbody>

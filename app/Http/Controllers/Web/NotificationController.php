@@ -26,18 +26,18 @@ class NotificationController extends Controller
         $notifications = Auth::user()->notifications;
         $notification = $notifications->where('id', $notificationId)->first();
         $notification->markAsRead();
-        return back()->with('success', 'Notification marked as read');
+        return back()->with('success', __('general.notif_read'));
     }
 
     public function remove($notificationId){
         $notification = Auth::user()->notifications->where('id', $notificationId)->first();
         $notification->delete();
-        return back()->with('success', 'Notification removed successfully');
+        return back()->with('success', __('general.notif_all_read'));
     }
 
     public function readAll(){
         Auth::user()->notifications->markAsRead();
-        return back()->with('success', 'All notifications have been marked as read');
+        return back()->with('success', __('general.notif_all_read'));
     }
 
     public function removeAll(){
@@ -45,6 +45,6 @@ class NotificationController extends Controller
         foreach ($notifications as $notification){
             $notification->delete();
         }
-        return back()->with('success', 'All notifications have been removed');
+        return back()->with('success', __('general.notif_all_remove'));
     }
 }

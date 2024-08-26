@@ -12,9 +12,9 @@
                 @endif
             </div>
             <div class="profile-info col-md-6">
-                <h3 class="mb-4">General Account</h3>
+                <h3 class="mb-4">{{ __('user.title_detail') }}</h3>
                 <div class="row mb-1">
-                    <strong class="col-sm-3">Name</strong>
+                    <strong class="col-sm-3">{{ __('general.name') }}</strong>
                     <span class="col-sm-9">: {{ $user->name }}</span>
                 </div>
                 <div class="row mb-1">
@@ -22,27 +22,27 @@
                     <span class="col-sm-9">: {{ $user->email }}</span>
                 </div>
                 <div class="row mb-1">
-                    <strong class="col-sm-3">Role</strong>
+                    <strong class="col-sm-3">{{ __('general.role') }}</strong>
                     <span class="col-sm-9">: {{ $user->is_admin ? 'Admin' : 'User' }}</span>
                 </div>
                 <div class="row mb-1">
-                    <strong class="col-sm-3">Last login</strong>
+                    <strong class="col-sm-3">{{ __('user.last_login') }}</strong>
                     <span class="col-sm-9">: {{ $user->last_login }}</span>
                 </div>
                 <div class="row mb-1">
-                    <strong class="col-sm-3">Joined</strong>
+                    <strong class="col-sm-3">{{ __('general.join') }}</strong>
                     <span class="col-sm-9">: {{ $user->created_at->diffForHumans() }}</span>
                 </div>
                 <div class="row mb-1">
                     <strong class="col-sm-3">Total Order</strong>
                     <span class="col-sm-9">: {{ count($user->orders) }}</span>
                 </div>
-                <a href="{{ route('users.list') }}" class="btn btn-primary mt-2">Kembali</a>
+                <a href="{{ route('users.list') }}" class="btn btn-primary mt-2">{{ __('general.back') }}</a>
             </div>
         </div>
         <div class="p-4" style="background-color: #191c24;border-radius:0.5rem">
             @if($orders->isNotEmpty())
-                <h3 class="pb-2" style="border-bottom: 2px solid #B1ADD4;">List Orders</h3>
+                <h3 class="pb-2" style="border-bottom: 2px solid #B1ADD4;">{{ __('user.list') }}</h3>
                 @foreach ($orders as $order)
                     <div class="item mb-3 p-2 d-flex justify-content-between" style="border-bottom: 2px dashed #B1ADD4;">
                         <div class="id">
@@ -62,14 +62,14 @@
                             <span class="text-muted">{{ $order->orderItems->sum('quantity') }}</span>
                         </div>
                         <div class="status">
-                            <span class="d-block">Waktu Pemesanan</span>
+                            <span class="d-block">{{ __('user.date_booking') }}</span>
                             <span class="text-muted">{{ $order->created_at }}</span>
                         </div>
                         <a href="{{ route('orders.detail', $order->id) }}" class="btn btn-primary my-auto mr-3"><i class="fa-solid fa-eye"></i>Detail</a>
                     </div>
                 @endforeach
             @else
-                <h4 class="text-center">Order Not Available !!</h4>
+                <h4 class="text-center">{{ __('general.no_data') }}</h4>
             @endif
         </div>
     </div>

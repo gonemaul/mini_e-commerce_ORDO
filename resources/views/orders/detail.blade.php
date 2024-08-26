@@ -103,20 +103,20 @@
         <div class="info-bottom d-flex justify-content-between p-3 mt-4" style="border-top: 2px dashed #B1ADD4;border-bottom: 2px dashed #B1ADD4;">
             <div class="left">
                 <div class="mb-2 text-muted">
-                    <span class="d-block">Waktu pemesanan</span>
+                    <span class="d-block">{{ __('order.time_booking') }}</span>
                     <span>{{ $order->created_at }}</span>
                 </div>
                 <div class="text-muted">
-                    <span class="d-block">Waktu pembayaran</span>
+                    <span class="d-block">{{ __('order.time_payment') }}</span>
                     <span>{{ $order->updated_at }}</span>
                 </div>
             </div>
             <div class="right d-flex align-content-center justify-content-between col-md-4">
                 <div class="title">
-                    <span class="d-block">Total Product</span>
-                    <span class="d-block">Discon</span>
-                    <span class="d-block">Biaya Layanan</span>
-                    <span class="d-block">Total Payment</span>
+                    <span class="d-block">{{ __('order.total_products') }}</span>
+                    <span class="d-block">{{ __('order.discon') }}</span>
+                    <span class="d-block">{{ __('order.service') }}</span>
+                    <span class="d-block">{{ __('order.total_amount') }}</span>
                 </div>
                 <div>
                     <span class="d-block">Rp.</span>
@@ -133,11 +133,11 @@
             </div>
         </div>
         <div class="d-flex mt-4 justify-content-end">
-            <a href="{{ route('orders.list') }}" class="mr-2 btn btn-primary"><i class="fa-solid fa-arrow-left"></i> Back</a>
+            <a href="{{ route('orders.list') }}" class="mr-2 btn btn-primary"><i class="fa-solid fa-arrow-left"></i> {{ __('general.back') }}</a>
             @if($order->status !== 'Canceled')
                 <form action="{{ route('orders.cancel', $order->order_id) }}" method="post">
                     @csrf
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('What are you sure? ..')" style="font-size:1rem"><i class="fa-solid fa-xmark"></i> Cancel</button>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('What are you sure? ..')" style="font-size:1rem"><i class="fa-solid fa-xmark"></i> {{ __('general.cancel') }}</button>
                 </form>
             @endif
             <a href="{{ route('orders.invoice', $order->order_id) }}" target="blank" class="btn btn-info ml-2" style="font-size:1rem"><i class="fa-regular fa-file-pdf"></i> Invoice</a>

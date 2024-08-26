@@ -55,9 +55,9 @@
     <div class="content-wrapper">
         <div class="p-4" style="background-color: #191c24;border-radius:0.5rem">
             <div class="d-flex justify-content-between mb-3">
-                <h3 class="my-auto">Products List</h3>
+                <h3 class="my-auto">{{ __('product.title') }}</h3>
                 <div class="d-block">
-                    <a class="btn btn-outline-primary" href="{{ route('products.create') }}" style="font-size:1rem;font-weight:500;align-items:center;width:100%"><i class="fa-solid fa-plus"></i> Add Product</a>
+                    <a class="btn btn-outline-primary" href="{{ route('products.create') }}" style="font-size:1rem;font-weight:500;align-items:center;width:100%"><i class="fa-solid fa-plus"></i> {{ __('product.add') }}</a>
                     <div class="d-flex mt-2">
                         <label for="toggle" class="btn btn-outline-success mb-0 mr-2" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-down import"></i>Import</label>
                       <a class="btn btn-outline-warning" href="{{ route('products.export') }}" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-up"></i>Export</a>
@@ -69,11 +69,11 @@
                     <thead>
                       <tr>
                         <th class="text-center" style="font-weight:600;"> No </th>
-                        <th class="text-center" style="font-weight:600;"> Product Name </th>
-                        <th class="text-center" style="font-weight:600;"> Category </th>
-                        <th class="text-center" style="font-weight:600;"> Price </th>
-                        <th class="text-center" style="font-weight:600;"> Stock </th>
-                        <th class="text-center" style="font-weight:600;"> Action </th>
+                        <th class="text-center" style="font-weight:600;"> {{ __('product.name') }} </th>
+                        <th class="text-center" style="font-weight:600;"> {{ __('general.category') }} </th>
+                        <th class="text-center" style="font-weight:600;"> {{ __('general.price') }} </th>
+                        <th class="text-center" style="font-weight:600;"> {{ __('general.stock') }} </th>
+                        <th class="text-center" style="font-weight:600;"> {{ __('general.action') }} </th>
                       </tr>
                     </thead>
                     <tbody>

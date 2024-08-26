@@ -30,8 +30,8 @@ class AuthenticationController extends Controller
 
         if(!$validatedData){
             return response()->json([
-               'status' => 'error',
-               'message' => 'Data validation failed',
+               'status' => __('general.message.error'),
+               'message' => __('general.validation_error'),
                 'data' => $validatedData,
             ],400);
         }
@@ -49,8 +49,8 @@ class AuthenticationController extends Controller
         }
         Notification::send($new_user, new EmailVerifyNotification());
         return response()->json([
-            'status' => 'success',
-            'message' => 'You have successfully registered, Please check your inbox for a verification email.',
+            'status' => __('general.success'),
+            'message' => __('auth.register_success'),
         ],201);
     }
 
@@ -60,16 +60,16 @@ class AuthenticationController extends Controller
         $user = User::where('email', $request->email)->first();
         if ($user->hasVerifiedEmail()) {
             return response()->json([
-                'status' => 'error',
-                'message' => 'Email already verified.'
+                'status' => __('general.error'),
+                'message' => __('auth.email_verified')
             ], 500);
         }
 
         Notification::send($user, new EmailVerifyNotification());
 
         return response()->json([
-            'status' => 'success',
-            'message' => 'Verification link sent successfully, Please check your inbox for a verification email.'
+            'status' => __('general.success'),
+            'message' => __('auth.verify_link_success')
         ], 200);
     }
 
@@ -81,13 +81,13 @@ class AuthenticationController extends Controller
 
         if($status === Password::RESET_LINK_SENT){
             return response()->json([
-               'status' =>'success',
-               'message' => 'Reset password link sent to your email',
+               'status' =>__('general.success'),
+               'message' =>__('auth.reset_password_link'),
             ], 200);
         } else{
             return response()->json([
-               'status' => 'error',
-               'message' => 'Failed to send reset password link'
+               'status' => __('general.error'),
+               'message' => __('auth.reset_password_link_failed')
             ], 500);
         }
     }
@@ -116,13 +116,13 @@ class AuthenticationController extends Controller
         if($status === Password::PASSWORD_RESET){
 
             return response()->json([
-               'status' =>'success',
-               'message' => 'Your password reset was successful',
+               'status' =>__('general.success'),
+               'message' => __('auth.reset_password_success'),
             ], 200);
         } else{
             return response()->json([
-               'status' => 'error',
-               'message' => $status
+               'status' => __('general.error'),
+               'message' => __('auth.reset_password_failed')
             ], 500);
         }
     }
@@ -136,8 +136,8 @@ class AuthenticationController extends Controller
         if($user && Hash::check($request->password, $user->password)){
             if (!$user->hasVerifiedEmail()) {
                 return response()->json([
-                   'status' => 'error',
-                   'message' => 'Account not actived, Please verify your email.',
+                   'status' => __('general.error'),
+                   'message' => __('auth.inactive'),
                 ], 401);
             }else{
                 if($user->tokens()) {
@@ -146,28 +146,28 @@ class AuthenticationController extends Controller
                 $token =  $user->createToken('authToken')->plainTextToken;
                 $user->update(['last_login' => now()]);
                 return response()->json([
-                    'status' => 'success',
-                    'message' => 'Login successfully',
+                    'status' => __('general.success'),
+                    'message' => __('auth.login_success'),
                     'data' => [
-                        'name' => $user->name,
+                        __('general.name') => $user->name,
                         'email' => $user->email,
-                        'profile_image' => $user->profile_image ? url('storage/' . $user->profile_image) : 'No Profile Image',
-                        'last_login' => $user->last_login,
-                        'created_at' => $user->created_at,
+                        __('auth.profile') => $user->profile_image ? url('storage/' . $user->profile_image) : 'No Profile Image',
+                        __('user.last_login') => $user->last_login,
+                        __('general.join') => $user->created_at,
                         'token' => [
-                            'access_token' => $token,
-                            'token_type' => 'Bearer',
+                            __('auth.access_token') => $token,
+                            __('auth.token_type') => 'Bearer',
                         ]
                     ]
                 ], 200);
             }
         } else {
             return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid credentials',
+                'status' => __('general.error'),
+                'message' => __('auth.failed'),
                 'errors' => [
-                    'email' => ['The provided email is not registered'],
-                    'password' => ['The provided password is incorrect']
+                    'email' => [__('auth.email')],
+                    'password' => [__('auth.password')]
                 ]
             ], 401);
         }
@@ -176,14 +176,13 @@ class AuthenticationController extends Controller
     public function me(Request $request){
         $user = $request->user();
         return response()->json([
-            'status' => 'success',
+            'status' => __('general.success'),
             'account' => [
-                'name' => $user->name,
+                __('general.name') => $user->name,
                 'email' => $user->email,
-                'profile_image' => $user->profile_image ? url('storage/' . $user->profile_image) : 'No Profile Image',
-                'last_login' => $user->last_login,
-                'created_at' => $user->created_at,
-                'updated_at' => $user->updated_at,
+                __('auth.profile') => $user->profile_image ? url('storage/' . $user->profile_image) : 'No Profile Image',
+                __('user.last_login') => $user->last_login,
+                __('general.join') => $user->created_at,
             ],
         ]);
     }
@@ -205,8 +204,8 @@ class AuthenticationController extends Controller
         if($request->password){
             if(Hash::check($request->password, $user->password)){
                 return response()->json([
-                    'status' =>'error',
-                    'message' => 'The new password is the same as the old password'
+                    'status' =>__('general.error'),
+                    'message' => __('auth.update_password_failed')
                 ],403);
             } else{
                 $user->password = Hash::make($request->password);
@@ -228,13 +227,13 @@ class AuthenticationController extends Controller
             $user->save();
             Notification::send($user, new EmailVerifyNotification());
             return response()->json([
-                'status' => 'success',
-                'message' => 'Your profile has changed successfully, Please check your inbox for email verification before logging back in.'
+                'status' => __('general.success'),
+                'message' => __('auth.update_profile_email_success')
             ],200);
         }
         return response()->json([
-           'status' =>'success',
-            'message' => 'Your profile has changed successfully'
+           'status' =>__('general.success'),
+            'message' => __('auth.update_profile_success')
         ],201);
         }
 
@@ -242,8 +241,8 @@ class AuthenticationController extends Controller
         $request->user()->tokens()->delete();
 
         return response()->json([
-            'status' => 'success',
-            'message' => 'You have successfully logged out!'
+            'status' => __('general.success'),
+            'message' => __('auth.logout')
         ],200);
     }
 }

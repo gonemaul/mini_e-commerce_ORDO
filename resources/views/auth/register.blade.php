@@ -6,14 +6,14 @@
       <form action="{{ Route('store') }}" method="post" class="card col-lg-4 mx-auto">
         @csrf
           <div class="card-body px-5 py-5">
-            <h3 class="card-title text-left mb-3">Register</h3>
+            <h3 class="card-title text-left mb-3">{{ __('auth.register_title') }}</h3>
             @if(session()->has('registerError'))
                 <div class="alert alert-danger" role="alert">
                     {{ session('registerError') }}
                 </div>
             @endif
               <div class="form-group">
-                <label>Name <span class="text-danger font-bold">*</span></label>
+                <label>{{ __('general.name') }} <span class="text-danger font-bold">*</span></label>
                 <input type="text" name="name" class="form-control p_input @error('name') is-invalid @enderror" value="{{ old('name') }}">
                 @error('name')
                   <div class="invalid-feedback">
@@ -49,10 +49,10 @@
                 @enderror
               </div>
               <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-block enter-btn">Register</button>
+                <button type="submit" class="btn btn-primary btn-block enter-btn">{{ __('auth.register_title') }}</button>
               </div>
-              <p class="sign-up text-center">Already have an Account?<a href="{{ Route('login') }}"> Sign In</a></p>
-              <p class="terms">By creating an account you are accepting our<a href="#"> Terms & Conditions</a></p>
+              <p class="sign-up text-center">{{ __('auth.register_to_login') }}<a href="{{ Route('login') }}"> Sign In</a></p>
+              <p class="terms">{{ __('auth.register_info') }}<a href="#"> Terms & Conditions</a></p>
           </div>
       </form>
     </div>

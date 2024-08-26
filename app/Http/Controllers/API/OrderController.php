@@ -144,7 +144,7 @@ class OrderController extends Controller
             return response()->json([
                 'data' => null,
                 'meta' => null,
-                'status' => 'error',
+                'status' => __('general.error'),
                 'message' => 'An error occurred',
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
@@ -192,7 +192,7 @@ class OrderController extends Controller
             return response()->json([
                 'data' => null,
                'meta' => null,
-               'status' => 'error',
+               'status' => __('general.error'),
                'message' => 'An error occurred',
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);

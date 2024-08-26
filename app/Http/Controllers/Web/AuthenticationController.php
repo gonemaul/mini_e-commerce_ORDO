@@ -52,7 +52,7 @@ class AuthenticationController extends Controller
         Notification::send($new_user, new EmailVerifyNotification());
         return redirect()->route('verification.notice')->with([
             'email' => $new_user->email,
-            'success' => 'You have successfully registered, Please check your inbox for a verification email.'
+            'success' => __('auth.register_success')
         ]);
     }
 
@@ -65,7 +65,7 @@ class AuthenticationController extends Controller
         $remember = $request->has('remember');
         if($user){
             if(!$user->hasVerifiedEmail()){
-                return back()->with(['error' => 'Account not actived, Please verify your email, <a href="'.route('verification.email', $request->email).'">Verify</a>']);
+                return back()->with(['error' => __('auth.inactive').', <a href="'.route('verification.email', $request->email).'">Verify</a>']);
             } else {
                 if(Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password'], 'is_admin' => true],$remember)){
                     $request->session()->regenerate();
@@ -73,10 +73,10 @@ class AuthenticationController extends Controller
 
                     return redirect()->route('dashboard');
                 }
-                return back()->with(['error' => 'Your provided credentials do not match in our records!!'])->onlyInput('email');
+                return back()->with(['error' => __('auth.failed')])->onlyInput('email');
             }
         }
-        return back()->with(['error' => 'Your provided credentials do not match in our records!! Please register your account.'])->onlyInput('email');
+        return back()->with(['error' => __('auth.failed')])->onlyInput('email');
 
     }
 
@@ -89,25 +89,25 @@ class AuthenticationController extends Controller
     public function verifyHandler($id,$hash,Request $request ){
         $verify = EmailVerify::where('token', $hash)->first();
         if(!$verify){
-            return 'Your verification is invalid';
+            return __('auth.verify_invalid');
         }
         try {
             $user = User::where('id', $id)->where('email', $verify->email)->first();
 
             if(Carbon::now()->greaterThan($verify->created_at->addMinutes(10))){
                 $verify->delete();
-                return 'Verification link expired.';
+                return __('auth.verify_expired');
             }
 
             if($user->hasVerifiedEmail()){
                 if($request->is('api/*')){
                     return response()->json([
                        'status' => 'error',
-                       'message' => 'Email already verified.'
+                       'message' => __('auth.email_verified')
                     ], 500);
                 } else{
                     return redirect()->route('login')->with([
-                        'success' => 'Email already verified'
+                        'success' => __('auth.email_verified')
                     ]);
                 }
             }
@@ -120,11 +120,11 @@ class AuthenticationController extends Controller
             if(!$user->is_admin) {
                 return response()->json([
                    'status' =>'success',
-                   'message' => 'Email verified successfully. Your account has been actived.'
+                   'message' => __('auth.verify_expired')
                 ], 200);
             } else{
                 return redirect()->route('login')->with([
-                   'success' => 'Email verified successfully. Your account has been actived.'
+                   'success' => __('auth.verify_expired')
                 ]);
             }
         } catch (\Exception $e){
@@ -140,7 +140,7 @@ class AuthenticationController extends Controller
         $user = User::where('email', $request->email)->first();
         if($user->hasVerifiedEmail()){
             return redirect()->route('login')->with([
-                'success' => 'Email already verified'
+                'success' => __('auth.email_verified')
             ]);
         }
 
@@ -148,7 +148,7 @@ class AuthenticationController extends Controller
 
         return redirect()->route('verification.notice')->with([
             'email' => $user->email,
-            'success' => 'Verification link sent successfully, Please check your inbox for a verification email.'
+            'success' => __('auth.verify_link_success')
         ]);
     }
 
@@ -174,7 +174,7 @@ class AuthenticationController extends Controller
            return view('auth.reset-password')->with(['title' => 'Reset Password', 'token' => $token]);
         } else{
             return response()->json([
-                'message' => 'Please enter token for reset password...',
+                'message' => __('auth.token_reset_pw'),
                 'token' => $token,
             ]);
         }
@@ -187,7 +187,6 @@ class AuthenticationController extends Controller
             'password' => 'required|min:8|confirmed',
         ]);
 
-        // return dd($request);
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
@@ -201,7 +200,6 @@ class AuthenticationController extends Controller
             }
         );
 
-        // return $status;
         return $status === Password::PASSWORD_RESET
                     ? redirect()->route('login')->with('success', __($status))
                     : back()->withErrors(['error' => [__($status)]]);
@@ -214,6 +212,6 @@ class AuthenticationController extends Controller
         $request->session()->regenerate();
         $request->session()->forget('remember_me');
 
-        return redirect()->route('login')->withSuccess('You have successfully logged in!');
+        return redirect()->route('login')->withSuccess(__('auth.logout'));
     }
 }

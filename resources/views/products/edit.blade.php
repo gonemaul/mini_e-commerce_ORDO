@@ -12,14 +12,14 @@
     <div class="content-wrapper">
         <div class="p-4" style="background-color: #191c24;border-radius:0.5rem">
             <div class="title mb-5">
-                <h4>Edit Product</h4>
+                <h4>{{ __('product.edit') }}</h4>
             </div>
             <form action="{{ route('products.update', $product->id) }}" method="post" enctype="multipart/form-data">
                 @method('put')
                 @csrf
                 @include('products.partials.item_form')
-                <button type="submit" class="btn btn-primary mt-3" id="submit">Update Product</button>
-                <a class="btn btn-secondary mt-3" onclick="cancel()">Cancel</a>
+                <button type="submit" class="btn btn-primary mt-3" id="submit">{{ __('product.update') }}</button>
+                <a class="btn btn-secondary mt-3" onclick="cancel()">{{ __('general.cancel') }}</a>
             </form>
             <form action="" enctype="multipart/form-data" id="form_image">
                 <div class="file-uploader">

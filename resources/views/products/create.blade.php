@@ -24,13 +24,13 @@
     <div class="content-wrapper">
         <div class="p-4" style="background-color: #191c24;border-radius:0.5rem">
             <div class="title mb-5">
-                <h4>Create Product</h4>
+                <h4>{{ __('product.create') }}</h4>
             </div>
             <form action="{{ Route('products.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 @include('products.partials.item_form')
-                <button type="submit" class=" btn btn-primary mt-3" id="submit">Add Product</button>
-                <a class="btn btn-secondary mt-3" onclick="cancel()" id="cancel-submit">Cancel</a>
+                <button type="submit" class=" btn btn-primary mt-3" id="submit">{{ __('product.add') }}</button>
+                <a class="btn btn-secondary mt-3" onclick="cancel()" id="cancel-submit">{{ __('general.cancel') }}</a>
             </form>
             <form action="" enctype="multipart/form-data" id="form_image">
                 <div class="file-uploader">

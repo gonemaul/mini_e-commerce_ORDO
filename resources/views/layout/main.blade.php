@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <script src="https://kit.fontawesome.com/1b48e60650.js" crossorigin="anonymous"></script>
 </head>
 <body>
 

@@ -31,17 +31,14 @@
         @endif
         <div class="row px-4 py-4 mb-3" style="background-color: #191c24;border-radius:0.5rem">
             <div class="col-md-6 ps-3 text-center">
-                <h4 class="align-center">General Account</h4>
+                <h4 class="align-center">{{ __('user.title_detail') }}</h4>
             </div>
             <div class="col md-6 ps-3 ">
                 <form action="{{ Route('update-profile') }}" method="post"  enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="id" value="{{ $user->id }}">
                     <div class="form-group">
-                        <div class="mb-2">
-                            <span>Profile Photo</span>
-                        </div>
-                        <div class="profileImg" style="margin-left: 1rem">
+                        <div class="profileImg mt-3" style="margin-left: 1rem">
                             @if ($user->profile_image)
                                 <img class="img-preview rounded-circle" style="width: 100px;height:100px" src="{{ asset('storage/' . $user->profile_image) }}">
                             @else
@@ -64,7 +61,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="name">Name</label>
+                        <label for="name">{{ __('general.name') }}</label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" placeholder="Name" value="{{ $user->name }}">
                         @error('name')
                             <div class="invalid-feedback">
@@ -76,7 +73,7 @@
                         <label for="email">Email</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Email" value="{{ $user->email }}">
                         <div class="detail-field">
-                            Please enter a valid email...
+                            {{ __('user.info_profile') }}
                         </div>
                         @error('email')
                         <div class="invalid-feedback">
@@ -84,23 +81,23 @@
                             </div>
                         @enderror
                     </div>
-                    <button class="btn btn-primary" onclick="return confirm('What are you sure? ..')" type="submit">Update</button>
+                    <button class="btn btn-primary" onclick="return confirm('What are you sure? ..')" type="submit">{{ __('general.update') }}</button>
                 </form>
             </div>
         </div>
 
         <div class="row px-4 py-4 mb-3" style="background-color: #191c24;border-radius:0.5rem">
             <div class="col-md-12 ps-3 text-center" style="border-bottom: 3px solid #343434;">
-                <h3 class="text-danger">Danger Zone !!!</h3>
+                <h3 class="text-danger">{{ __('user.zone') }}</h3>
             </div>
             <div class="col-md-12 text-center" id="btn_delete">
-                <button class="btn btn-outline-danger text-center mt-3 fs-3" id="delete-account">Delete Account</button>
+                <button class="btn btn-outline-danger text-center mt-3 fs-3" id="delete-account">{{ __('user.delete_account') }}</button>
             </div>
             <div class="col md-12 ps-3 mt-3 d-none" id="form_delete">
                 <form action="{{ Route('delete-account') }}" method="post"  enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
-                        <label for="password">Please field your password !!</label>
+                        <label for="password">{{ __('general.password_field') }}</label>
                         <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Password">
                         @error('password')
                             <div class="invalid-feedback">
@@ -108,8 +105,7 @@
                             </div>
                         @enderror
                     </div>
-                    <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary mr-2">Back to Dashboard</a>
-                    <button class="btn btn-outline-danger" onclick="return confirm('What are you sure? ..')" type="submit">Delete</button>
+                    <button class="btn btn-outline-danger" onclick="return confirm('What are you sure? ..')" type="submit">{{ __('general.delete') }}</button>
                 </form>
             </div>
         </div>
@@ -137,14 +133,14 @@
         @endif
         <div class="row mt-3 px-4 py-4" id="changePassword" style="background-color: #191c24;border-radius:0.5rem">
             <div class="col-md-6 ps-3 text-center">
-                <h4 class="align-center">Change Password</h4>
+                <h4 class="align-center">{{ __('passwords.change') }}</h4>
             </div>
             <div class="col-md-6">
                 <form action="{{ Route('update-password') }}" method="post">
                     @csrf
                     <input type="hidden" name="id" value="{{ $user->id }}">
                     <div class="form-group">
-                        <label for="current_password">Current Password</label>
+                        <label for="current_password">{{ __('passwords.current') }}</label>
                         <input type="password" class="form-control @error('current_password') is-invalid @enderror" name="current_password" id="current_password" placeholder="Current Password">
                         @error('current_password')
                             <div class="invalid-feedback">
@@ -153,7 +149,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="password">New Password</label>
+                        <label for="password">{{ __('passwords.new') }}</label>
                         <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password" placeholder="New Password" >
                         @error('password')
                             <div class="invalid-feedback">
@@ -162,7 +158,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="password_confirmation">Confirm Password</label>
+                        <label for="password_confirmation">{{ __('passwords.confirm') }}</label>
                         <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation" id="password_confirmation" placeholder="Confirm Password" >
                         @error('password_confirmation')
                             <div class="invalid-feedback">
@@ -170,7 +166,7 @@
                             </div>
                         @enderror
                     </div>
-                    <button class="btn btn-primary" type="submit">Change</button>
+                    <button class="btn btn-primary" type="submit">{{ __('general.update') }}</button>
                 </form>
             </div>
         </div>

@@ -61,9 +61,9 @@
 <div class="content-wrapper">
   <div class="p-4" style="background-color: #191c24;border-radius:0.5rem">
     <div class="d-flex justify-content-between mb-3">
-      <h3 class="my-auto">Categories List</h3>
+      <h3 class="my-auto">{{ __('category.title') }}</h3>
       <div class="d-block">
-          <a class="btn btn-outline-primary" href="{{ route('categories.create') }}" style="font-size:1rem;font-weight:500;align-items:center;width:100%"><i class="fa-solid fa-plus"></i> Add Category</a>
+          <a class="btn btn-outline-primary" href="{{ route('categories.create') }}" style="font-size:1rem;font-weight:500;align-items:center;width:100%"><i class="fa-solid fa-plus"></i>{{ __('category.add') }}</a>
           <div class="d-flex mt-2">
             <label for="toggle" class="btn btn-outline-success mb-0 mr-2" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-down import"></i>Import</label>
             <a class="btn btn-outline-warning" href="{{ route('categories.export') }}" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-up"></i>Export</a>
@@ -75,8 +75,8 @@
             <thead>
               <tr>
                 <th class="text-center" style="font-weight:600;"> No </th>
-                <th class="text-center" style="font-weight:600;"> Category Name </th>
-                <th class="text-center" style="font-weight:600;"> Total Product </th>
+                <th class="text-center" style="font-weight:600;"> {{ __('category.name') }} </th>
+                <th class="text-center" style="font-weight:600;"> {{ __('category.product') }} </th>
                 <th class="text-center" style="font-weight:600;"> Action </th>
               </tr>
             </thead>

@@ -25,15 +25,15 @@ class ProductController extends Controller
                             'last_page' => $products->lastPage(),
                         ]
                 ],
-                'status' => 'success',
-                'message' => 'Data retrieved successfully',
+                'status' => __('general.success'),
+                'message' => __('general.message.success'),
             ],200);
         } catch (\Exception $e) {
             return response()->json([
                 'data' => null,
                 'meta' => null,
-                'status' => 'error',
-                'message' => 'An error occurred',
+                'status' => __('general.error'),
+                'message' => __('general.message.error'),
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
         }
@@ -52,15 +52,15 @@ class ProductController extends Controller
                             'last_page' => $products->lastPage(),
                         ]
                 ],
-                'status' => 'success',
-                'message' => 'Data retrieved successfully',
+                'status' => __('general.success'),
+                'message' => __('general.message.success'),
             ],200);
         } catch (\Exception $e){
             return response()->json([
                 'data' => null,
                 'meta' => null,
-                'status' => 'error',
-                'message' => 'An error occurred',
+                'status' => __('general.error'),
+                'message' => __('general.message.error'),
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
         }
@@ -81,15 +81,15 @@ class ProductController extends Controller
                             'last_page' => $products->lastPage(),
                         ]
                 ],
-                'status' => 'success',
-                'message' => 'Data retrieved successfully',
+                'status' => __('general.success'),
+                'message' => __('general.message.success'),
             ],200);
         } catch (\Exception $e){
             return response()->json([
                 'data' => null,
                 'meta' => null,
-                'status' => 'error',
-                'message' => 'An error occurred',
+                'status' => __('general.error'),
+                'message' => __('general.message.error'),
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
         }
@@ -99,15 +99,15 @@ class ProductController extends Controller
         if($product){
             return response()->json([
                 'data' => new ProductDetailResource($product),
-                'status' => 'success',
-                'message' => 'Product retrieved successfully',
+                'status' => __('general.success'),
+                'message' => __('general.message.success'),
             ]);
         }
         return response()->json([
             'data' => null,
             'meta' => null,
-            'status' => 'error',
-            'message' => 'An error occurred',
+            'status' => __('general.error'),
+            'message' => __('general.message.error'),
         ], 500);
     }
 }

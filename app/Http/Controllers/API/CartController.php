@@ -20,7 +20,7 @@ class CartController extends Controller
 
             if($product->stock < $quantity){
                 return response()->json([
-                    'status' => 'error',
+                    'status' => __('general.error'),
                     'message' => 'Not enough stock for '. $product->name,
                     'stock' => $product->stock
                 ],400);
@@ -58,7 +58,7 @@ class CartController extends Controller
             return response()->json([
                 'data' => null,
                'meta' => null,
-               'status' => 'error',
+               'status' => __('general.error'),
                'message' => 'An error occurred',
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
@@ -75,7 +75,7 @@ class CartController extends Controller
 
             if($cartItems->isEmpty()){
                 return response()->json([
-                    'status' => 'success',
+                    'status' => __('general.error'),
                     'message' => 'Cart is empty',
                 ],200);
             }
@@ -99,7 +99,7 @@ class CartController extends Controller
             return response()->json([
                 'data' => null,
                'meta' => null,
-               'status' => 'error',
+               'status' => __('general.error'),
                'message' => 'An error occurred',
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
@@ -118,7 +118,7 @@ class CartController extends Controller
 
             if($product->stock < $request->quantity){
                 return response()->json([
-                    'status' => 'error',
+                    'status' => __('general.error'),
                     'message' => 'Not enough stock for '. $product->name,
                     'stock' => $product->stock
                 ],400);
@@ -142,7 +142,7 @@ class CartController extends Controller
             return response()->json([
                 'data' => null,
                'meta' => null,
-               'status' => 'error',
+               'status' => __('general.error'),
                'message' => 'An error occurred',
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
@@ -164,7 +164,7 @@ class CartController extends Controller
             return response()->json([
                 'data' => null,
                'meta' => null,
-               'status' => 'error',
+               'status' => __('general.error'),
                'message' => 'An error occurred',
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);

@@ -14,7 +14,7 @@
 <div class="content-wrapper">
     <div class="col-lg-12 p-4" style="background-color: #191c24;border-radius:0.5rem">
         <div class="d-flex justify-content-between mb-3">
-            <h3 class="my-auto">Users List</h3>
+            <h3 class="my-auto">{{ __('user.title') }}</h3>
             <div class="dropdown">
                 <button class="btn btn-outline-warning dropdown-toggle" type="button" id="dropdownMenuIconButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa-solid fa-cloud-arrow-up"></i>Export
@@ -32,10 +32,10 @@
                 <thead>
                 <tr>
                     <th class="text-center" style="font-weight:600;"> Profile </th>
-                    <th class="text-center" style="font-weight:600;"> Name </th>
+                    <th class="text-center" style="font-weight:600;"> {{ __('general.name') }} </th>
                     <th class="text-center" style="font-weight:600;"> Email </th>
-                    <th class="text-center" style="font-weight:600;"> Role </th>
-                    <th class="text-center" style="font-weight:600;"> Action </th>
+                    <th class="text-center" style="font-weight:600;"> {{ __('general.role') }} </th>
+                    <th class="text-center" style="font-weight:600;"> {{ __('general.action') }} </th>
                 </tr>
                 </thead>
                 <tbody>

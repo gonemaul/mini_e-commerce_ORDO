@@ -78,7 +78,7 @@
 @enderror
 {{-- Name Produk --}}
     <div class="form-group">
-        <label for="name">Product Name <span class="text-danger">*</span></label>
+        <label for="name">{{ __('product.name') }} <span class="text-danger">*</span></label>
         <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" autofocus value="{{ old('name', $product->name ?? '') }}">
     </div>
     @error('name')
@@ -89,7 +89,7 @@
 
 {{-- Category --}}
     <div class="form-group">
-        <label for="category">Category <span class="text-danger">*</span></label>
+        <label for="category">{{ __('general.category') }} <span class="text-danger">*</span></label>
         <select class="form-control" id="category" name="category" value="{{ old('category', $product->category ?? '') }}">
         @foreach ($categories as $category)
             <option value="{{ $category->id }}" {{ (old('category_id', $product->category_id ?? '') == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -99,7 +99,7 @@
 
 {{-- Price --}}
     <div class="form-group">
-        <label for="price">Price <span class="text-danger">*</span></label>
+        <label for="price">{{ __('general.price') }} <span class="text-danger">*</span></label>
         <input type="text" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price', $product->price ?? '') }}">
     </div>
     @error('price')
@@ -110,7 +110,7 @@
 
 {{-- Stock --}}
     <div class="form-group">
-        <label for="stock">Stock <span class="text-danger">*</span></label>
+        <label for="stock">{{ __('general.stock') }} <span class="text-danger">*</span></label>
         <input type="text" class="form-control @error('stock') is-invalid @enderror" id="stock" name="stock" value="{{ old('stock', $product->stock ?? '') }}">
     </div>
     @error('stock')
@@ -121,7 +121,7 @@
 
 {{-- Description --}}
     <div class="form-group">
-        <label for="description">Description <span class="text-danger">*</span></label>
+        <label for="description">{{ __('general.descriptions') }} <span class="text-danger">*</span></label>
         <input id="description" type="hidden" name="description" value="{{ old('description', $product->description ?? '') }}" required>
         <trix-editor input="description"></trix-editor>
     </div>

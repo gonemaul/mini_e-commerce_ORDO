@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\ImageController;
 use App\Http\Controllers\Web\OrderController;
@@ -9,6 +11,14 @@ use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\NotificationController;
 use App\Http\Controllers\Web\AuthenticationController;
+
+Route::get('set-language/{lang}', function ($lang) {
+    if (in_array($lang,['en', 'id'])){
+        App::setlocale($lang);
+        Session::put('locale', $lang);
+    }
+    return back();
+})->name('set_language');
 
 Route::middleware('guest')->group(function(){
     Route::get('login', [AuthenticationController::class, 'login'])->name('login');

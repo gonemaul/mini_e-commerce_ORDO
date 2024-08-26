@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@mail.com',
             'password' => Hash::make('password'),
-            'is_admin' => true
+            'is_admin' => true,
+            'email_verified_at' => now(),
         ]);
         User::factory(10)->create();
         Category::factory(10)->create();

@@ -14,7 +14,7 @@
                         {{ session('error') }}
                     </div>
                 @endif
-                <label>Please enter your email to reset the password</label>
+                <label>{{ __('auth.info_text') }}</label>
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="text" class="form-control" id="email" name="email" required autofocus>
@@ -24,8 +24,8 @@
                         </div>
                     @enderror
                 </div>
-                <a href="{{ route('login') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Request Link</button>
+                <button type="submit" class="btn btn-primary">{{ __('auth.btn_request') }}</button>
+                <a href="{{ route('login') }}" class="btn btn-secondary">{{ __('general.cancel') }}</a>
             </form>
         </div>
     </div>

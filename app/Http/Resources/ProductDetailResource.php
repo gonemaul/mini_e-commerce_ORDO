@@ -21,12 +21,12 @@ class ProductDetailResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'product_name' => $this->name,
-            'category' => $this->category->name,
-            'price' => $this->price,
-            'stock' => $this->stock,
-            'description' => $this->description,
-            'images' => $product_image
+            __('product.name') => $this->name,
+            __('general.category') => $this->category->name,
+            __('general.price') => $this->price,
+            __('general.stock') => $this->stock,
+            __('general.descriptions') => $this->description,
+            __('general.image') => $product_image
         ];
     }
 }

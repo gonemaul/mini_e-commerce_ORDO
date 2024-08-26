@@ -32,13 +32,14 @@ class NotificationController extends Controller
                             'last_page' => $all_notification->lastPage(),
                         ]
                 ],
-                'status' => 'success',
-                'message' => 'Data retrieved successfully',
+                'status' => __('general.success'),
+                'message' => __('general.message.error')
                 ], 200);
             }
             else{
                 return response()->json([
-                    'message' => 'No notifications available',
+                    'status' => __('general.error'),
+                    'message' => __('general.no_notifications')
                 ], 200);
             }
         } catch(\Exception $e){
@@ -53,7 +54,7 @@ class NotificationController extends Controller
         try {
             Auth::user()->unreadNotifications->where('id', $notificationId)->markAsRead();
             return response()->json([
-                'message' => 'Notification marked as read'
+                'message' => __('general.notif_read')
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -67,7 +68,7 @@ class NotificationController extends Controller
             $notification = Auth::user()->notifications->where('id', $notificationId)->first();
             $notification->delete();
             return response()->json([
-                'message' => 'Notification removed'
+                'message' => __('general.notif_remove')
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

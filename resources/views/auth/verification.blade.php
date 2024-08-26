@@ -38,10 +38,10 @@
                     @enderror
                 </div>
                 <div class="invalid-feedback info">
-                    If you haven't received the email please press the button below
+                    {{ __('auth.info_verify') }}
                 </div>
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary btn-block enter-btn">Resend Link</button>
+                  <button type="submit" class="btn btn-primary btn-block enter-btn">{{ __('auth.btn_resend') }}</button>
                 </div>
             </form>
           </form>

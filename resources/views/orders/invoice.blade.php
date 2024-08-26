@@ -147,18 +147,18 @@ body {
         <table class="table-head">
             <tr>
                 <td><h1>Order ID : #{{ $order->order_id }}</h1></td>
-                <td><h1>Date : {{ now() }}</h1></td>
+                <td><h1>{{ __('order.date') }} : {{ now() }}</h1></td>
             </tr>
         </table>
         <table class="table-content">
             <thead class="tc-head">
                 <tr>
-                    <td>To :</td>
+                    <td>{{ __('order.to') }} :</td>
                 </tr>
             </thead>
             <tbody class="tc-content">
                 <tr>
-                    <td class="label">Name</td>
+                    <td class="label">{{ __('general.name') }}</td>
                     <td class="value">: {{ $order->name }}</td>
                 </tr>
                 <tr>
@@ -166,11 +166,11 @@ body {
                     <td class="value">: {{ $order->email }}</td>
                 </tr>
                 <tr>
-                    <td class="label">Phone</td>
+                    <td class="label">{{ __('order.phone') }}</td>
                     <td class="value">: {{ $order->phone }}</td>
                 </tr>
                 <tr>
-                    <td class="label">Address</td>
+                    <td class="label">{{ __('order.address') }}</td>
                     <td class="value">: {{ $order->address }}{{ $order->city }} {{ $order->postal_code }}</td>
                 </tr>
             </tbody>
@@ -182,10 +182,10 @@ body {
                 <tr class="tr-top">
                     <td class="label">No</td>
                     <td class="label">Item</td>
-                    <td class="label">Category</td>
-                    <td class="label">Price</td>
-                    <td class="label">Qty</td>
-                    <td class="label">Amount</td>
+                    <td class="label">{{ __('general.category') }}</td>
+                    <td class="label">{{ __('general.price') }}</td>
+                    <td class="label">{{ __('general.quantity') }}</td>
+                    <td class="label">{{ __('general.total') }}</td>
                 </tr>
             </thead>
             <div class="border"></div>
@@ -206,30 +206,30 @@ body {
             <thead>
                 <tr>
                     <td class="wp-label-value-top">
-                        <p>Waktu pemesanan</p>
+                        <p>{{ __('order.time_booking') }}</p>
                     </td>
-                    <td class="label">Total Product</td>
+                    <td class="label">{{ __('order.total_products') }}</td>
                     <td class="value">: {{ number_format($order->total, 0, ',', '.') }}</td>
                 </tr>
                 <tr>
                     <td class="wp-label-value-top">
                         <p>{{ $order->created_at }}</p>
                     </td>
-                    <td class="label">Discon</td>
+                    <td class="label">{{ __('order.discon') }}</td>
                     <td class="value">: 0</td>
                 </tr>
                 <tr>
                     <td class="wp-label-value-bot">
-                        <p>Waktu pemesanan</p>
+                        <p>{{ __('order.time_payment') }}</p>
                     </td>
-                    <td class="label">Biaya Layanan</td>
+                    <td class="label">{{ __('order.service') }}</td>
                     <td class="value">: 1.000</td>
                 </tr>
                 <tr>
                     <td class="wp-label-value-bot">
                         <p>{{ $order->updated_at }}</p>
                     </td>
-                    <td class="label">Total Payment</td>
+                    <td class="label">{{ __('order.total_amount') }}</td>
                     <td class="value">: {{ number_format(($order->total  + 1000), 0, ',', '.') }}</td>
                 </tr>
             </thead>
@@ -240,13 +240,13 @@ body {
     </div>
     <div class="footer">
         <span class="head">
-            THANK YOU!..
+            {{ __('order.invoice_title') }}
         </span>
         <span class="mid">
-            Items that have been purchased cannot be returned
+            {{ __('order.invoice_text') }}
         </span>
         <span class="bot">
-            For more info contact support@gonemaul.my.id
+            {{ __('order.invoice_help') }}
         </span>
     </div>
 </div>

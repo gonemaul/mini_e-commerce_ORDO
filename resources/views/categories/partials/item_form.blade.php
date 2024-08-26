@@ -14,7 +14,7 @@
     }
 </style>
 <div class="form-group">
-    <label for="name">Category Name</label>
+    <label for="name">{{ __('category.name') }}</label>
     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" placeholder="Category Name" required autofocus value="{{ old('category', $category->name ?? '') }}">
 </div>
 @error('name')

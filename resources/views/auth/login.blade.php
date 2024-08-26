@@ -5,7 +5,7 @@
     <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
       <div class="card col-lg-4 mx-auto">
         <div class="card-body px-5 py-5">
-          <h3 class="card-title text-left mb-3">Login</h3>
+          <h3 class="card-title text-left mb-3">{{ __('auth.login_title') }}</h3>
           <form action="{{ Route('authenticate') }}" method="post">
             @csrf
             @if(session()->has('success'))
@@ -38,14 +38,14 @@
             <div class="form-group d-flex align-items-center justify-content-between">
                 <div class="form-check">
                   <label class="form-check-label" for="remember_me">
-                    <input type="checkbox" id="remember_me" name="remember" class="form-check-input"> Remember me </label>
+                    <input type="checkbox" id="remember_me" name="remember" class="form-check-input"> {{ __('auth.remember_title') }} </label>
                 </div>
-                <a href="{{ route('password.request') }}" class="forgot-pass">Forgot password</a>
+                <a href="{{ route('password.request') }}" class="forgot-pass">{{ __('auth.forgot_password_title') }}</a>
               </div>
             <div class="text-center">
-              <button type="submit" class="btn btn-primary btn-block enter-btn">Login</button>
+              <button type="submit" class="btn btn-primary btn-block enter-btn">{{ __('auth.login_title') }}</button>
             </div>
-            <p class="sign-up">Don't have an Account?<a href="{{ Route('register') }}"> Sign Up</a></p>
+            <p class="sign-up">{{ __('auth.login_to_register') }}<a href="{{ Route('register') }}"> Sign Up</a></p>
           </form>
         </div>
       </div>

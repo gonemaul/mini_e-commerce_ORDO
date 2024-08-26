@@ -16,9 +16,9 @@
                 @endif
                 <input type="hidden" name="token" value="{{ $token }}">
                 <input type="hidden" name="email" value="{{ request()->email }}">
-                <label>Please enter new password</label>
+                <label>{{ __('auth.new_pw') }}</label>
                 <div class="form-group">
-                    <label for="password">New Password</label>
+                    <label for="password">{{ __('passwords.new') }}</label>
                     <input type="password" class="form-control" id="password" name="password" required autofocus>
                     @error('password')
                         <div class="invalid-feedback d-block">
@@ -27,10 +27,10 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="password_confirmation">Confirm Password</label>
+                    <label for="password_confirmation">{{ __('passwords.confirm') }}</label>
                     <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required autofocus>
                 </div>
-                <button type="submit" class="btn btn-primary">Update Password</button>
+                <button type="submit" class="btn btn-primary">{{ __('auth.update_pw') }}</button>
             </form>
         </div>
     </div>
