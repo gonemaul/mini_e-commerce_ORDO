@@ -41,6 +41,7 @@ return [
     'verify_expired' => 'Verification link expired.',
     'verify_success' => 'Email verified successfully. Your account has been actived.',
     'token_reset_pw' => 'Please enter token for reset password...',
+    'delete_account_success' => 'Your account has been deleted successfully!',
 
     // API
     'register_success' => 'You have successfully registered, Please check your inbox for a verification email.',
@@ -56,5 +57,6 @@ return [
     'update_profile_email_success' => 'Your profile has changed successfully, Please check your inbox for email verification before logging back in.',
     'update_profile_success' => 'Your profile has changed successfully',
     'update_profile_failed' => 'Failed to update profile',
-    'update_password_failed' => 'The new password is the same as the old password'
+    'update_password_failed' => 'The new password is the same as the old password',
+    'update_password_success' => 'Your password has been updated successfully'
 ];

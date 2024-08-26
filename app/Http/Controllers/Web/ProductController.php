@@ -98,7 +98,7 @@ class ProductController extends Controller
         if($user){
             Notification::send($user,new NewProduct($product_id,$request->category));
         }
-        return redirect()->route('products.index')->with('success', 'Product created successfully.');
+        return redirect()->route('products.index')->with('success', __('product.create.success'));
     }
 
     /**
@@ -155,7 +155,7 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
+        return redirect()->route('products.index')->with('success', __('product.update.success'));
     }
 
     /**
@@ -170,7 +170,7 @@ class ProductController extends Controller
         }
         $product->delete();
 
-        return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
+        return redirect()->route('products.index')->with('success', __('product.delete.success'));
     }
 
     public function templates()
@@ -203,7 +203,7 @@ class ProductController extends Controller
         if($user){
             Notification::send($user,new NewProductImport());
         }
-        return redirect()->back()->with('success', 'Data berhasil diimport.');
+        return redirect()->back()->with('success', __('product.import.success'));
     }
     public function export(){
         $name = 'Product_' . Carbon::now()->format('Ymd') . rand(10,99) . '.xlsx';

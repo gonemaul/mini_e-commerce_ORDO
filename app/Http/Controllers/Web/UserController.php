@@ -58,10 +58,10 @@ class UserController extends Controller
             $request->session()->forget('remember_me');
             return redirect()->route('verification.notice')->with([
                 'email' => $user->email,
-                'success' => 'Your profile has changed successfully, Please check your inbox for email verification before logging back in.'
+                'success' => __('auth.update_profile_email_success')
             ]);
         }
-        return redirect()->route('dashboard')->with(['success' => "Your profile has been updated successfully"]);
+        return redirect()->route('dashboard')->with(['success' => __('auth.update_profile_success')]);
     }
 
     public function change_password(Request $request){
@@ -73,14 +73,14 @@ class UserController extends Controller
         ]);
 
         if (!(Hash::check($request->get('current_password'), $user->password))) {
-            return back()->with(["error" => "Your current password does not matches with the password."]);
+            return back()->with(["error" => __('auth.update_password_failed')]);
         }
 
         $user->update([
             'password' =>  Hash::make($request->get('password'))
         ]);;
 
-        return back()->with(["success" => "Password changed successfully!"]);
+        return back()->with(["success" => __('auth.update_password_success')]);
     }
 
     public function delete_account(Request $request){
@@ -90,7 +90,7 @@ class UserController extends Controller
 
         $user = User::findOrFail($request->user()->id);
         if (!(Hash::check($request->get('password'), $user->password))) {
-            return back()->with(["error" => "Password does not match with the your password."]);
+            return back()->with(["error" => __('auth.password')]);
         }
         else{
             if($user->profile_image){
@@ -98,7 +98,7 @@ class UserController extends Controller
             }
             $user->delete();
             Auth::logout();
-            return redirect()->route('login')->with(['success' => 'Your account has been deleted successfully!']);
+            return redirect()->route('login')->with(['success' => __('auth.delete_account_success')]);
         }
     }
 

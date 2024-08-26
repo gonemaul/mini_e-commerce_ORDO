@@ -69,7 +69,7 @@ class CategoryController extends Controller
             'name' => Str::title($request->name)
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Category created successfully.');
+        return redirect()->route('categories.index')->with('success', __('category.create.success'));
     }
 
     /**
@@ -104,7 +104,7 @@ class CategoryController extends Controller
             'name' => Str::title($request->name)
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
+        return redirect()->route('categories.index')->with('success', __('category.update.success'));
     }
 
     /**
@@ -114,11 +114,11 @@ class CategoryController extends Controller
     {
         $products = Product::where('category_id', $category->id)->first();
         if($products){
-            return back()->with(['error' => 'Category already used']);
+            return back()->with(['error' => __('category.delete.error')]);
         }
         else{
             $category->delete();
-            return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
+            return redirect()->route('categories.index')->with('success', __('category.delete.success'));
         }
     }
 
@@ -147,7 +147,7 @@ class CategoryController extends Controller
 
             return redirect()->back()->with(['alerts' => $allAlerts]);
         }
-            return redirect()->back()->with('success', 'Data berhasil diimport.');
+            return redirect()->back()->with('success', __('category.import.success'));
     }
 
     public function export(){

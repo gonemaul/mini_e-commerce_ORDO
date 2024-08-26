@@ -54,9 +54,9 @@ class OrderController extends Controller
         })
         ->addColumn('action', function($orders){
             if($orders->status == "Pending")
-                $btn = '<button type="submit" class="btn btn-outline-danger" onclick="return confirm(\'What are you sure? ..\');" style="font-size:1rem"><i class="fa-solid fa-xmark"></i> Cancel</button>';
+                $btn = '<button type="submit" class="btn btn-outline-danger" onclick="return confirm(\'What are you sure? ..\');" style="font-size:1rem"><i class="fa-solid fa-xmark"></i>'. __('general.cancel').'</button>';
             else
-                $btn = '<button type="submit" disabled class="btn btn-outline-danger" onclick="return confirm("What are you sure? ..")" style="font-size:1rem"><i class="fa-solid fa-xmark"></i> Cancel</button>';
+                $btn = '<button type="submit" disabled class="btn btn-outline-danger" onclick="return confirm("What are you sure? ..")" style="font-size:1rem"><i class="fa-solid fa-xmark"></i>'. __('general.cancel').'</button>';
 
             return '<a href="'. route('orders.detail', $orders->id) .'" class="btn btn-outline-primary mr-1"><i class="fa-solid fa-eye"></i> Detail</a>
                     <form action="'. route('orders.cancel', $orders->order_id) .'" method="post">
@@ -89,15 +89,15 @@ class OrderController extends Controller
                 $order->save();
 
                 Notification::send($users, new ChangeStatusOrder($order));
-                return redirect()->back()->with(['success' => 'Order canceled successfully']);
+                return redirect()->back()->with(['success' => __('order.cancel_order_success')]);
             } else {
-                return redirect()->back()->with(['error' => 'Failed to cancel order']);
+                return redirect()->back()->with(['error' => __('order.cancel_order_failed')]);
             }
         } catch (\Exception $e) {
             $order->status = 'Canceled';
             $order->save();
             Notification::send($users, new ChangeStatusOrder($order));
-            return redirect()->back()->with(['success' => 'Order canceled successfully']);
+            return redirect()->back()->with(['success' => __('order.cancel_order_success')]);
         }
     }
 

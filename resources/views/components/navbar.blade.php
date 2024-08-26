@@ -101,13 +101,13 @@
             </li>
             <li class="nav-item dropdown border-left">
                 <a class="nav-link indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-                    <i class="fa-solid fa-earth-americas" style="font-size: 1.3rem"></i>
+                    ID/EN
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item preview-item" href="{{ route('set_language', 'en') }}">
                         <div class="preview-item-content d-flex justify-content-between {{ session('locale') == 'en' ? 'selected' : '' }}" style="width: 100%">
-                            <p class="preview-subject mb-1">Inggris</p>
+                            <p class="preview-subject mb-1">English</p>
                             <i class="fa-solid fa-circle-check text-success language"></i>
                         </div>
                     </a>

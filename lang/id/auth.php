@@ -41,6 +41,7 @@ return [
     'verify_expired' => 'Tautan verifikasi kadaluarsa.',
     'verify_success' => 'Email berhasil diverifikasi. Akun Anda telah diaktifkan.',
     'token_reset_pw' => 'Silakan masukkan token untuk mereset kata sandi...',
+    'delete_account_success' => 'Akun Anda telah berhasil dihapus!',
 
     // API
     'register_success' => 'Anda telah berhasil mendaftar, Silakan cek kotak masuk Anda untuk email verifikasi.',
@@ -56,5 +57,6 @@ return [
     'update_profile_email_success' => 'Profil Anda telah berhasil diubah, Silakan cek kotak masuk Anda untuk verifikasi email sebelum login kembali.',
     'update_profile_success' => 'Profil Anda telah berhasil diubah',
     'update_profile_failed' => 'Gagal mengubah profil',
-    'update_password_failed' => 'Kata sandi baru sama dengan kata sandi lama'
+    'update_password_failed' => 'Kata sandi baru sama dengan kata sandi lama',
+    'update_password_success' => 'Kata sandi Anda telah berhasil diperbarui',
 ];

@@ -14,5 +14,6 @@ return [
     'total_amount' => 'Total Pembayaran',
     'invoice_title' => 'TERIMA KASIH!..',
     'invoice_text' => 'Barang yang telah dibeli tidak dapat dikembalikan',
-    'invoice_help' => 'Untuk info lebih lanjut, hubungi support@gonemaul.my.id'
+    'invoice_help' => 'Untuk info lebih lanjut, hubungi support@gonemaul.my.id',
+    
 ];

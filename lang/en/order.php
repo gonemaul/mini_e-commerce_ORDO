@@ -14,5 +14,7 @@ return [
     'total_amount' => 'Total Payment',
     'invoice_title' => 'THANK YOU!..',
     'invoice_text' => 'Items that have been purchased cannot be returned',
-    'invoice_help' => 'For more info contact support@gonemaul.my.id'
+    'invoice_help' => 'For more info contact support@gonemaul.my.id',
+    'cancel_order_success' => 'Order canceled successfully',
+    'cancel_order_failed' => 'Failed to cancel order',
 ];

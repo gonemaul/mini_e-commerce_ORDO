@@ -7,4 +7,8 @@ return [
     'create' => 'Create Product',
     'edit' => 'Edit Product',
     'update' => 'Update Product',
+    'create.success' => 'Product created successfully',
+    'update.success' => 'Product updated successfully',
+    'delete.success' => 'Product deleted successfully',
+    'import.success' => 'Product imported successfully'
 ];
