@@ -11,8 +11,6 @@ use App\Http\Controllers\API\AuthenticationController;
 
 // Email Verification
 Route::post('/email/verify/send', [AuthenticationController::class, 'verifySend'])->middleware(['throttle:6,1'])->name('api.verification.resend');
-Route::get('/email/verify-status', [AuthenticationController::class, 'verifyStatus'])->middleware(['auth:sanctum', 'verified']);
-Route::get('/email/verify/{id}/{hash}', [AuthenticationController::class, 'verifyHandler'])->middleware(['signed'])->name('api.verification.verify');
 
 Route::middleware(['guest'])->group( function(){
     Route::post('register', [AuthenticationController::class, 'register']);
@@ -20,7 +18,6 @@ Route::middleware(['guest'])->group( function(){
     // Forgot Password
     Route::post('forgot-password/reset', [AuthenticationController::class, 'forgot_reset']);
     Route::post('forgot-password/request', [AuthenticationController::class, 'forgot_request']);
-    Route::get('forgot-password/{token}', [AuthenticationController::class, 'forgot_verify'])->name('api.password.reset');
 });
 
 Route::middleware(['auth:sanctum' , 'verified'])->group( function(){

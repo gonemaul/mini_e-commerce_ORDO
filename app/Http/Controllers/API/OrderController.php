@@ -128,11 +128,12 @@ class OrderController extends Controller
             if($users){
                 Notification::send($users, new NewOrder($order,$path));
             }
-            Storage::delete('invoices/' . 'invoice_'.$lastOrder->order_id . '.pdf');
+            if($lastOrder){
+                Storage::delete('invoices/' . 'invoice_'.$lastOrder->order_id . '.pdf');
+            }
             return response()->json([
                 'status' => 'success',
                 'message' => 'Please ndang bayar!!',
-                'lats_order' => $lastOrder->order_id,
                 'payment' => [
                     'token' => $snapToken,
                     'link' => 'https://app.sandbox.midtrans.com/snap/v2/vtweb/'.$snapToken,

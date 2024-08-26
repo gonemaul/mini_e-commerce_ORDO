@@ -1,12 +1,7 @@
 <?php
 
-use App\Models\Order;
-use App\Notifications\NewOrder;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\UserController;
-use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\Web\ImageController;
 use App\Http\Controllers\Web\OrderController;
 use App\Http\Controllers\Web\ProductController;

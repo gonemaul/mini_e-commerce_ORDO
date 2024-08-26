@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\Auth\EmailVerifyNotification;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class AuthenticationController extends Controller
@@ -46,51 +47,30 @@ class AuthenticationController extends Controller
         if($admin){
             Notification::send($admin, new NewUser($new_user));
         }
-        event(new Registered($new_user));
+        Notification::send($new_user, new EmailVerifyNotification());
         return response()->json([
             'status' => 'success',
             'message' => 'You have successfully registered, Please check your inbox for a verification email.',
         ],201);
     }
 
-    public function verifyHandler($id,$hash){
-        $user = User::where('id', $id)->first();
-
-        if ($user->hasVerifiedEmail()) {
-            return response()->json([
-               'status' => 'success',
-               'message' => 'Email already verified.'
-            ], 200);
-        }
-        if ($user->markEmailAsVerified()) {
-            event(new Verified($user));
-        }
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Email verified successfully.',
-        ], 200);
-    }
-
     public function verifySend(Request $request){
-        $request->validate(['email' => 'required|exists:users|email']);
+        $request->validate(['email' => 'required|exists:users|email'
+        ],['email.exists' => 'Invalid email address']);
         $user = User::where('email', $request->email)->first();
         if ($user->hasVerifiedEmail()) {
             return response()->json([
-                'status' => 'success',
+                'status' => 'error',
                 'message' => 'Email already verified.'
-            ], 200);
+            ], 500);
         }
 
-        $user->sendEmailVerificationNotification();
+        Notification::send($user, new EmailVerifyNotification());
 
         return response()->json([
             'status' => 'success',
             'message' => 'Verification link sent successfully, Please check your inbox for a verification email.'
         ], 200);
-    }
-
-    public function verifyStatus(Request $request){
-        return response()->json(['email_verified_at' => $request->user()->email_verified_at]);
     }
 
     public function forgot_request(Request $request){
@@ -112,19 +92,12 @@ class AuthenticationController extends Controller
         }
     }
 
-    public function forgot_verify(string $token){
-        return response()->json([
-            'message' => 'Please enter token for reset password...',
-            'token' => $token,
-        ]);
-    }
     public function forgot_reset(Request $request){
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:8|confirmed',
         ]);
-        $user = User::where('email', $request->email)->first();
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
@@ -135,13 +108,13 @@ class AuthenticationController extends Controller
                 $user->save();
 
                 event(new PasswordReset($user));
+                if($user->tokens()) {
+                    $user->tokens()->delete();
+                }
             }
         );
-
         if($status === Password::PASSWORD_RESET){
-            if($user->tokens()) {
-                $user->tokens()->delete();
-            }
+
             return response()->json([
                'status' =>'success',
                'message' => 'Your password reset was successful',
@@ -155,19 +128,18 @@ class AuthenticationController extends Controller
     }
 
     public function login(Request $request){
-        $credentials = $request->validate([
+        $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
         $user = User::where('email', $request->email)->first();
-
-        if (!$user->hasVerifiedEmail()) {
-            return response()->json([
-               'status' => 'error',
-               'message' => 'Email not verified!, Please verify your email',
-            ], 401);
-        }else{
-            if (Auth::attempt($credentials)) {
+        if($user && Hash::check($request->password, $user->password)){
+            if (!$user->hasVerifiedEmail()) {
+                return response()->json([
+                   'status' => 'error',
+                   'message' => 'Account not actived, Please verify your email.',
+                ], 401);
+            }else{
                 if($user->tokens()) {
                     $user->tokens()->delete();
                 }
@@ -189,15 +161,16 @@ class AuthenticationController extends Controller
                     ]
                 ], 200);
             }
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid credentials',
+                'errors' => [
+                    'email' => ['The provided email is not registered'],
+                    'password' => ['The provided password is incorrect']
+                ]
+            ], 401);
         }
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Invalid credentials',
-            'errors' => [
-                'email' => ['The provided email is not registered'],
-                'password' => ['The provided password is incorrect']
-            ]
-        ], 401);
     }
 
     public function me(Request $request){
@@ -216,27 +189,28 @@ class AuthenticationController extends Controller
     }
 
     public function update_me(Request $request){
-        $user = User::findOrFail(Auth::user()->id);
+        $user = User::findOrFail($request->user()->id);
 
         $request->validate([
-            'name' => ['string', 'max:250'],
+            'name' => ['string', 'max:250','regex:/^[\pL\s]+$/u'],
             'email' => ['email','max:250','unique:users'],
             'password' => 'min:8',
-            'profile_image' => ['image|file|max:1024'],
+            'profile_image' => ['image|file|max:1024|mimes:jpeg,png,jpg,gif,svg'],
         ]);
 
         if($request->name){
             $user->name = Str::title($request->name);
         }
 
-        if($request->password && (Hash::check($request->password, $user->password))){
-            return response()->json([
-                'status' =>'error',
-                'message' => 'The new password is the same as the old password'
-            ],403);
-        }
-        else{
-            $user->password = Hash::make($request->password);
+        if($request->password){
+            if(Hash::check($request->password, $user->password)){
+                return response()->json([
+                    'status' =>'error',
+                    'message' => 'The new password is the same as the old password'
+                ],403);
+            } else{
+                $user->password = Hash::make($request->password);
+            }
         }
 
         if ($request->file('profile_image')){
@@ -250,11 +224,12 @@ class AuthenticationController extends Controller
         if($request->email && $request->email !== $user->email){
             $user->email_verified_at = null;
             $user->email = $request->email;
+            $user->tokens()->delete();
             $user->save();
-            $user->sendEmailVerificationNotification();
+            Notification::send($user, new EmailVerifyNotification());
             return response()->json([
                 'status' => 'success',
-                'message' => 'Your profile has changed successfully, Please check your inbox for a verification email.'
+                'message' => 'Your profile has changed successfully, Please check your inbox for email verification before logging back in.'
             ],200);
         }
         return response()->json([

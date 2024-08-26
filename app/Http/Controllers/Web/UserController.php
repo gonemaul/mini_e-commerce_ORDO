@@ -58,7 +58,7 @@ class UserController extends Controller
             $request->session()->forget('remember_me');
             return redirect()->route('verification.notice')->with([
                 'email' => $user->email,
-                'success' => 'Verification link sent!, Please check your inbox for email verification before logging back in.'
+                'success' => 'Your profile has changed successfully, Please check your inbox for email verification before logging back in.'
             ]);
         }
         return redirect()->route('dashboard')->with(['success' => "Your profile has been updated successfully"]);

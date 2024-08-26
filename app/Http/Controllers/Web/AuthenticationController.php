@@ -104,7 +104,7 @@ class AuthenticationController extends Controller
                     return response()->json([
                        'status' => 'error',
                        'message' => 'Email already verified.'
-                    ], 200);
+                    ], 500);
                 } else{
                     return redirect()->route('login')->with([
                         'success' => 'Email already verified'
@@ -117,7 +117,7 @@ class AuthenticationController extends Controller
             }
             $verify->delete();
 
-            if($request->is('api/*')){
+            if(!$user->is_admin) {
                 return response()->json([
                    'status' =>'success',
                    'message' => 'Email verified successfully. Your account has been actived.'
@@ -168,8 +168,16 @@ class AuthenticationController extends Controller
                     : back()->withErrors(['error' => __($status)]);
     }
 
-    public function forgotPWreset(string $token){
-        return view('auth.reset-password')->with(['title' => 'Reset Password', 'token' => $token]);
+    public function forgotPWreset(Request $request,string $token){
+        $user = User::where('email',$request->email)->first();
+        if($user->is_admin){
+           return view('auth.reset-password')->with(['title' => 'Reset Password', 'token' => $token]);
+        } else{
+            return response()->json([
+                'message' => 'Please enter token for reset password...',
+                'token' => $token,
+            ]);
+        }
     }
 
     public function resetPassword(Request $request){
