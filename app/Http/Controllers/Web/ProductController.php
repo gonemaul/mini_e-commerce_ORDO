@@ -41,7 +41,7 @@ class ProductController extends Controller
                     <form action="'. route('products.destroy', $products->id) .'" method="post">
                     '.method_field('DELETE').'
                     '.csrf_field().'
-                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm(\'What are you sure? ..\');" style="font-size:1rem"><i class="fa-solid fa-trash"></i>'.__('general.delete').'</button></form>';
+                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm(\''.__('general.alert_delete').'\');" style="font-size:1rem"><i class="fa-solid fa-trash"></i>'.__('general.delete').'</button></form>';
         })
         ->rawColumns(['action'])
         ->make(true);

@@ -12,4 +12,11 @@ return [
     'delete.success' => 'Kategori berhasil dihapus.',
     'delete.error' => 'Kategori sudah digunakan',
     'import.success' => 'Kategori berhasil diimpor.',
+    'modal' => [
+    'header' => 'Impor Kategori',
+    'text' => 'Unduh Template Impor Kategori jika Anda belum memilikinya',
+    'btn-import' => 'Impor File',
+    'btn-template' => 'Unduh Template',
+    'footer' => 'Kami tidak membagikan informasi Anda.',
+    ],
 ];

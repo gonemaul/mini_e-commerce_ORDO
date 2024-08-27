@@ -43,12 +43,12 @@ class OrderController extends Controller
         $lastOrder = Order::orderBy('created_at', 'desc')->first();
 
         if($cartItems->isEmpty()){
-            return response()->json(['message' => 'Cart is empty'], 400);
+            return response()->json(['message' => __('order.cart.kosong')], 400);
         }
         foreach($cartItems as $item){
             if($item->product->stock < $item->quantity){
                 return response()->json([
-                    'message' => 'Not enough stock for '. $item->product->name,
+                    'message' => __('order.cart.error'). $item->product->name,
                     'stock' => $item->product->stock
                 ], 400);
             }
@@ -132,8 +132,8 @@ class OrderController extends Controller
                 Storage::delete('invoices/' . 'invoice_'.$lastOrder->order_id . '.pdf');
             }
             return response()->json([
-                'status' => 'success',
-                'message' => 'Please ndang bayar!!',
+                'status' => __('general.success'),
+                'message' => __('order.notif_payment'),
                 'payment' => [
                     'token' => $snapToken,
                     'link' => 'https://app.sandbox.midtrans.com/snap/v2/vtweb/'.$snapToken,
@@ -145,7 +145,7 @@ class OrderController extends Controller
                 'data' => null,
                 'meta' => null,
                 'status' => __('general.error'),
-                'message' => 'An error occurred',
+                'message' => __('general.message.error'),
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
         }
@@ -157,10 +157,10 @@ class OrderController extends Controller
             $order_history = $history->map(function ($item) {
                 $order_items = $item->orderItems->map(function ($orderItem) {
                     return [
-                        'product_name' => $orderItem->product_name,
-                        'category' => $orderItem->category_name,
-                        'quantity' => $orderItem->quantity,
-                        'price' => $orderItem->price,
+                        __('product.name') => $orderItem->product_name,
+                        __('general.category') => $orderItem->category_name,
+                        __('general.quantity') => $orderItem->quantity,
+                        __('general.price') => $orderItem->price,
                     ];
                 });
 
@@ -185,15 +185,15 @@ class OrderController extends Controller
                         'last_page' => $history->lastPage(),
                     ]
                 ],
-                'status' => 'success',
-                'message' => 'Data retrieved successfully',
+                'status' => __('general.success'),
+                'message' => __('general.message.success'),
             ],200);
         } catch (\Exception $e) {
             return response()->json([
                 'data' => null,
                'meta' => null,
                'status' => __('general.error'),
-               'message' => 'An error occurred',
+               'message' => __('general.message.error'),
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
         }
@@ -212,15 +212,15 @@ class OrderController extends Controller
                 $order->status = 'Canceled';
                 $order->save();
                 Notification::send($users, new ChangeStatusOrder($order));
-                return response()->json(['message' => 'Order canceled successfully'], 200);
+                return response()->json(['message' => __('order.cancel_order.success')], 200);
             } else {
-                return response()->json(['message' => 'Failed to cancel order'], 500);
+                return response()->json(['message' => __('order.cancel_order.failed')], 500);
             }
         } catch (\Exception $e) {
             $order->status = 'Canceled';
             $order->save();
             Notification::send($users, new ChangeStatusOrder($order));
-            return response()->json(['message' => 'Order canceled successfully'], 200);
+            return response()->json(['message' => __('order.cancel_order.success')], 200);
         }
     }
 

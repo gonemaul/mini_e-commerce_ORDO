@@ -27,27 +27,27 @@
         @switch($order->status)
             @case('Success')
                 <div class="status bg-success p-3 mb-4 text-center" style="border-radius: 0.5rem;font-size:1rem;font-weight:600">
-                    <span>{{ $order->status }}...</span>
+                    <span>{{ __('order.status.success') }}...</span>
                 </div>
                 @break
             @case('Pending')
                 <div class="status bg-warning p-3 mb-4 text-center" style="border-radius: 0.5rem;font-size:1rem;font-weight:600">
-                    <span>{{ $order->status }}...</span>
+                    <span>{{ __('order.status.pending') }}...</span>
                 </div>
                 @break
             @case('Failed')
                 <div class="status bg-danger p-3 mb-4 text-center" style="border-radius: 0.5rem;font-size:1rem;font-weight:600">
-                    <span>{{ $order->status }}...</span>
+                    <span>{{ __('order.status.failed') }}...</span>
                 </div>
                 @break
             @case('Expired')
                 <div class="status bg-info p-3 mb-4 text-center" style="border-radius: 0.5rem;font-size:1rem;font-weight:600">
-                    <span>{{ $order->status }}...</span>
+                    <span>{{ __('order.status.expired') }}...</span>
                 </div>
                 @break
             @case('Canceled')
                 <div class="status bg-danger p-3 mb-4 text-center" style="border-radius: 0.5rem;font-size:1rem;font-weight:600">
-                    <span>{{ $order->status }}...</span>
+                    <span>{{ __('order.status.canceled') }}...</span>
                 </div>
                 @break
             @default
@@ -103,11 +103,11 @@
         <div class="info-bottom d-flex justify-content-between p-3 mt-4" style="border-top: 2px dashed #B1ADD4;border-bottom: 2px dashed #B1ADD4;">
             <div class="left">
                 <div class="mb-2 text-muted">
-                    <span class="d-block">{{ __('order.time_booking') }}</span>
+                    <span class="d-block">{{ __('order.time.booking') }}</span>
                     <span>{{ $order->created_at }}</span>
                 </div>
                 <div class="text-muted">
-                    <span class="d-block">{{ __('order.time_payment') }}</span>
+                    <span class="d-block">{{ __('order.time.payment') }}</span>
                     <span>{{ $order->updated_at }}</span>
                 </div>
             </div>
@@ -140,7 +140,7 @@
                     <button type="submit" class="btn btn-danger" onclick="return confirm('What are you sure? ..')" style="font-size:1rem"><i class="fa-solid fa-xmark"></i> {{ __('general.cancel') }}</button>
                 </form>
             @endif
-            <a href="{{ route('orders.invoice', $order->order_id) }}" target="blank" class="btn btn-info ml-2" style="font-size:1rem"><i class="fa-regular fa-file-pdf"></i> Invoice</a>
+            <a href="{{ route('orders.invoice', $order->order_id) }}" target="blank" class="btn btn-info ml-2" style="font-size:1rem"><i class="fa-regular fa-file-pdf"></i> {{ __('order.invoices.title') }}</a>
         </div>
     </div>
 </div>

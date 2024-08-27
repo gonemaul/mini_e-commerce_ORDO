@@ -33,7 +33,7 @@ class NotificationController extends Controller
                         ]
                 ],
                 'status' => __('general.success'),
-                'message' => __('general.message.error')
+                'message' => __('general.message.success'),
                 ], 200);
             }
             else{

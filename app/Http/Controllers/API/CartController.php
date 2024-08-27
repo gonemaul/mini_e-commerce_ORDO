@@ -21,7 +21,7 @@ class CartController extends Controller
             if($product->stock < $quantity){
                 return response()->json([
                     'status' => __('general.error'),
-                    'message' => 'Not enough stock for '. $product->name,
+                    'message' => __('order.cart.error'). $product->name,
                     'stock' => $product->stock
                 ],400);
             }
@@ -43,14 +43,14 @@ class CartController extends Controller
             }
 
             return response()->json([
-                'status' => 'success',
-                'message' => 'Product add to cart successfully',
+                'status' => __('general.success'),
+                'message' => __('order.cart.success'),
                 'data' => [
                     'user' => $user->name,
-                    'name' => $cartItem->product->name,
-                    'quantity' => $cartItem->quantity,
-                    'price' => $cartItem->product->price,
-                    'amount' => $cartItem->product->price * $cartItem->quantity
+                    __('product.name') => $cartItem->product->name,
+                    __('general.quantity') => $cartItem->quantity,
+                    __('general.price') => $cartItem->product->price,
+                    __('general.total') => $cartItem->product->price * $cartItem->quantity
                 ]
 
             ],200);
@@ -59,7 +59,7 @@ class CartController extends Controller
                 'data' => null,
                'meta' => null,
                'status' => __('general.error'),
-               'message' => 'An error occurred',
+               'message' => __('general.message.error'),
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
         }
@@ -76,23 +76,23 @@ class CartController extends Controller
             if($cartItems->isEmpty()){
                 return response()->json([
                     'status' => __('general.error'),
-                    'message' => 'Cart is empty',
+                    'message' => __('order.cart.kosong'),
                 ],200);
             }
             return response()->json([
                 'data' => [
                     'cartItems' => $cartItems->map(function ($cartItem) {
                         return [
-                            'product_name' => $cartItem->product->name,
-                            'category' => $cartItem->product->category->name,
-                            'quantity' => $cartItem->quantity,
-                            'price' => $cartItem->product->price,
+                            __('product.name') => $cartItem->product->name,
+                            __('general.category') => $cartItem->product->category->name,
+                            __('general.quantity') => $cartItem->quantity,
+                            __('general.price') => $cartItem->product->price,
                         ];
                     }),
                     'totalPrice' => $totalPrice
                 ],
-                'status' => 'success',
-                'message' => 'Cart items retrieved successfully',
+                'status' => __('general.success'),
+                'message' => __('general.message.success'),
 
             ],200);
         } catch (\Exception $e) {
@@ -100,7 +100,7 @@ class CartController extends Controller
                 'data' => null,
                'meta' => null,
                'status' => __('general.error'),
-               'message' => 'An error occurred',
+               'message' => __('general.message.error'),
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
         }
@@ -119,7 +119,7 @@ class CartController extends Controller
             if($product->stock < $request->quantity){
                 return response()->json([
                     'status' => __('general.error'),
-                    'message' => 'Not enough stock for '. $product->name,
+                    'message' => __('order.cart.error'). $product->name,
                     'stock' => $product->stock
                 ],400);
             }
@@ -129,13 +129,13 @@ class CartController extends Controller
             ]);
 
             return response()->json([
-                'status' => 'success',
-                'message' => 'Product quantity updated successfully',
+                'status' => __('general.success'),
+                'message' => __('order.cart.update'),
                 'data' => [
-                    'name' => $cartItem->product->name,
-                    'quantity' => $cartItem->quantity,
-                    'price' => $cartItem->product->price,
-                    'amount' => $cartItem->product->price * $cartItem->quantity
+                    __('product.name') => $cartItem->product->name,
+                    __('general.quantity') => $cartItem->quantity,
+                    __('general.price') => $cartItem->product->price,
+                    __('general.total') => $cartItem->product->price * $cartItem->quantity
                 ],
             ],200);
         } catch (\Exception $e){
@@ -143,7 +143,7 @@ class CartController extends Controller
                 'data' => null,
                'meta' => null,
                'status' => __('general.error'),
-               'message' => 'An error occurred',
+               'message' => __('general.message.error'),
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
         }
@@ -157,15 +157,15 @@ class CartController extends Controller
                             ->firstOrFail()->delete();
 
             return response()->json([
-               'status' =>'success',
-               'message' => 'Product removed from cart successfully',
+               'status' =>__('general.success'),
+               'message' => __('order.cart.remove.')
             ],200);
         } catch (\Exception $e) {
             return response()->json([
                 'data' => null,
                'meta' => null,
                'status' => __('general.error'),
-               'message' => 'An error occurred',
+               'message' => __('general.message.error'),
                 'errors' => ['exception' => $e->getMessage()]
             ], 500);
         }

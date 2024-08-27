@@ -37,18 +37,18 @@
     <i class="cancel-icon fas fa-times"></i>
     </label>
     <div class="content">
-      <header>Import Product</header>
-      <p>Download Import Product Template if you don't have one</p>
+      <header>{{ __('product.modal.header') }}</header>
+      <p>{{ __('product.modal.text') }}</p>
     </div>
     <form action="{{ route('products.import') }}" method="POST" id="modal" enctype="multipart/form-data">
         @csrf
         <input type="file" class="file_up" name="file_up" accept=".xls,.xlsx" required hidden>
         <div class="button">
-            <a id="upload_file" class="btn btn-primary mb-2"><i class="fa-solid fa-cloud-arrow-up"></i>Import File</a>
-            <a id="templates" href="{{ route('products.templates') }}" class="btn btn-success mb-2"><i class="fa-solid fa-cloud-arrow-down"></i>Download Template</a>
+            <a id="upload_file" class="btn btn-primary mb-2"><i class="fa-solid fa-cloud-arrow-up"></i>{{ __('product.modal.btn-import') }}</a>
+            <a id="templates" href="{{ route('products.templates') }}" class="btn btn-success mb-2"><i class="fa-solid fa-cloud-arrow-down"></i>{{ __('product.modal.btn-template') }}</a>
         </div>
     </form>
-    <div class="text">We do not share your information.</div>
+    <div class="text-muted">{{ __('product.modal.footer') }}</div>
 </div>
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -147,20 +147,6 @@
                         }
                 ]
             });
-            // $('#error_show').click(function(){
-            //     $('#tabel_error').show();
-            //     $('#tabel_data').hide();
-            // })
-            // $('#error_hide').click(function(){
-            //     $('#tabel_error').hide();
-            //     $('#tabel_data').show();
-            // })
         })
     </script>
-    {{-- @if(session()->has('failures'))
-        <script>
-            $('#tabel_error').hide();
-            // $('#tabel_data').show();
-        </script>
-    @endif --}}
 @endsection

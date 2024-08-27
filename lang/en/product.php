@@ -10,5 +10,12 @@ return [
     'create.success' => 'Product created successfully',
     'update.success' => 'Product updated successfully',
     'delete.success' => 'Product deleted successfully',
-    'import.success' => 'Product imported successfully'
+    'import.success' => 'Product imported successfully',
+    'modal' => [
+        'header' => 'Import Product',
+        'text' => "Download Import Product Template if you don't have one",
+        'btn-import' => 'Import File',
+        'btn-template' => 'Download Template',
+        'footer' => 'We do not share your information.'
+    ]
 ];

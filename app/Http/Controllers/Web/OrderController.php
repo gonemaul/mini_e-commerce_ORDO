@@ -34,19 +34,19 @@ class OrderController extends Controller
         ->addColumn('status', function($orders){
             switch($orders->status){
                 case 'Success':
-                    return '<label class="badge badge-outline-success"><i class="fa-regular fa-circle-check mr-2"></i>'. $orders->status .'</label>';
+                    return '<label class="badge badge-outline-success"><i class="fa-regular fa-circle-check mr-2"></i>'. __('order.status.success') .'</label>';
 
                 case 'Pending':
-                    return '<label class="badge badge-outline-warning"><i class="fa-regular fa-clock mr-2"></i> '. $orders->status .'</label>';
+                    return '<label class="badge badge-outline-warning"><i class="fa-regular fa-clock mr-2"></i> '. __('order.status.pending') .'</label>';
 
                 case'Failed';
-                    return '<label class="badge badge-outline-danger">'. $orders->status .'</label>';
+                    return '<label class="badge badge-outline-danger">'. __('order.status.failed') .'</label>';
 
                 case'Expired';
-                    return '<label class="badge badge-outline-info">'. $orders->status .'</label>';
+                    return '<label class="badge badge-outline-info">'. __('order.status.expired') .'</label>';
 
                 case'Canceled';
-                    return '<label class="badge badge-outline-danger"><i class="fa-solid fa-xmark mr-2"></i>'. $orders->status .'</label>';
+                    return '<label class="badge badge-outline-danger"><i class="fa-solid fa-xmark mr-2"></i>'. __('order.status.canceled') .'</label>';
 
                 default:
                     return '<label class="badge badge-outline-secondary">'. $orders->status .'</label>';
@@ -89,15 +89,15 @@ class OrderController extends Controller
                 $order->save();
 
                 Notification::send($users, new ChangeStatusOrder($order));
-                return redirect()->back()->with(['success' => __('order.cancel_order_success')]);
+                return redirect()->back()->with(['success' => __('order.cancel_order.success')]);
             } else {
-                return redirect()->back()->with(['error' => __('order.cancel_order_failed')]);
+                return redirect()->back()->with(['error' => __('order.cancel_order.failed')]);
             }
         } catch (\Exception $e) {
             $order->status = 'Canceled';
             $order->save();
             Notification::send($users, new ChangeStatusOrder($order));
-            return redirect()->back()->with(['success' => __('order.cancel_order_success')]);
+            return redirect()->back()->with(['success' => __('order.cancel_order.success')]);
         }
     }
 
@@ -113,8 +113,8 @@ class OrderController extends Controller
             'title' => 'Invoice',
             'order' => $order,
             'button' => '<div class="container mt-3">
-                <a href="'. route('orders.invoice_download', $order->order_id) .'" class="btn btn-outline-info" style="font-size:1rem"><i class="fa-regular fa-file-pdf"></i>Download</a>
-                <a href="'. route('orders.invoice_preview', $order->order_id) .'" target="blank" class="btn btn-outline-warning" style="font-size:1rem"><i class="fa-solid fa-print"></i>Preview</a>
+                <a href="'. route('orders.invoice_download', $order->order_id) .'" class="btn btn-outline-info" style="font-size:1rem"><i class="fa-regular fa-file-pdf"></i>'.__('order.cancel_order.download').'</a>
+                <a href="'. route('orders.invoice_preview', $order->order_id) .'" target="blank" class="btn btn-outline-warning" style="font-size:1rem"><i class="fa-solid fa-print"></i>'.__('order.cancel_order.preview').'</a>
             </div>'
         ]);
     }
@@ -122,20 +122,16 @@ class OrderController extends Controller
     public function invoice_download($order_id){
         $order = Order::with(['user','orderItems.product.category', 'orderItems.product.productImage'])->where('order_id', $order_id)->first();
 
-        // Buat PDF dari tampilan
         $pdf = Pdf::loadView('orders.invoice', ['order' => $order, 'button' => '']);
 
-        // Mengunduh PDF dengan nama file tertentu
         return $pdf->download('invoice_'.$order->order_id.'.pdf');
     }
 
     public function invoice_preview($order_id){
         $order = Order::with(['user','orderItems.product.category', 'orderItems.product.productImage'])->where('order_id', $order_id)->first();
 
-        // Buat PDF dari tampilan
         $pdf = Pdf::loadView('orders.invoice', ['order' => $order, 'button' => '']);
 
-        // Mengunduh PDF dengan nama file tertentu
         return $pdf->stream('invoice_'.$order->order_id.'.pdf');
     }
 }

@@ -6,15 +6,40 @@ return [
     'to' => 'To',
     'phone' => 'Phone',
     'address' => 'Address',
-    'time_booking' => 'Booking Time',
-    'time_payment' => 'Payment Time',
+    'time' => [
+        'booking' => 'Booking Time',
+        'payment'  => 'Payment Time',
+    ],
     'total_products' => 'Total Products',
     'discon' => 'Discount',
     'service' => 'Service Fee',
     'total_amount' => 'Total Payment',
-    'invoice_title' => 'THANK YOU!..',
-    'invoice_text' => 'Items that have been purchased cannot be returned',
-    'invoice_help' => 'For more info contact support@gonemaul.my.id',
-    'cancel_order_success' => 'Order canceled successfully',
-    'cancel_order_failed' => 'Failed to cancel order',
+    'notif_patment' => 'Please complete the payment immediately!!',
+    'invoices' => [
+        'head' => 'INVOICE',
+        'title' => 'Invoice',
+        'footer' => 'THANK YOU!..',
+        'text' => 'Items that have been purchased cannot be returned',
+        'help' => 'For more info contact support@gonemaul.my.id',
+    ],
+    'cancel_order' => [
+        'success' =>'Order canceled successfully',
+        'failed' =>'Failed to cancel order',
+        'download' => 'Download',
+        'preview' => 'Preview'
+    ],
+    'status' => [
+        'success' => "Success",
+        'pending' => "Pending",
+        'failed' => "Failed",
+        'expired' => "Expired",
+        'canceled' => "Canceled",
+    ],
+    'cart' => [
+        'success' => 'Product add to cart successfully',
+        'error' => 'Not enough stock for ',
+        'kosong' => 'Cart is empty',
+        'update' => 'Product quantity updated successfully',
+        'remove' => 'Product removed from cart successfully',
+    ]
 ];

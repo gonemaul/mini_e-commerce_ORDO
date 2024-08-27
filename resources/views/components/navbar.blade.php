@@ -101,7 +101,7 @@
             </li>
             <li class="nav-item dropdown border-left">
                 <a class="nav-link indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-                    ID/EN
+                    {{ session('locale') == 'id' ? 'ID' : 'EN' }}
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
                     <div class="dropdown-divider"></div>

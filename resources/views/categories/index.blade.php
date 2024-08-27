@@ -43,18 +43,18 @@
     <i class="cancel-icon fas fa-times"></i>
     </label>
     <div class="content">
-      <header>Import Category</header>
-      <p>Download Import Category Template if you don't have one</p>
+      <header>{{ __('category.modal.header') }}</header>
+      <p>{{ __('category.modal.text') }}</p>
     </div>
     <form action="{{ route('categories.import') }}" method="POST" id="modal" enctype="multipart/form-data">
         @csrf
         <input type="file" class="file_up" name="file_up" accept=".xls,.xlsx" required hidden>
         <div class="button">
-            <a id="upload_file" class="btn btn-primary mb-2"><i class="fa-solid fa-cloud-arrow-up"></i>Upload File</a>
-            <a id="templates" href="{{ route('categories.templates') }}" class="btn btn-success mb-2"><i class="fa-solid fa-cloud-arrow-down"></i>Download Template</a>
+            <a id="upload_file" class="btn btn-primary mb-2"><i class="fa-solid fa-cloud-arrow-up"></i>{{ __('category.modal.btn-import') }}</a>
+            <a id="templates" href="{{ route('categories.templates') }}" class="btn btn-success mb-2"><i class="fa-solid fa-cloud-arrow-down"></i>{{ __('category.modal.btn-template') }}</a>
         </div>
     </form>
-    <div class="text">We do not share your information.</div>
+    <div class="text-muted">{{ __('category.modal.footer') }}</div>
 </div>
 
 
@@ -77,7 +77,7 @@
                 <th class="text-center" style="font-weight:600;"> No </th>
                 <th class="text-center" style="font-weight:600;"> {{ __('category.name') }} </th>
                 <th class="text-center" style="font-weight:600;"> {{ __('category.product') }} </th>
-                <th class="text-center" style="font-weight:600;"> Action </th>
+                <th class="text-center" style="font-weight:600;"> {{ __('general.action') }} </th>
               </tr>
             </thead>
               <tbody>

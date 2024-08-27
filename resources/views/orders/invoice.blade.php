@@ -142,7 +142,7 @@ body {
 
 </style>
 <div class="container invoice">
-    <h1 class="title">INVOICE</h1>
+    <h1 class="title">{{ __('order.invoices.head') }}</h1>
     <div class="top">
         <table class="table-head">
             <tr>
@@ -240,13 +240,13 @@ body {
     </div>
     <div class="footer">
         <span class="head">
-            {{ __('order.invoice_title') }}
+            {{ __('order.invoices.footer') }}
         </span>
         <span class="mid">
-            {{ __('order.invoice_text') }}
+            {{ __('order.invoices.text') }}
         </span>
         <span class="bot">
-            {{ __('order.invoice_help') }}
+            {{ __('order.invoices.help') }}
         </span>
     </div>
 </div>

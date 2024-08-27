@@ -39,4 +39,5 @@ return [
     'notif_read' => 'Notifikasi telah ditandai sebagai dibaca',
     'notif_remove' => 'Notifikasi telah dihapus',
     'notif_all_read' => 'Semua notifikasi telah ditandai sebagai dibaca',
+    'alert_delete' => 'Apa anda yakin? ..'
 ];

@@ -40,4 +40,5 @@ return [
     'notif_remove' => 'Notification removed',
     'notif_all_read' => 'All notifications have been marked as read',
     'notif_all_remove' => 'All notifications have been removed',
+    'alert_delete' => 'What are you sure? ..'
 ];
