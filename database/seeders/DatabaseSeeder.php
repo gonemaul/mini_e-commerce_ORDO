@@ -21,23 +21,9 @@ class DatabaseSeeder extends Seeder
     {
         $super_admin =User::factory()->create([
             'name' => 'Super Admin',
-            'email' => 'support@mail.com',
+            'email' => 'support@gonemaul.my.id',
             'password' => Hash::make('password'),
             'is_admin' => true,
-            'email_verified_at' => now(),
-        ]);
-        User::factory()->create([
-            'name' => 'maul',
-            'email' => 'maul@mail.com',
-            'password' => Hash::make('password'),
-            'is_admin' => true,
-            'email_verified_at' => now(),
-        ]);
-        User::factory()->create([
-            'name' => 'user api',
-            'email' => 'api@mail.com',
-            'password' => Hash::make('password'),
-            'is_admin' => false,
             'email_verified_at' => now(),
         ]);
 
