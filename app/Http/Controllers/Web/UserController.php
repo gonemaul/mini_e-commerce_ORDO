@@ -14,14 +14,21 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Storage;
-use App\Notifications\emailVerification;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Notifications\Auth\EmailVerifyNotification;
 
-class UserController extends Controller
+class UserController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:user_view', only: ['list_users','load_data','user_detail']),
+            new Middleware('permission:user_export', only: ['export','export_customer']),
+        ];
+    }
     public function profile(){
         return view('users.profile')->with([
             'title' => 'Profile',
@@ -123,9 +130,9 @@ class UserController extends Controller
         })
         ->addColumn('role', function($users){
             if($users->is_admin)
-                return '<label class="badge '. (Auth::user()->id == $users->id ? 'badge-primary' : 'badge-outline-primary') .'">Admin</label>';
+                return '<label class="badge '. ($users->hasRole('Super Admin') ? 'badge-primary' : 'badge-outline-primary') .'">Web</label>';
             else
-                return '<label class="badge badge-outline-warning">User</label>';
+                return '<label class="badge badge-outline-warning">Api</label>';
         })
         ->rawColumns(['action','profile','role'])
         ->make(true);
@@ -141,7 +148,8 @@ class UserController extends Controller
 
     public function export(){
         $name = 'User_' . Carbon::now()->format('Ymd') . rand(10,99) . '.xlsx';
-        return Excel::download(new AdminExport(), $name);
+
+       return Excel::download(new AdminExport(), $name);
     }
 
     public function export_customer(){

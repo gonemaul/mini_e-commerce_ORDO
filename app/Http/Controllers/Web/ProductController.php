@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Web;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
-use App\Notifications\NewProductImport;
 use Illuminate\Support\Str;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
@@ -14,14 +13,28 @@ use App\Imports\ProductImport;
 use Illuminate\Support\Carbon;
 use App\Notifications\NewProduct;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Notifications\NewProductImport;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
 
-class ProductController extends Controller
+class ProductController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:product_view', only: ['load_data','show']),
+            new Middleware('permission:product_create', only: ['create','store']),
+            new Middleware('permission:product_edit', only: ['edit','update']),
+            new Middleware('permission:product_delete', only: ['destroy']),
+            new Middleware('permission:product_exim', only: ['templates','import','export']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */

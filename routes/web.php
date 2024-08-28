@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\ImageController;
 use App\Http\Controllers\Web\OrderController;
@@ -82,11 +83,10 @@ Route::middleware(['auth','verified'])->group(function(){
         Route::get('templates', [CategoryController::class, 'templates'])->name('categories.templates');
     });
 
-
-
     Route::get('invoice/{order_id}', [OrderController::class, 'invoice'])->name('orders.invoice');
     Route::get('invoice/{order_id}/download', [OrderController::class, 'invoice_download'])->name('orders.invoice_download');
     Route::get('invoice/{order_id}/preview', [OrderController::class, 'invoice_preview'])->name('orders.invoice_preview');
+
     // Order
     Route::prefix('orders')->group(function() {
         Route::get('/', [OrderController::class, 'index'])->name('orders.list');
@@ -105,8 +105,16 @@ Route::middleware(['auth','verified'])->group(function(){
         Route::get('RemoveAll', [NotificationController::class, 'removeAll'])->name('notifications.removeAll');
     });
 
+    Route::prefix('roles')->group(function(){
+        Route::post('load', [RoleController::class, 'load_all'])->name('roles.load');
+        Route::post('{role}/assign', [RoleController::class, 'assign'])->name('roles.assign');
+        Route::delete('remove-member/{member}', [RoleController::class, 'remove_member'])->name('roles.remove-member');
+        Route::post('load/{role}', [RoleController::class, 'load_role'])->name('roles.load_data');
+    });
+
     Route::resources([
         'categories'=> CategoryController::class,
         'products' => ProductController::class,
+        'roles' => RoleController::class,
     ]);
 });

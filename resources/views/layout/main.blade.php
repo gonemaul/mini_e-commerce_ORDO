@@ -40,7 +40,7 @@
 
     @auth
     <div class="container-scroller">
-        @include('components.sidebar')
+        <x-sidebar />
         <div class="page-body-wrapper">
                 @include('components.navbar')
                 <div class="main-panel" style="background-color: #000000">

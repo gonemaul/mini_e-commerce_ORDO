@@ -3,7 +3,8 @@
 return [
     // general
     'name' => 'Name',
-    'role' => 'Role',
+    'role' => "Role",
+    'type' => 'Type Account',
     'product' => 'Product',
     'category' => 'Category',
     'image' => 'Image',
@@ -26,6 +27,9 @@ return [
     'save' => 'Save',
     'cancel' => 'Cancel',
     'edit' => 'Edit',
+    'account' => [
+        'access' => 'Access',
+    ],
 
     // label
     'join' => 'Joined',

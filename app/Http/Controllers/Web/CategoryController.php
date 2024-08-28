@@ -9,15 +9,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Exports\CategoryExport;
 use App\Imports\CategoryImport;
-use App\Exports\CategoryTemplate;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
-use Maatwebsite\Excel\Validators\ValidationException;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class CategoryController extends Controller
+class CategoryController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:category_view', only: ['load_data','show']),
+            new Middleware('permission:category_create', only: ['create','store']),
+            new Middleware('permission:category_edit', only: ['edit','update']),
+            new Middleware('permission:category_delete', only: ['destroy']),
+            new Middleware('permission:category_exim', only: ['templates','export','import']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */

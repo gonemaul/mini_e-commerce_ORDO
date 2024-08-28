@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'User Baru',
+    'title' => 'Daftar User',
     'title_detail' => 'Detail Akun',
     'last_login' => 'Terakhir Login',
     'list' => 'Daftar Order',

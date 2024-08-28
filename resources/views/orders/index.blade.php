@@ -11,17 +11,13 @@
 <link rel="stylesheet" href="{{ asset('assets/css/alert.css') }}">
 <script src="{{ asset('assets/js/alert.js') }}"></script>
 @if(session()->has('success'))
-    <input type="hidden" id="myElement" message="{{ session('success') }}">
     <script>
-        var element = document.getElementById('myElement');
-        var message = element.getAttribute('message');
+        var message = "{{ session()->get('success') }}";
         createToast('success', message);
     </script>
 @elseif(session()->has('error'))
-    <input type="hidden" id="myElement" message="{{ session('error') }}">
     <script>
-        var element = document.getElementById('myElement');
-        var message = element.getAttribute('message');
+        var message = "{{ session()->get('error') }}";
         createToast('error', message);
     </script>
 @endif
@@ -29,8 +25,11 @@
     <div class="p-4" style="background-color: #191c24;border-radius:0.5rem">
         <div class="d-flex justify-content-between mb-3">
             <h3 class="my-auto">{{ __('order.title') }}</h3>
-            <a href="{{ route('orders.export') }}" class="btn btn-outline-warning" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-up"></i>Export</a>
+            @can('order_export')
+                <a href="{{ route('orders.export') }}" class="btn btn-outline-warning" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-up"></i>Export</a>
+            @endcan
         </div>
+        @can('order_view')
         <div class="table-responsive">
             <table id="tabel" class="display row-border hover">
                 <thead>
@@ -46,6 +45,7 @@
                 </tbody>
             </table>
         </div>
+        @endcan
     </div>
 </div>
 <script src="{{ asset('assets/vendors/DataTables/datatables.min.js') }}"></script>
@@ -56,6 +56,8 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+    })
+    function load(){
         let table = new DataTable('#tabel', {
                 prosessing: true,
                 serverSide: true,
@@ -98,7 +100,12 @@
                             className: 'justify-content-center d-flex'
                         }
                 ]
-            });
-    })
+        });
+    }
 </script>
+@can('order_view')
+    <script>
+        load();
+    </script>
+@endcan
 @endsection

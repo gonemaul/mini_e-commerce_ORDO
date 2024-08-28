@@ -5,19 +5,31 @@ namespace App\Http\Controllers\Web;
 use App\Models\User;
 use Midtrans\Config;
 use App\Models\Order;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Midtrans\Transaction;
 use App\Exports\OrderExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Notifications\ChangeStatusOrder;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class OrderController extends Controller
+class OrderController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:order_view', only: ['load_data']),
+            new Middleware('permission:order_view_detail', only: ['detail']),
+            new Middleware('permission:order_export', only: ['export']),
+            new Middleware('permission:order_update', only: ['cancel_order']),
+        ];
+    }
     public function index(){
         return view('orders.index')->with([
             'title' => 'Orders',

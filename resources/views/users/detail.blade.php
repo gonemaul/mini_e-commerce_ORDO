@@ -13,33 +13,47 @@
             </div>
             <div class="profile-info col-md-6">
                 <h3 class="mb-4">{{ __('user.title_detail') }}</h3>
-                <div class="row mb-1">
+                <div class="row mb-2">
                     <strong class="col-sm-3">{{ __('general.name') }}</strong>
                     <span class="col-sm-9">: {{ $user->name }}</span>
                 </div>
-                <div class="row mb-1">
+                <div class="row mb-2">
                     <strong class="col-sm-3">Email</strong>
                     <span class="col-sm-9">: {{ $user->email }}</span>
                 </div>
-                <div class="row mb-1">
-                    <strong class="col-sm-3">{{ __('general.role') }}</strong>
-                    <span class="col-sm-9">: {{ $user->is_admin ? 'Admin' : 'User' }}</span>
+                <div class="row mb-2">
+                    <strong class="col-sm-3">{{ __('general.type') }}</strong>
+                    <span class="col-sm-9">: {{ $user->is_admin ? 'Web' : 'Api' }}</span>
                 </div>
-                <div class="row mb-1">
+                @if($user->is_admin)
+                    <div class="row mb-2">
+                        <strong class="col-sm-3">{{ __('general.role') }}</strong>
+                        <span class="col-sm-9">: {{ $user->getRoleNames()[0] ?? 'Default'}}</span>
+                    </div>
+                @endif
+                <div class="row mb-2">
                     <strong class="col-sm-3">{{ __('user.last_login') }}</strong>
                     <span class="col-sm-9">: {{ $user->last_login }}</span>
                 </div>
-                <div class="row mb-1">
+                <div class="row mb-2">
                     <strong class="col-sm-3">{{ __('general.join') }}</strong>
                     <span class="col-sm-9">: {{ $user->created_at->diffForHumans() }}</span>
                 </div>
-                <div class="row mb-1">
-                    <strong class="col-sm-3">Total Order</strong>
-                    <span class="col-sm-9">: {{ count($user->orders) }}</span>
-                </div>
-                <a href="{{ route('users.list') }}" class="btn btn-primary mt-2">{{ __('general.back') }}</a>
+                @if($user->is_admin == false)
+                    <div class="row mb-2">
+                        <strong class="col-sm-3">Total Order</strong>
+                        <span class="col-sm-9">: {{ count($user->orders) }}</span>
+                    </div>
+                @endif
+                <a href="{{ route('users.list') }}" class="btn btn-primary mt-2"><i class="fa-solid fa-arrow-left"></i>{{ __('general.back') }}</a>
+                @can('assign_roles')
+                    @if(!$user->hasRole('Super Admin') && $user->id != Auth::user()->id && $user->is_admin)
+                        <a href="{{ route('roles.show', $user->Roles->first()->id ?? '') }}" class="btn btn-warning mt-2"><i class="mdi mdi-account-key"></i> {{ __('general.account.access') }}</a>
+                    @endif
+                @endcan
             </div>
         </div>
+        @if($user->is_admin == false)
         <div class="p-4" style="background-color: #191c24;border-radius:0.5rem">
             @if($orders->isNotEmpty())
                 <h3 class="pb-2" style="border-bottom: 2px solid #B1ADD4;">{{ __('user.list') }}</h3>
@@ -72,5 +86,6 @@
                 <h4 class="text-center">{{ __('general.no_data') }}</h4>
             @endif
         </div>
+        @endif
     </div>
 @endsection

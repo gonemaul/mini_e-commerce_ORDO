@@ -57,13 +57,18 @@
             <div class="d-flex justify-content-between mb-3">
                 <h3 class="my-auto">{{ __('product.title') }}</h3>
                 <div class="d-block">
+                    @can('product_create')
                     <a class="btn btn-outline-primary" href="{{ route('products.create') }}" style="font-size:1rem;font-weight:500;align-items:center;width:100%"><i class="fa-solid fa-plus"></i> {{ __('product.add') }}</a>
-                    <div class="d-flex mt-2">
-                        <label for="toggle" class="btn btn-outline-success mb-0 mr-2" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-down import"></i>Import</label>
-                      <a class="btn btn-outline-warning" href="{{ route('products.export') }}" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-up"></i>Export</a>
-                    </div>
+                    @endcan
+                    @can('product_exim')
+                        <div class="d-flex mt-2">
+                            <label for="toggle" class="btn btn-outline-success mb-0 mr-2" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-down import"></i>Import</label>
+                        <a class="btn btn-outline-warning" href="{{ route('products.export') }}" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-up"></i>Export</a>
+                        </div>
+                    @endcan
                 </div>
             </div>
+            @can('product_view')
             <div class="table-responsive" id="tabel_data">
                 <table id="tabel" class="display hover row-border">
                     <thead>
@@ -80,6 +85,7 @@
                     </tbody>
                 </table>
             </div>
+            @endcan
         </div>
     </div>
     <script src="{{ asset('assets/vendors/DataTables/datatables.min.js') }}"></script>
@@ -98,6 +104,8 @@
                 $('#templates').disable();
                 $('#upload_file').disable();
             });
+        })
+        function load(){
             let table = new DataTable('#tabel', {
                 prosessing: true,
                 serverSide: true,
@@ -147,6 +155,11 @@
                         }
                 ]
             });
-        })
+        }
     </script>
+    @can('product_view')
+        <script>
+            load();
+        </script>
+    @endcan
 @endsection

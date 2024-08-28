@@ -19,7 +19,7 @@ class OrderFactory extends Factory
     {
         return [
             'order_id'=> rand(1,10),
-            'user_id' => rand(1,10),
+            // 'user_id' => rand(1,10),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),

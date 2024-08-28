@@ -57,19 +57,23 @@
     <div class="text-muted">{{ __('category.modal.footer') }}</div>
 </div>
 
-
 <div class="content-wrapper">
   <div class="p-4" style="background-color: #191c24;border-radius:0.5rem">
     <div class="d-flex justify-content-between mb-3">
-      <h3 class="my-auto">{{ __('category.title') }}</h3>
-      <div class="d-block">
-          <a class="btn btn-outline-primary" href="{{ route('categories.create') }}" style="font-size:1rem;font-weight:500;align-items:center;width:100%"><i class="fa-solid fa-plus"></i>{{ __('category.add') }}</a>
-          <div class="d-flex mt-2">
-            <label for="toggle" class="btn btn-outline-success mb-0 mr-2" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-down import"></i>Import</label>
-            <a class="btn btn-outline-warning" href="{{ route('categories.export') }}" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-up"></i>Export</a>
-      </div>
-  </div>
+        <h3 class="my-auto">{{ __('category.title') }}</h3>
+        <div class="d-block">
+            @can('category_create')
+                <a class="btn btn-outline-primary" href="{{ route('categories.create') }}" style="font-size:1rem;font-weight:500;align-items:center;width:100%"><i class="fa-solid fa-plus"></i>{{ __('category.add') }}</a>
+            @endcan
+            @can('category_exim')
+            <div class="d-flex mt-2">
+                <label for="toggle" class="btn btn-outline-success mb-0 mr-2" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-down import"></i>Import</label>
+                <a class="btn btn-outline-warning" href="{{ route('categories.export') }}" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-up"></i>Export</a>
+            </div>
+            @endcan
+        </div>
     </div>
+    @can('category_view')
     <div class="table-responsive">
         <table class="display hover row-border" id="tabel">
             <thead>
@@ -84,6 +88,7 @@
             </tbody>
         </table>
     </div>
+    @endcan
   </div>
 </div>
 <script src="{{ asset('assets/vendors/DataTables/datatables.min.js') }}"></script>
@@ -102,6 +107,8 @@
             $('#templates').disable();
             $('#upload_file').disable();
         });
+    })
+    function load(){
         let table = new DataTable('#tabel', {
                 prosessing: true,
                 serverSide: true,
@@ -141,6 +148,13 @@
                         }
                 ]
         });
-    })
+    }
 </script>
+@can('category_view')
+    <script>
+        $(document).ready(function() {
+            load();
+        })
+    </script>
+@endcan
 @endsection

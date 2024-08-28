@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'New Users',
+    'title' => 'Users List',
     'title_detail' => 'Account Details',
     'last_login' => 'Last Login',
     'list' => 'List Orders',

@@ -3,7 +3,8 @@
 return [
     // Name
     'name' => 'Nama',
-    'role' => 'Bagian',
+    'role' => 'Role',
+    'type' => 'Tipe Akun',
     'product' => 'Produk',
     'category' => 'Kategori',
     'image' => 'Gambar',
@@ -26,6 +27,9 @@ return [
     'save' => 'Simpan',
     'cancel' => 'Batal',
     'edit' => 'Edit',
+    'account' => [
+        'access' => 'Akses',
+    ],
 
     // label
     'join' => 'Bergabung',
