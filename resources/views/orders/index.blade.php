@@ -29,7 +29,7 @@
                 <a href="{{ route('orders.export') }}" class="btn btn-outline-warning" style="font-size:1rem;font-weight:500;align-items:center"><i class="fa-solid fa-cloud-arrow-up"></i>Export</a>
             @endcan
         </div>
-        @can('order_view')
+        @canany(['order_view','order_view_detail','order_update'])
         <div class="table-responsive">
             <table id="tabel" class="display row-border hover">
                 <thead>
@@ -45,7 +45,7 @@
                 </tbody>
             </table>
         </div>
-        @endcan
+        @endcanany
     </div>
 </div>
 <script src="{{ asset('assets/vendors/DataTables/datatables.min.js') }}"></script>
@@ -103,9 +103,9 @@
         });
     }
 </script>
-@can('order_view')
+@canany(['order_view','order_view_detail','order_update'])
     <script>
         load();
     </script>
-@endcan
+@endcanany
 @endsection

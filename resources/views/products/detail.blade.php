@@ -56,7 +56,9 @@
                 <div class="row mb-4 px-3">
                     <span class="text-muted" style="font-size: 15px">{{ __('general.added') }} {{ $product->created_at->diffForHumans() }}</span>
                 </div>
+                @can('product_edit')
                 <a href="{{ route('products.edit', $product->id) }}" class="btn btn-outline-warning mt-2 mr-2"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+                @endcan
                 <a href="{{ route('products.index') }}" class="btn btn-outline-primary mt-2">{{ __('general.back') }}</a>
             </div>
             <div class="col-md-12 p-3 pt-4 pl-4">

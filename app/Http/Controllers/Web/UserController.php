@@ -12,12 +12,13 @@ use App\Exports\CustomerExport;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use App\Notifications\Auth\EmailVerifyNotification;
 
 class UserController extends Controller implements HasMiddleware
@@ -25,8 +26,9 @@ class UserController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:user_view', only: ['list_users','load_data','user_detail']),
             new Middleware('permission:user_export', only: ['export','export_customer']),
+            new Middleware('permission:user_detail', only: ['user_detail']),
+            new Middleware('permission:user_view|user_detail|user_export', only: ['list_users','load_data']),
         ];
     }
     public function profile(){
@@ -126,7 +128,9 @@ class UserController extends Controller implements HasMiddleware
                 return '<img class="rounded-circle" style="width: 50px;height:50px" src="https://ui-avatars.com/api/?name='. $users->name .'&color=7F9CF5&background=EBF4FF"> </td>';
         })
         ->addColumn('action', function($users){
+            if (Gate::allows('user_detail')) {
             return '<a href="'.route('users.detail', $users->id) .'" class="btn btn-outline-info" style="font-size:1rem"><i class="fa-solid fa-eye"></i>Detail</a>';
+            }
         })
         ->addColumn('role', function($users){
             if($users->is_admin)
@@ -139,10 +143,14 @@ class UserController extends Controller implements HasMiddleware
     }
 
     public function user_detail(User $user){
+        $permissions = $user->getAllPermissions();
         return view('users.detail')->with([
             'title' => 'User Detail',
             'user' => $user,
             'orders' => Order::where('user_id', $user->id)->with('orderItems')->get(),
+            'permissions' => $permissions->map(function($permission){
+                return $permission->name;
+            })
         ]);
     }
 

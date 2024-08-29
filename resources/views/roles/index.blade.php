@@ -30,9 +30,6 @@
     <div class="p-4" style="background-color: #191c24;border-radius:0.5rem">
         <div class="d-flex justify-content-between mb-3">
             <h3 class="my-auto">{{ __('roles.title.list') }}</h3>
-            <div class="d-block">
-                <a class="btn btn-outline-primary" href="{{ route('roles.create') }}" style="font-size:1rem;font-weight:500;align-items:center;width:100%"><i class="fa-solid fa-plus"></i>{{ __('roles.label.add_role') }}</a>
-            </div>
         </div>
         <div class="table-responsive">
             <table class="display hover row-border" id="tabel">

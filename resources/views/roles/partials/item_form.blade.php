@@ -43,6 +43,10 @@
             </div>
             <div class="form-check-primary form-check">
                 <label class="form-check-label">
+                <input type="checkbox" class="form-check-input check_permission" {{ $permissions->contains('user_detail') ? 'checked' : '' }} id="user_detail"> {{ __('roles.permissions.view_detail') }}  </label>
+            </div>
+            <div class="form-check-primary form-check">
+                <label class="form-check-label">
                 <input type="checkbox" class="form-check-input check_permission" id="user_export" {{ $permissions->contains('user_export')  ? 'checked' : '' }}> {{ __('roles.permissions.export') }}  </label>
             </div>
             <div class="form-check-primary form-check">
@@ -128,17 +132,18 @@
     $('#all').change(function(){
         if (this.checked) {
             $('.check_permission').prop('checked', true);
-            // permissions.push('all');
         } else {
-            // permissions = permissions.filter(element => element !== 'all');
-            $('.check_permission').each(function() {
-                if (permissions.includes($(this).attr('id'))) {
-                    $(this).prop('checked', true);
-                } else {
-                    $(this).prop('checked', false);
-                }
-            });
+            $('.check_permission').prop('checked', false);
+            permissions = [];
+            // $('.check_permission').each(function() {
+            //     if (permissions.includes($(this).attr('id'))) {
+            //         $(this).prop('checked', true);
+            //     } else {
+            //         $(this).prop('checked', false);
+            //     }
+            // });
         }
+        console.log(permissions)
         $('#permissions').val(JSON.stringify(permissions));
     })
 

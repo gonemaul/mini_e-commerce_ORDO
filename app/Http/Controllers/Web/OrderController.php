@@ -12,22 +12,24 @@ use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Notifications\ChangeStatusOrder;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
 class OrderController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:order_view', only: ['load_data']),
+            new Middleware('permission:order_view|order_view_detail|order_update', only: ['load_data']),
             new Middleware('permission:order_view_detail', only: ['detail']),
             new Middleware('permission:order_export', only: ['export']),
             new Middleware('permission:order_update', only: ['cancel_order']),
+            new Middleware('permission:order_update|order_export|order_view_detail|order_view', only: ['index']),
         ];
     }
     public function index(){
@@ -65,16 +67,24 @@ class OrderController extends Controller implements HasMiddleware
             }
         })
         ->addColumn('action', function($orders){
-            if($orders->status == "Pending")
+            if($orders->status == "Pending"){
                 $btn = '<button type="submit" class="btn btn-outline-danger" onclick="return confirm(\'What are you sure? ..\');" style="font-size:1rem"><i class="fa-solid fa-xmark"></i>'. __('general.cancel').'</button>';
-            else
+            }
+            else {
                 $btn = '<button type="submit" disabled class="btn btn-outline-danger" onclick="return confirm("What are you sure? ..")" style="font-size:1rem"><i class="fa-solid fa-xmark"></i>'. __('general.cancel').'</button>';
-
-            return '<a href="'. route('orders.detail', $orders->id) .'" class="btn btn-outline-primary mr-1"><i class="fa-solid fa-eye"></i> Detail</a>
-                    <form action="'. route('orders.cancel', $orders->order_id) .'" method="post">
+            }
+            $detail = '';
+            $cancel = '';
+            if(Gate::allows('order_view_detail')){
+                $detail = '<a href="'. route('orders.detail', $orders->id) .'" class="btn btn-outline-primary mr-1"><i class="fa-solid fa-eye"></i> Detail</a>';
+            }
+            if(Gate::allows('order_update')){
+                $cancel = '<form action="'. route('orders.cancel', $orders->order_id) .'" method="post">
                         '.csrf_field().'
                         '.$btn.
                         '</form>';
+            }
+            return $detail.$cancel;
         })
         ->rawColumns(['status','action'])
         ->make(true);

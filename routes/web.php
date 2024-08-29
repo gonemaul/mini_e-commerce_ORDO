@@ -106,6 +106,7 @@ Route::middleware(['auth','verified'])->group(function(){
     });
 
     Route::prefix('roles')->group(function(){
+        Route::post('assign/permis', [RoleController::class, 'assign_permis']);
         Route::post('load', [RoleController::class, 'load_all'])->name('roles.load');
         Route::post('{role}/assign', [RoleController::class, 'assign'])->name('roles.assign');
         Route::delete('remove-member/{member}', [RoleController::class, 'remove_member'])->name('roles.remove-member');

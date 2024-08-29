@@ -6,17 +6,20 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Routing\Controllers\HasMiddleware;
+use App\Notifications\AssignPermissionNotif;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
 class RoleController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:assign_roles', only: ['show','assign','remove_member']),
+            new Middleware('permission:assign_roles', only: ['show','assign','remove_member','assign_permis']),
             new Middleware('role:Super Admin', only: ['create','store','edit','destroy','update']),
         ];
     }
@@ -96,7 +99,7 @@ class RoleController extends Controller implements HasMiddleware
         }
         $role = Role::create(['name' => Str::title($request->name)]);
         $role->givePermissionTo($permissions);
-        return back()->with('success', 'Role created successfully');
+        return back()->with('success', __('roles.alert.create_success'));
     }
 
     /**
@@ -108,12 +111,14 @@ class RoleController extends Controller implements HasMiddleware
             abort(403);
         }
         $role = Role::find($id);
-        // return $role->users;
         return view('roles.assign_role')->with([
             'title' => 'Role - '.$role->name,
             'role' => $role->id,
             'users' => User::doesntHave('roles')->where('is_admin', true)->get(),
-            'role_users' => $role->users
+            'role_users' => $role->users,
+            'permissions' => $role->permissions->map(function($permission){
+                return $permission->name;
+            })
         ]);
     }
 
@@ -142,17 +147,20 @@ class RoleController extends Controller implements HasMiddleware
             'name' => ['required', 'max:100', 'regex:/^[\pL\s]+$/u'],
             'permissions' => 'required',
         ]);
-        if($request->permissions[0] != null){
-            $role->update(['name' => Str::title($request->name)]);
-            if($request->has('all')){
-                $permissions = Permission::all();
-            } else{
+        // return dd($request);
+        if($request->has('all')){
+            $permissions = Permission::all();
+        } else{
+            if(empty(json_decode($request->permissions,true))){
+                return back()->with('error', __('roler.alert.edit_failed'));
+            } else {
                 $permissions = json_decode($request->permissions,true);
             }
-            $role->syncPermissions($permissions);
-            return redirect()->route('roles.show',$role->id);
         }
-        return back()->with(['error', 'Permissions Not Allowed']);
+        $role->update(['name' => Str::title($request->name)]);
+        $role->syncPermissions($permissions);
+        return redirect()->route('roles.show',$role->id)->with('success', __('roles.alert.edit_success'));
+
     }
 
     /**
@@ -160,7 +168,10 @@ class RoleController extends Controller implements HasMiddleware
      */
     public function destroy(string $id)
     {
-        //
+        $role = Role::find($id);
+        // $role->users()->detach();
+        $role->delete();
+        return 'dihapus';
     }
 
     public function assign($id,Request $request){
@@ -168,13 +179,39 @@ class RoleController extends Controller implements HasMiddleware
             'member' => 'required'
         ]);
         $role = Role::find($id);
-        $user = User::find($id);
+        $user = User::find($request->member);
 
         if($user && $role){
             $user->assignRole($role);
-            return back()->with('success' , 'User has been assigned');
+            return back()->with('success' , __('roles.alert.assign_success'));
         } else{
-            return back()->with('error' , 'Error');
+            return back()->with('error' , __('roles.alert.assign_failed'));
+        }
+    }
+    public function assign_permis(Request $request){
+        if($request->ajax()) {
+            $request->validate([
+                'user_id' => ['required','exists:users,id'],
+                'data_permis' =>'required'
+            ]);
+            $user = User::findOrFail($request->user_id);
+            $assign_permission = Auth::user();
+            $super_admin = User::where('email', 'support@gonemaul.my.id')->orWhere('id', 1)->get();
+            $permissions = json_decode($request->data_permis,true);
+            if(empty($permissions)) {
+                $permissions = $user->getPermissionsViaRoles();
+                $user->syncPermissions($permissions);
+                if($assign_permission->id != 1){
+                    Notification::send($super_admin,new AssignPermissionNotif($assign_permission,$user));
+                }
+                return response()->json(['success' => true, 'pesan' => __('roles.alert.reset_permis'), 'permis' => $user->getAllPermissions()->pluck('name')], 200);
+            } else{
+                $user->syncPermissions($permissions);
+                if($assign_permission->id != 1){
+                    Notification::send($super_admin,new AssignPermissionNotif($assign_permission,$user));
+                }
+                return response()->json(['success' => true, 'pesan' => __('roles.alert.assign_permis'), 'permis' => $user->getAllPermissions()->pluck('name')], 200);
+            }
         }
     }
 
@@ -183,9 +220,9 @@ class RoleController extends Controller implements HasMiddleware
         $role = $user->getRoleNames()[0];
         if($user && $role){
             $user->removeRole($role);
-            return back()->with('success' , 'User has been removed');
+            return back()->with('success' , __('roles.alert.revoke_success'));
         } else{
-            return back()->with('error' , 'Error');
+            return back()->with('error' , __('roles.alert.revoke_failed'));
         }
     }
 }

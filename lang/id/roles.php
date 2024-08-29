@@ -5,16 +5,26 @@ return [
         'list' => 'Daftar Peran',
         'create' => 'Buat Peran',
         'edit' => 'Ubah Peran',
-        'permissions' => 'Izin'
+        'permissions' => 'Perizinan'
     ],
     'label' => [
         'name' => 'Nama Peran',
         'email' => 'Email Pengguna',
         'add_role' => 'Tambah Peran',
         'add_member' => 'Tambah Anggota',
-        'edit_role' => 'Ubah Peran',
         'member_list' => 'Daftar Anggota',
         'member' => 'Anggota',
+    ],
+    'alert' => [
+        'create_success' => 'Role berhasil dibuat',
+        'edit_failed' => 'Izin diperlukan',
+        'edit_success' => 'Role berhasil diperbarui',
+        'assign_success' => 'Pengguna telah ditetapkan',
+        'assign_failed' => 'Pengguna belum ditetapkan',
+        'revoke_success' => 'Role pengguna telah dicabut',
+        'revoke_failed' => 'Role pengguna belum dicabut',
+        'assign_permis' => 'Berhasil memberikan izin kepada pengguna',
+        'reset_permis' => 'Izin pengguna berhasil diatur ulang sesuai dengan role'
     ],
     'permissions' => [
         'all' => 'Semua Izin',
@@ -30,7 +40,7 @@ return [
         'create' => 'Buat',
         'edit' => 'Ubah',
         'delete' => 'Hapus',
-        'view_detail' => 'Lihat Detail',
+        'view_detail' => 'Detail',
         'update_status' => 'Perbarui Status',
     ]
 ];

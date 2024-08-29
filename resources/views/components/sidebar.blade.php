@@ -29,7 +29,7 @@
           <span class="menu-title">Dashboard</span>
         </a>
       </li>
-      @canany(['user_view', 'user_export', 'assign_role'])
+      @canany(['user_view', 'user_detail', 'user_export'])
       <li class="nav-item menu-items {{  Request::is('users*') ? 'active' : ''  }}">
         <a class="nav-link" href="{{ route('users.list') }}">
           <span class="menu-icon">

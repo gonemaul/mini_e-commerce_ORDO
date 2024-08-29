@@ -14,13 +14,14 @@ use Illuminate\Support\Carbon;
 use App\Notifications\NewProduct;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Notifications\NewProductImport;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
 
 class ProductController extends Controller implements HasMiddleware
@@ -28,11 +29,12 @@ class ProductController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:product_view', only: ['load_data','show']),
+            new Middleware('permission:product_view|product_edit|product_delete', only: ['load_data','show']),
             new Middleware('permission:product_create', only: ['create','store']),
             new Middleware('permission:product_edit', only: ['edit','update']),
             new Middleware('permission:product_delete', only: ['destroy']),
             new Middleware('permission:product_exim', only: ['templates','import','export']),
+            new Middleware('permission:product_exim|product_delete|product_edit|product_create|product_view', only: ['index']),
         ];
     }
     /**
@@ -49,12 +51,23 @@ class ProductController extends Controller implements HasMiddleware
             return $products->category->name;
         })
         ->addColumn('action', function($products){
-            return '<a href="'.route('products.show', $products->id) .'" class="btn btn-outline-primary" style="margin-right: 0.5rem;font-size:1rem"><i class="fa-solid fa-eye"></i> Detail</a>
-                    <a href="'.route('products.edit', $products->id) .'" class="btn btn-outline-warning" style="margin-right: 0.5rem;font-size:1rem"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
-                    <form action="'. route('products.destroy', $products->id) .'" method="post">
+            $detail = '';
+            $edit = '';
+            $delete = '';
+
+            if(Gate::allows('product_view')){
+                $detail = '<a href="'.route('products.show', $products->id) .'" class="btn btn-outline-primary" style="margin-right: 0.5rem;font-size:1rem"><i class="fa-solid fa-eye"></i> Detail</a>';
+            }
+            if(Gate::allows('product_edit')){
+                $edit = '<a href="'.route('products.edit', $products->id) .'" class="btn btn-outline-warning" style="margin-right: 0.5rem;font-size:1rem"><i class="fa-solid fa-pen-to-square"></i> Edit</a>';
+            }
+            if(Gate::allows('product_delete')){
+                $delete = '<form action="'. route('products.destroy', $products->id) .'" method="post">
                     '.method_field('DELETE').'
                     '.csrf_field().'
                     <button type="submit" class="btn btn-outline-danger" onclick="return confirm(\''.__('general.alert_delete').'\');" style="font-size:1rem"><i class="fa-solid fa-trash"></i>'.__('general.delete').'</button></form>';
+            }
+            return $detail . $edit .$delete;
         })
         ->rawColumns(['action'])
         ->make(true);

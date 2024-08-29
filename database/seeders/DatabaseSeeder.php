@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
 
         $permissions = [
             ['name' => 'user_view'],
+            ['name' => 'user_detail'],
             [ 'name' => 'user_export' ],
             [ 'name' => 'assign_roles' ],
             [ 'name' => 'category_view' ],
@@ -52,7 +53,7 @@ class DatabaseSeeder extends Seeder
             $Role_SA->givePermissionTo($permission);
         }
         $super_admin->assignRole('Super Admin');
-        // User::factory(10)->create();
+        User::factory(3)->create();
         Category::factory(10)->create();
         Product::factory(10)->create();
         Order::factory(10)->create();

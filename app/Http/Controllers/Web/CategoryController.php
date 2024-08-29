@@ -11,22 +11,25 @@ use App\Exports\CategoryExport;
 use App\Imports\CategoryImport;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rules\Can;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
 class CategoryController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:category_view', only: ['load_data','show']),
+            new Middleware('permission:category_view|category_edit|category_delete', only: ['load_data','show']),
             new Middleware('permission:category_create', only: ['create','store']),
             new Middleware('permission:category_edit', only: ['edit','update']),
             new Middleware('permission:category_delete', only: ['destroy']),
             new Middleware('permission:category_exim', only: ['templates','export','import']),
+            new Middleware('permission:category_exim|category_delete|category_edit|category_create|category_view', only: ['index']),
         ];
     }
     /**
@@ -47,11 +50,29 @@ class CategoryController extends Controller implements HasMiddleware
             return count($categories->products);
         })
         ->addColumn('action', function($categories){
-            return '<a href="'. route('categories.edit', $categories->id) .'" class="btn btn-outline-warning" style="margin-right: 0.5rem;font-size:1rem"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
-                      <form action="'.route('categories.destroy', $categories->id) .'" method="post">
-                          '.method_field('DELETE').'
-                          '.csrf_field().'
-                          <button type="submit" class="btn btn-outline-danger" onclick="return confirm(\''.__('general.alert_delete').'\');" style="font-size:1rem"><i class="fa-solid fa-trash"></i>'. __('general.delete').' </button></form>';
+            $editButton = '';
+            $deleteButton = '';
+
+            // Cek otorisasi untuk mengedit
+            if (Gate::allows('category_edit')) {
+                $editButton = '<a href="' . route('categories.edit', $categories->id) . '" class="btn btn-outline-warning" style="margin-right: 0.5rem; font-size:1rem">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                </a>';
+            }
+
+            // Cek otorisasi untuk menghapus
+            if (Gate::allows('category_delete')) {
+                $deleteButton = '<form action="' . route('categories.destroy', $categories->id) . '" method="post" style="display:inline-block;">
+                    ' . method_field('DELETE') . '
+                    ' . csrf_field() . '
+                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm(\'' . __('general.alert_delete') . '\');" style="font-size:1rem">
+                        <i class="fa-solid fa-trash"></i> ' . __('general.delete') . '
+                    </button>
+                </form>';
+            }
+
+            // Gabungkan tombol edit dan delete
+            return $editButton . $deleteButton;
         })
         ->rawColumns(['action'])
         ->make(true);

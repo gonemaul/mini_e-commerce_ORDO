@@ -68,7 +68,7 @@
                     @endcan
                 </div>
             </div>
-            @can('product_view')
+            @canany(['product_view','product_edit','product_delete'])
             <div class="table-responsive" id="tabel_data">
                 <table id="tabel" class="display hover row-border">
                     <thead>
@@ -85,7 +85,7 @@
                     </tbody>
                 </table>
             </div>
-            @endcan
+            @endcanany
         </div>
     </div>
     <script src="{{ asset('assets/vendors/DataTables/datatables.min.js') }}"></script>
@@ -157,9 +157,9 @@
             });
         }
     </script>
-    @can('product_view')
+    @canany(['product_view','product_edit','product_delete'])
         <script>
             load();
         </script>
-    @endcan
+    @endcanany
 @endsection

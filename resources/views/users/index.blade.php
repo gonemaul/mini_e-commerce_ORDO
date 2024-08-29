@@ -1,8 +1,11 @@
 @extends('layout.main')
 
 @section('content')
+{{-- CDN --}}
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/1b48e60650.js" crossorigin="anonymous"></script>
+
+{{-- local --}}
 <link rel="stylesheet" href="{{ asset('assets/css/datatables.css') }}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -11,6 +14,7 @@
         color: #ffff
     }
 </style>
+
 <div class="content-wrapper">
     <div class="col-lg-12 p-4" style="background-color: #191c24;border-radius:0.5rem">
         <div class="d-flex justify-content-between mb-3">
@@ -29,7 +33,7 @@
                 </div>
             @endcan
         </div>
-        @can('user_view')
+        @canany(['user_view','user_detail'])
         <div class="table-responsive">
             <table id="tabel" class="display hover row-border">
                 <thead>
@@ -45,7 +49,7 @@
                 </tbody>
             </table>
         </div>
-        @endcan
+        @endcanany
     </div>
 </div>
 
@@ -104,9 +108,9 @@
         });
     }
 </script>
-@can('user_view')
+@canany(['user_view','user_detail'])
     <script>
         load();
     </script>
-@endcan
+@endcanany
 @endsection
