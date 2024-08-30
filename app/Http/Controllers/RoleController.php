@@ -169,9 +169,16 @@ class RoleController extends Controller implements HasMiddleware
     public function destroy(string $id)
     {
         $role = Role::find($id);
-        // $role->users()->detach();
-        $role->delete();
-        return 'dihapus';
+        if($role){
+            $role->delete();
+            return redirect()->route('roles.index')->with([
+                'success' => __('roles.alert.remove_success')
+            ]);
+        } else{
+            return redirect()->route('roles.index')->with([
+                'error' => __('roles.alert.remove_failed')
+            ]);
+        }
     }
 
     public function assign($id,Request $request){

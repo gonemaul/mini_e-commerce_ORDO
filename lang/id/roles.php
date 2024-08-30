@@ -19,6 +19,8 @@ return [
         'create_success' => 'Role berhasil dibuat',
         'edit_failed' => 'Izin diperlukan',
         'edit_success' => 'Role berhasil diperbarui',
+        'remove_success' => 'Role berhasil dihapus',
+        'remove_failed' => 'Role tidak ditemukan',
         'assign_success' => 'Pengguna telah ditetapkan',
         'assign_failed' => 'Pengguna belum ditetapkan',
         'revoke_success' => 'Role pengguna telah dicabut',

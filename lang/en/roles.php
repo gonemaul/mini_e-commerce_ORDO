@@ -21,6 +21,8 @@ return [
         'edit_success' => 'Role Updated successfully',
         'assign_success' => 'User has been assigned',
         'assign_failed' => 'User has not been assigned',
+        'remove_success' => 'Role Removed successfully',
+        'remove_failed' => 'Role not found',
         'revoke_success' => 'User has been revoked role',
         'revoke_failed' => 'User has not been revoked role',
         'assign_permis' => 'Successfully granted permissions to users',
