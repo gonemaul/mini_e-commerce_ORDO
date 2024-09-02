@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" href="{{ asset('assets/css/alert.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/datatables.css') }}">
-<ul class="notifications"></ul>
+<ul class="notifications mt-3"></ul>
 <script src="{{ asset('assets/js/alert.js') }}"></script>
 @if(session()->has('success'))
     <script>

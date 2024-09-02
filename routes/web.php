@@ -41,7 +41,7 @@ Route::middleware('guest')->group(function(){
 Route::get('email/verify/{id}/{hash}', [AuthenticationController::class, 'verifyHandler'])->middleware(['signed'])->name('verification.verify');
 Route::post('email/verify/send', [AuthenticationController::class, 'verifySend'])->middleware(['throttle:6,1'])->name('verification.send');
 
-Route::middleware(['auth','verified'])->group(function(){
+Route::middleware(['auth','verified','auth.session'])->group(function(){
     // Dashboard
     Route::get('/', [DashboardController::class,'index'])->name('dashboard');
 
@@ -50,9 +50,10 @@ Route::middleware(['auth','verified'])->group(function(){
 
     // User Profile
     Route::get('profile', [UserController::class, 'profile'])->name('profile');
-    Route::get('change-password', [UserController::class, 'profile'])->name('change-password');
     Route::post('update-profile', [UserController::class, 'update_profile'])->name('update-profile');
     Route::post('update-password', [UserController::class, 'change_password'])->name('update-password');
+    Route::post('logout-other', [UserController::class, 'logout_other']);
+    Route::post('delete-account', [UserController::class, 'delete_account'])->name('delete-account');
 
 
     // Users
@@ -61,7 +62,6 @@ Route::middleware(['auth','verified'])->group(function(){
         Route::get('export', [UserController::class, 'export'])->name('users.export');
         Route::get('customer/export', [UserController::class, 'export_customer'])->name('users.export_customer');
         Route::get('{user}', [UserController::class, 'user_detail'])->name('users.detail');
-        Route::post('delete-account', [UserController::class, 'delete_account'])->name('delete-account');
         Route::post('load', [UserController::class, 'load_data'])->name('users.load_data');
     });
 

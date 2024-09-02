@@ -11,7 +11,7 @@
               @endif
               <span class="count bg-success"></span>
             </div>
-            <div class="profile-name">
+            <div class="profile-name" onclick="window.location='/profile'">
               <h5 class="mb-0 font-weight-normal">Hi, {{ Auth::user()->name }}</h5>
               <span>{{ auth()->user()->email }}</span>
             </div>

@@ -9,7 +9,7 @@
         padding-bottom: 8px
     }
 </style>
-<ul class="notifications"></ul>
+<ul class="notifications mt-3"></ul>
 
 <link rel="stylesheet" href="{{ asset('assets/css/alert.css') }}">
 <script src="{{ asset('assets/js/alert.js') }}"></script>

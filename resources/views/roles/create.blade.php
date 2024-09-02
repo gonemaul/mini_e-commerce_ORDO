@@ -3,7 +3,7 @@
 @section('content')
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/1b48e60650.js" crossorigin="anonymous"></script>
-<ul class="notifications"></ul>
+<ul class="notifications mt-3"></ul>
 
 <link rel="stylesheet" href="{{ asset('assets/css/alert.css') }}">
 <script src="{{ asset('assets/js/alert.js') }}"></script>

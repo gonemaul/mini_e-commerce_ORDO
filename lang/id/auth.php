@@ -21,6 +21,15 @@ return [
     'inactive' => 'Akun belum aktif, Silakan verifikasi email Anda.',
     'profile' => 'gambar_profil',
     'logout' => 'Anda telah berhasil logout!',
+    'delete_account' => [
+        'title' => 'Hapus Akun',
+        'success' => 'Akun Anda telah berhasil dihapus!',
+        'failed' => 'Anda tidak dapat menghapus akun ini..',
+        'info' => 'Setelah akun Anda dihapus, semua sumber daya dan datanya akan dihapus secara permanen.
+                Sebelum menghapus akun Anda, harap unduh data atau informasi apa pun yang ingin Anda simpan',
+        'confirm' => 'Apa anda yakin menghapus akun ini?..'
+    ],
+    'logout_other' => 'Berhasil keluar dari device lain',
 
     // Tampilan Web
     'login_title' => 'Masuk',
@@ -30,6 +39,12 @@ return [
     'login_to_register' => "Belum punya Akun?",
     'register_to_login' => 'Sudah punya Akun?',
     'register_info' => 'Dengan membuat akun, Anda menyetujui',
+
+    // profile
+    'sesi_title' => 'Sesi Browser',
+    'this_sesi' => 'Device ini',
+    'btn_lod' => 'Keluar dari device lain',
+
     // Lupa kata sandi
     'info_text' => 'Silakan masukkan email Anda untuk mereset kata sandi',
     'btn_request' => 'Minta Tautan',
@@ -41,7 +56,6 @@ return [
     'verify_expired' => 'Tautan verifikasi kadaluarsa.',
     'verify_success' => 'Email berhasil diverifikasi. Akun Anda telah diaktifkan.',
     'token_reset_pw' => 'Silakan masukkan token untuk mereset kata sandi...',
-    'delete_account_success' => 'Akun Anda telah berhasil dihapus!',
 
     // API
     'register_success' => 'Anda telah berhasil mendaftar, Silakan cek kotak masuk Anda untuk email verifikasi.',

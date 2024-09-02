@@ -142,17 +142,6 @@
                     </div>
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item preview-item" href="{{ route('change-password') }}">
-                    <div class="preview-thumbnail">
-                        <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-onepassword text-info"></i>
-                        </div>
-                    </div>
-                    <div class="preview-item-content">
-                        <p class="preview-subject mb-1">Change Password</p>
-                    </div>
-                    </a>
-                    <div class="dropdown-divider"></div>
                     <form action="{{ Route('logout') }}" method="post" class="dropdown-item preview-item">
                     @csrf
                         <div class="preview-thumbnail">

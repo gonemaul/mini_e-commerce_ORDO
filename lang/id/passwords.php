@@ -18,7 +18,7 @@ return [
     'throttled' => 'Silakan tunggu sebelum mencoba lagi.',
     'token' => 'Token reset kata sandi ini tidak valid.',
     'user' => "Kami tidak dapat menemukan pengguna dengan alamat email tersebut.",
-    'change' => 'Ubah kata sandi Anda',
+    'change' => 'Ubah kata sandi',
     'current' => 'Kata sandi saat ini',
     'new' => 'Kata sandi baru',
     'confirm' => 'Konfirmasi kata sandi baru',
