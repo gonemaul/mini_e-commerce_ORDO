@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Web;
 
 use App\Models\User;
 use App\Models\Order;
+use App\Models\Session;
 use Illuminate\Support\Str;
+use Jenssegers\Agent\Agent;
 use App\Exports\AdminExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -32,9 +34,20 @@ class UserController extends Controller implements HasMiddleware
         ];
     }
     public function profile(){
+        $auth = Auth::user();
+        $sessions = Session::where('user_id', $auth->id)->get();
+        foreach ($sessions as $session) {
+            $agent = new Agent();
+            $agent->setUserAgent($session->user_agent);
+
+            $session->device = $agent->device(); // Dapatkan nama perangkat
+            $session->platform = $agent->platform(); // Dapatkan platform (OS)
+            $session->browser = $agent->browser(); // Dapatkan nama browser
+        }
         return view('users.profile')->with([
             'title' => 'Profile',
-            'user' => Auth::user()
+            'user' => $auth,
+            'sessions' => $sessions,
         ]);
     }
 
@@ -93,21 +106,39 @@ class UserController extends Controller implements HasMiddleware
     }
 
     public function delete_account(Request $request){
-        $request->validate([
-            'password' => 'required'
-        ]);
-
-        $user = User::findOrFail($request->user()->id);
-        if (!(Hash::check($request->get('password'), $user->password))) {
-            return back()->with(["error" => __('auth.password')]);
-        }
-        else{
+        if($request->ajax()) {
+            $user = User::findOrFail($request->user()->id);
+            if (!(Hash::check($request->get('password'), $user->password))) {
+                return response()->json(['status' => 'error', "pesan" => __('auth.password')]);
+            }
+            if($user->id == 1 && $user->hasRole('Super Admin')){
+                return response()->json(['status' =>  'error', 'pesan'=> __('auth.delete_account.failed') ]);
+            }
             if($user->profile_image){
                 Storage::delete($user->profile_image);
             }
+            $user->sessions()->delete();
             $user->delete();
             Auth::logout();
-            return redirect()->route('login')->with(['success' => __('auth.delete_account_success')]);
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return response()->json([
+                'status' => 'success',
+                'pesan' => __('auth.delete_account.success')
+            ]);
+        }
+
+    }
+
+    public function logout_other(Request $request){
+        if($request->ajax()){
+            $currentSessionId = session()->getId();
+            $user = Auth::user();
+            if (!(Hash::check($request->get('password'), $user->password))) {
+                return response()->json(['status' => 'error', "pesan" => __('auth.password')]);
+            }
+            $sesi = Session::where('user_id', $user->id)->where('id', '<>', $currentSessionId)->delete();
+            return response()->json(['status' => 'success', 'pesan' => __('auth.logout_other')]);
         }
     }
 
@@ -144,13 +175,20 @@ class UserController extends Controller implements HasMiddleware
 
     public function user_detail(User $user){
         $permissions = $user->getAllPermissions();
+        $lastActivitySession = Session::where('user_id',$user->id)->orderBy('last_activity', 'desc')->first();
+        if ($lastActivitySession) {
+            $lastActivity = Carbon::createFromTimestamp($lastActivitySession->last_activity)->toDateTimeString();
+        } else {
+            $lastActivity = 'No activity found';
+        }
         return view('users.detail')->with([
             'title' => 'User Detail',
             'user' => $user,
             'orders' => Order::where('user_id', $user->id)->with('orderItems')->get(),
             'permissions' => $permissions->map(function($permission){
                 return $permission->name;
-            })
+            }),
+            'last_activity' => $lastActivity
         ]);
     }
 

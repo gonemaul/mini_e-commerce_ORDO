@@ -21,6 +21,15 @@ return [
     'inactive' => 'Account not actived, Please verify your email.',
     'profile' => 'profile_image',
     'logout' => 'You have successfully logged out!',
+    'delete_account' => [
+        'title' => 'Delete Account',
+        'success' => 'Your account has been successfully deleted!',
+        'failed' => 'You cannot delete this account.',
+        'info' => 'Once your account is deleted, all its resources and data will be permanently deleted.
+                Before deleting your account, please download any data or information you wish to keep.',
+        'confirm' => 'Are you sure you want to delete this account?',
+    ],
+    'logout_other' => 'Successfully logged out from other devices',
 
     // Web View
     'login_title' => 'Login',
@@ -30,6 +39,12 @@ return [
     'login_to_register' => "Don't have an Account?",
     'register_to_login' => 'Already have an Account?',
     'register_info' => 'By creating an account you are accepting our',
+
+    // profile
+    'sesi_title' => 'Browser Session',
+    'this_sesi' => 'This device',
+    'btn_lod' => 'Log out from other devices',
+
     // Forgot password
     'info_text' => 'Please enter your email to reset the password',
     'btn_request' => 'Request Link',
@@ -41,7 +56,6 @@ return [
     'verify_expired' => 'Verification link expired.',
     'verify_success' => 'Email verified successfully. Your account has been actived.',
     'token_reset_pw' => 'Please enter token for reset password...',
-    'delete_account_success' => 'Your account has been deleted successfully!',
 
     // API
     'register_success' => 'You have successfully registered, Please check your inbox for a verification email.',

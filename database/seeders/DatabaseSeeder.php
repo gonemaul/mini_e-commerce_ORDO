@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
             $Role_SA->givePermissionTo($permission);
         }
         $super_admin->assignRole('Super Admin');
-        // User::factory(3)->create();
+        User::factory(10)->create();
         // Category::factory(10)->create();
         // Product::factory(10)->create();
         // Order::factory(10)->create();

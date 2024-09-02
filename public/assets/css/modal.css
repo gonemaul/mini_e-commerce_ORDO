@@ -10,8 +10,9 @@
   box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
 }
 .wrapper{
+  position: fixed;
   z-index: 5;
-  background: #fff;
+  background: #2c313f;
   padding: 30px;
   text-align: center;
   max-width: 400px;
@@ -19,7 +20,9 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  /* top: 10%; */
+  top: 50%;
+  left: 52%;
+  color: #fff;
   opacity: 1;
   pointer-events: auto;
   transition: all 0.3s ease;
@@ -61,12 +64,12 @@
   margin: 0 0 10px 0;
 }
 .content header{
-  color: #333;
+  color: #fff;
   font-size: 30px;
   font-weight: 600;
 }
 .content p{
-  color: #333;
+  color: #fff;
   font-size: 16px;
   font-weight: 400;
   margin-left: -3px;
@@ -168,3 +171,20 @@ form .field input:focus{
 #modal .left, .right{
     text-align: left !important;
 }
+
+/* Password input */
+.modal_luar{
+    width: 100vw;
+    height: 100vh;
+    display: relative;
+    z-index: 10;
+    position: absolute;
+    display: none;
+}
+.wrapper.pw_confirm{
+    text-align: left !important;
+}
+/* .modal input.pw_confirm{
+    background-color: #191c24 !important;
+    border: 2px dashed #191c24;
+} */

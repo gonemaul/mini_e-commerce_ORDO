@@ -58,4 +58,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function orders(){
         return $this->hasMany(Order::class);
     }
+
+    public function sessions()
+    {
+        return $this->hasMany(Session::class, 'user_id', 'id');
+    }
 }
